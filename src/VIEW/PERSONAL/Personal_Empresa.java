@@ -12,6 +12,7 @@ public class Personal_Empresa extends JFrame {
     private JButton personalButton;
     private JButton anadirButton;
     private JButton modificarButton;
+    private JButton editarButton;
     private ActualizarUsuario actualizarUsuario;
     private Usuario usuario_actual;
     private JTextField nombreField;
@@ -63,6 +64,14 @@ public class Personal_Empresa extends JFrame {
         modificarButton.setForeground(Color.WHITE);
         modificarButton.setPreferredSize(new Dimension(150, 50));
         modificarButton.setMargin(new Insets(10, 20, 10, 20));
+        modificarButton.setEnabled(false);
+
+        editarButton = new JButton("Editar");
+        editarButton.setFont(buttonFont);
+        editarButton.setBackground(new Color(174, 101, 7));
+        editarButton.setForeground(Color.WHITE);
+        editarButton.setPreferredSize(new Dimension(150, 50));
+        editarButton.setMargin(new Insets(10, 20, 10, 20));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -77,6 +86,9 @@ public class Personal_Empresa extends JFrame {
         topPanel.add(anadirButton, gbc);
 
         gbc.gridx = 3;
+        topPanel.add(editarButton, gbc);
+
+        gbc.gridx = 4;
         topPanel.add(modificarButton, gbc);
 
         add(topPanel, BorderLayout.NORTH);
@@ -92,22 +104,21 @@ public class Personal_Empresa extends JFrame {
 
         nombreField = new JTextField(usuario_actual.getUsuario());
         nombreField.setFont(new Font("Arial", Font.PLAIN, 18));
+        nombreField.setEnabled(false);
         companyPanel.add(nombreField);
 
         JLabel direccionLabel = new JLabel("Dirección:");
         direccionLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        companyPanel.add(direccionLabel);
-
         direccionField = new JTextField(usuario_actual.getDireccion());
         direccionField.setFont(new Font("Arial", Font.PLAIN, 18));
+        direccionField.setEnabled(false);
         companyPanel.add(direccionField);
 
         JLabel telefonoLabel = new JLabel("Teléfono:");
         telefonoLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        companyPanel.add(telefonoLabel);
-
         telefonoField = new JTextField(usuario_actual.getTelefono());
         telefonoField.setFont(new Font("Arial", Font.PLAIN, 18));
+        telefonoField.setEnabled(false);
         companyPanel.add(telefonoField);
 
         add(companyPanel, BorderLayout.CENTER);
@@ -118,16 +129,23 @@ public class Personal_Empresa extends JFrame {
         });
         personalButton.addActionListener(e -> JOptionPane.showMessageDialog(null, "Personal button clicked"));
         anadirButton.addActionListener(e -> JOptionPane.showMessageDialog(null, "Añadir button clicked"));
+        editarButton.addActionListener(e -> {
+            nombreField.setEnabled(true);
+            direccionField.setEnabled(true);
+            telefonoField.setEnabled(true);
+            modificarButton.setEnabled(true);
+        });
         modificarButton.addActionListener(e -> {
             usuario_actual.setUsuario(nombreField.getText());
             usuario_actual.setDireccion(direccionField.getText());
             usuario_actual.setTelefono(telefonoField.getText());
 
-            if (actualizarUsuario.actualizarUsuario(usuario_actual).equals("Usuario actualizado correctamente")) {
-                JOptionPane.showMessageDialog(null, "Datos actualizados correctamente");
-            } else {
-                JOptionPane.showMessageDialog(null, "Error al actualizar los datos");
-            }
+            JOptionPane.showMessageDialog(null, actualizarUsuario.actualizarUsuario(usuario_actual));
+
+            nombreField.setEnabled(false);
+            direccionField.setEnabled(false);
+            telefonoField.setEnabled(false);
+            modificarButton.setEnabled(false);
         });
     }
 }
