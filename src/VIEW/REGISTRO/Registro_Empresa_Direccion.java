@@ -1,0 +1,191 @@
+package VIEW.REGISTRO;
+
+import MODEL.Usuario;
+import VIEW.INICIO_SESION.InicioSesion_Vista;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import static CONTROLLER.CRUD.USER.AddUsuario.addEmpresa;
+
+public class Registro_Empresa_Direccion extends JFrame {
+    private JTextField streetField;
+    private JTextField numberField;
+    private JTextField localityField;
+    private JTextField municipalityField;
+    private JTextField provinceField;
+    private JTextField postalCodeField;
+    private JTextField countryField;
+    private JLabel messageLabel;
+
+    public Registro_Empresa_Direccion(Usuario usuario_sin_direccion) {
+        setTitle("Registro Dirección Empresa");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        panel.setBackground(new Color(211, 205, 192));
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.anchor = GridBagConstraints.WEST;
+
+        Font font = new Font("Arial", Font.PLAIN, 18);
+
+        // Add street label and text field
+        JLabel streetLabel = new JLabel("Calle:");
+        streetLabel.setFont(font);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        panel.add(streetLabel, constraints);
+
+        streetField = new JTextField(20);
+        streetField.setFont(font);
+        constraints.gridx = 1;
+        panel.add(streetField, constraints);
+
+        // Add number label and text field
+        JLabel numberLabel = new JLabel("Número:");
+        numberLabel.setFont(font);
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        panel.add(numberLabel, constraints);
+
+        numberField = new JTextField(20);
+        numberField.setFont(font);
+        constraints.gridx = 1;
+        panel.add(numberField, constraints);
+
+        // Add locality label and text field
+        JLabel localityLabel = new JLabel("Localidad:");
+        localityLabel.setFont(font);
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        panel.add(localityLabel, constraints);
+
+        localityField = new JTextField(20);
+        localityField.setFont(font);
+        constraints.gridx = 1;
+        panel.add(localityField, constraints);
+
+        // Add municipality label and text field
+        JLabel municipalityLabel = new JLabel("Municipio:");
+        municipalityLabel.setFont(font);
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        panel.add(municipalityLabel, constraints);
+
+        municipalityField = new JTextField(20);
+        municipalityField.setFont(font);
+        constraints.gridx = 1;
+        panel.add(municipalityField, constraints);
+
+        // Add province label and text field
+        JLabel provinceLabel = new JLabel("Provincia:");
+        provinceLabel.setFont(font);
+        constraints.gridx = 0;
+        constraints.gridy = 4;
+        panel.add(provinceLabel, constraints);
+
+        provinceField = new JTextField(20);
+        provinceField.setFont(font);
+        constraints.gridx = 1;
+        panel.add(provinceField, constraints);
+
+        // Add postal code label and text field
+        JLabel postalCodeLabel = new JLabel("Código Postal:");
+        postalCodeLabel.setFont(font);
+        constraints.gridx = 0;
+        constraints.gridy = 5;
+        panel.add(postalCodeLabel, constraints);
+
+        postalCodeField = new JTextField(20);
+        postalCodeField.setFont(font);
+        constraints.gridx = 1;
+        panel.add(postalCodeField, constraints);
+
+        // Add country label and text field
+        JLabel countryLabel = new JLabel("País:");
+        countryLabel.setFont(font);
+        constraints.gridx = 0;
+        constraints.gridy = 6;
+        panel.add(countryLabel, constraints);
+
+        countryField = new JTextField(20);
+        countryField.setFont(font);
+        constraints.gridx = 1;
+        panel.add(countryField, constraints);
+
+        // Add register button
+        JButton registerButton = new JButton("Registrar");
+        registerButton.setFont(font);
+        registerButton.setBackground(new Color(174, 101, 7));
+        registerButton.setForeground(new Color(255, 255, 255));
+        constraints.gridx = 1;
+        constraints.gridy = 7;
+        constraints.anchor = GridBagConstraints.CENTER;
+        panel.add(registerButton, constraints);
+
+        // Add message label
+        messageLabel = new JLabel("");
+        messageLabel.setFont(font);
+        messageLabel.setForeground(Color.RED);
+        constraints.gridx = 0;
+        constraints.gridy = 8;
+        constraints.gridwidth = 2;
+        constraints.anchor = GridBagConstraints.CENTER;
+        panel.add(messageLabel, constraints);
+
+        // Add action listener to the register button
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (validateFields()) {
+                    Usuario usuario = new Usuario(usuario_sin_direccion.getUsuario(), usuario_sin_direccion.getPassword(), usuario_sin_direccion.getEmail(), "", usuario_sin_direccion.getTelefono(), 10, "");
+                    usuario.setDireccion(Usuario.formatoDireccion(streetField.getText(), numberField.getText(), localityField.getText(), municipalityField.getText(), provinceField.getText(), postalCodeField.getText(), countryField.getText()));
+                    String mensaje = addEmpresa(usuario);
+                    JOptionPane.showMessageDialog(null, mensaje, "Registro Empresa", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
+                    new InicioSesion_Vista().setVisible(true);
+                }
+            }
+        });
+        add(panel);
+    }
+
+    private boolean validateFields() {
+        if (streetField.getText().isEmpty()) {
+            messageLabel.setText("La calle es obligatoria");
+            return false;
+        }
+        if (numberField.getText().isEmpty()) {
+            messageLabel.setText("El número es obligatorio");
+            return false;
+        }
+        if (localityField.getText().isEmpty()) {
+            messageLabel.setText("La localidad es obligatoria");
+            return false;
+        }
+        if (municipalityField.getText().isEmpty()) {
+            messageLabel.setText("El municipio es obligatorio");
+            return false;
+        }
+        if (provinceField.getText().isEmpty()) {
+            messageLabel.setText("La provincia es obligatoria");
+            return false;
+        }
+        if (postalCodeField.getText().isEmpty()) {
+            messageLabel.setText("El código postal es obligatorio");
+            return false;
+        }
+        if (countryField.getText().isEmpty()) {
+            messageLabel.setText("El país es obligatorio");
+            return false;
+        }
+        return true;
+    }
+}

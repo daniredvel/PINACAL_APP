@@ -1,0 +1,119 @@
+package MODEL;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class Publicacion {
+    //Tipo de publicaciones
+    //Ofertas de trabajo, maquinaria...
+    //Demandas de trabajo, maquinaria...
+    private final String [] tipos = {"OFERTA", "DEMANDA"};
+
+    private int id_publicacion;
+    private String titulo;
+    private String descripcion;
+    private Date fecha_publicacion;
+    private String tipo;
+    private int id_usuario;
+    private String usuario;
+
+
+    //CONSTRUCTORES
+
+    public Publicacion(){}
+
+    public Publicacion(
+            int     id_publicacion,
+            String  titulo,
+            String  descripcion,
+            Date    fecha_publicacion,
+            int     indice,
+            int     id_usuario,
+            String  usuario
+    ){
+        this.id_publicacion     = id_publicacion;
+        this.titulo             = titulo;
+        this.descripcion        = descripcion;
+        this.fecha_publicacion  = fecha_publicacion;
+        this.tipo               = indicarTipo(indice);
+        this.id_usuario         = id_usuario;
+        this.usuario            = usuario;
+    }
+
+    //GETTER
+
+    public int getId_publicacion(){
+        return id_publicacion;
+    }
+
+    public String getTitulo(){
+        return titulo;
+    }
+
+    public String getDescripcion(){
+        return descripcion;
+    }
+
+    public Date getFecha_publicacion(){
+        return fecha_publicacion;
+    }
+
+    public String getTipo(){
+        return tipo;
+    }
+
+    public int getId_usuario(){
+        return id_usuario;
+    }
+
+    public String getUsuario(){
+        return usuario;
+    }
+
+    //SETTER
+
+    public void setId_publicacion(int id_publicacion){
+        this.id_publicacion = id_publicacion;
+    }
+
+    public void setTipo(String tipo){
+        this.tipo = tipo;
+    }
+
+    public void setTitulo(String titulo){
+        this.titulo = titulo;
+    }
+
+    public void setDescripcion(String descripcion){
+        this.descripcion = descripcion;
+    }
+
+    public void setFecha_publicacion(Date fecha_publicacion){
+        this.fecha_publicacion = fecha_publicacion;
+    }
+
+    public void setId_usuario(int id_usuario){
+        this.id_usuario = id_usuario;
+    }
+
+    public void setUsuario(String usuario){
+        this.usuario = usuario;
+    }
+
+    //METODOS
+
+    //METODO QUE INDICA EL TIPO DE PUBLICACION A PARTIR DE UN INDICE
+
+    private String indicarTipo(int indice){
+        return tipos[indice];
+    }
+
+    //METODO PARA DAR FORMATO A LA FECHA
+
+    public String toStringDate(Date fecha_publicacion){
+        String pattern = "kk'h':mm'm' dd/MM/yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(fecha_publicacion);
+    }
+
+}
