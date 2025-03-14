@@ -13,7 +13,7 @@
 -- JUSTIFICACIONES_ELIMINACION_USUARIOS: Tabla que almacena las justificaciones de eliminación de usuarios
 
 CREATE TABLE TIPOS_USUARIOS (
-    id_tipo_usuario INT PRIMARY KEY AUTO_INCREMENT, -- ID como clave primaria
+    id_tipo_usuario VARCHAR PRIMARY KEY, -- ID como clave primaria, permisos de admin = 2, usuario = 1
     nombre_tipo VARCHAR(50) NOT NULL UNIQUE, -- Nombre del tipo de usuario (Administrador, Empresa asociada, etc.)
     permisos VARCHAR(255) NOT NULL -- Permisos del tipo de usuario
 );
@@ -48,11 +48,13 @@ CREATE TABLE PUBLICACIONES_GUARDADAS (
     FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario) ON DELETE CASCADE -- Clave foránea de la tabla USUARIOS
 );
 
+
+--LOS DATOS DE ESTAS TABLAS DEBERAN ELIMINARSE AUTOMATICAMENTE PASADO CIERTO TIEMPO
 CREATE TABLE JUSTIFICACIONES_ELIMINACION_PUBLICACIONES (
     id_justificacion INT PRIMARY KEY AUTO_INCREMENT, -- ID como clave primaria
     id_publicacion INT NOT NULL, -- ID de la publicación eliminada
     id_admin INT NOT NULL, -- ID del administrador que realizó la eliminación
-    justificacion TEXT NOT NULL, -- Mensaje de justificación
+    justificacion VARCHAR NOT NULL, -- Mensaje de justificación
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha y hora de la eliminación
     FOREIGN KEY (id_publicacion) REFERENCES PUBLICACIONES(id_publicacion) ON DELETE CASCADE, -- Clave foránea de la tabla PUBLICACIONES
     FOREIGN KEY (id_admin) REFERENCES USUARIOS(id_usuario) -- Clave foránea de la tabla USUARIOS
@@ -62,7 +64,7 @@ CREATE TABLE JUSTIFICACIONES_ELIMINACION_USUARIOS (
     id_justificacion INT PRIMARY KEY AUTO_INCREMENT, -- ID como clave primaria
     id_usuario_eliminado INT NOT NULL, -- ID del usuario eliminado
     id_admin INT NOT NULL, -- ID del administrador que realizó la eliminación
-    justificacion TEXT NOT NULL, -- Mensaje de justificación
+    justificacion VARCHAR NOT NULL, -- Mensaje de justificación
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha y hora de la eliminación
     FOREIGN KEY (id_usuario_eliminado) REFERENCES USUARIOS(id_usuario) ON DELETE CASCADE, -- Clave foránea de la tabla USUARIOS
     FOREIGN KEY (id_admin) REFERENCES USUARIOS(id_usuario) -- Clave foránea de la tabla USUARIOS

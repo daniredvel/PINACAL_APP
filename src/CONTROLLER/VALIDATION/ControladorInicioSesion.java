@@ -13,6 +13,8 @@ public class ControladorInicioSesion {
     public static int comprobarPass(String usuario, String password) throws Exception {
 
         Connection conn = GestorConexion.getConexion();
+
+        //Obtenemos la contraseña del usuario
         PreparedStatement consulta = conn.prepareStatement("SELECT * FROM usuarios WHERE usuario = ?");
         consulta.setString(1, usuario);
 
@@ -22,9 +24,11 @@ public class ControladorInicioSesion {
         //Si devuelve -1, la contraseña es incorrecta
         //Si devuelve 0, el usuario no existe
 
+        //Comprobamos si el usuario existe
         if (resultSet.next()) {
             //String passDesencriptada = CodificadorPassword.descodificar(resultSet.getString("password"));
             String passDesencriptada = resultSet.getString("password");
+                //Comprobamos si la contraseña es correcta
             if (password.equals(passDesencriptada)) {
                 return 1;
             } else {

@@ -14,20 +14,20 @@ public class Registro_Vista extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Create panel and set layout
+        // Crear Panel y Layout
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
         panel.setBackground(new Color(211, 205, 192));
 
-        // Create constraints for layout
+        // Constraints para el layout
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(20, 20, 20, 20);
         constraints.anchor = GridBagConstraints.CENTER;
 
-        // Set font for components
+        // Fuente para los elementos
         Font font = new Font("Arial", Font.PLAIN, 24);
 
-        // Add label
+        // Añade una etiqueta
         JLabel label = new JLabel("Escoge una opción para registrarte");
         label.setFont(font);
         label.setForeground(new Color(0, 0, 0));
@@ -36,7 +36,7 @@ public class Registro_Vista extends JFrame {
         constraints.gridwidth = 2;
         panel.add(label, constraints);
 
-        // Add EMPRESA button
+        // Añade el botón de la opción de EMPRESA
         JButton empresaButton = new JButton("EMPRESA");
         empresaButton.setFont(font);
         empresaButton.setBackground(new Color(174, 101, 7));
@@ -46,7 +46,7 @@ public class Registro_Vista extends JFrame {
         constraints.gridwidth = 1;
         panel.add(empresaButton, constraints);
 
-        // Add USUARIO button
+        // Añade el botón de la opción de USUARIO
         JButton usuarioButton = new JButton("USUARIO");
         usuarioButton.setFont(font);
         usuarioButton.setBackground(new Color(174, 101, 7));
@@ -55,10 +55,12 @@ public class Registro_Vista extends JFrame {
         constraints.gridy = 1;
         panel.add(usuarioButton, constraints);
 
-        // Add action listeners to buttons
+        // «Escuchadores» de los botones
         empresaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                //Cierra la ventana actual y abre la de registro de empresa
                 dispose();
                 new Registro_Empresa().setVisible(true);
             }
@@ -67,12 +69,14 @@ public class Registro_Vista extends JFrame {
         usuarioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                //Cierra la ventana actual y abre la de registro de usuario
                 dispose();
                 new Registro_Usuario().setVisible(true);
             }
         });
 
-        // Add panel to frame
+        // Añade el panel al marco
         add(panel);
     }
 }

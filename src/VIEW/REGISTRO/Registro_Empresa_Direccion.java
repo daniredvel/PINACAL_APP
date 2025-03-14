@@ -36,7 +36,7 @@ public class Registro_Empresa_Direccion extends JFrame {
 
         Font font = new Font("Arial", Font.PLAIN, 18);
 
-        // Add street label and text field
+        // Etiqueta y campo de texto para la calle
         JLabel streetLabel = new JLabel("Calle:");
         streetLabel.setFont(font);
         constraints.gridx = 0;
@@ -48,7 +48,7 @@ public class Registro_Empresa_Direccion extends JFrame {
         constraints.gridx = 1;
         panel.add(streetField, constraints);
 
-        // Add number label and text field
+        // Etiqueta y campo de texto para el número
         JLabel numberLabel = new JLabel("Número:");
         numberLabel.setFont(font);
         constraints.gridx = 0;
@@ -60,7 +60,7 @@ public class Registro_Empresa_Direccion extends JFrame {
         constraints.gridx = 1;
         panel.add(numberField, constraints);
 
-        // Add locality label and text field
+        // Etiqueta y campo de texto para la Localidad
         JLabel localityLabel = new JLabel("Localidad:");
         localityLabel.setFont(font);
         constraints.gridx = 0;
@@ -72,7 +72,7 @@ public class Registro_Empresa_Direccion extends JFrame {
         constraints.gridx = 1;
         panel.add(localityField, constraints);
 
-        // Add municipality label and text field
+        // Etiqueta y campo de texto para el municipio
         JLabel municipalityLabel = new JLabel("Municipio:");
         municipalityLabel.setFont(font);
         constraints.gridx = 0;
@@ -84,7 +84,7 @@ public class Registro_Empresa_Direccion extends JFrame {
         constraints.gridx = 1;
         panel.add(municipalityField, constraints);
 
-        // Add province label and text field
+        // Etiqueta y campo de texto para la provincia
         JLabel provinceLabel = new JLabel("Provincia:");
         provinceLabel.setFont(font);
         constraints.gridx = 0;
@@ -96,7 +96,7 @@ public class Registro_Empresa_Direccion extends JFrame {
         constraints.gridx = 1;
         panel.add(provinceField, constraints);
 
-        // Add postal code label and text field
+        // Etiqueta y campo de texto para el código postal
         JLabel postalCodeLabel = new JLabel("Código Postal:");
         postalCodeLabel.setFont(font);
         constraints.gridx = 0;
@@ -108,7 +108,7 @@ public class Registro_Empresa_Direccion extends JFrame {
         constraints.gridx = 1;
         panel.add(postalCodeField, constraints);
 
-        // Add country label and text field
+        // Etiqueta y campo de texto para el país
         JLabel countryLabel = new JLabel("País:");
         countryLabel.setFont(font);
         constraints.gridx = 0;
@@ -120,7 +120,7 @@ public class Registro_Empresa_Direccion extends JFrame {
         constraints.gridx = 1;
         panel.add(countryField, constraints);
 
-        // Add register button
+        // Botón de registro
         JButton registerButton = new JButton("Registrar");
         registerButton.setFont(font);
         registerButton.setBackground(new Color(174, 101, 7));
@@ -130,7 +130,7 @@ public class Registro_Empresa_Direccion extends JFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(registerButton, constraints);
 
-        // Add message label
+        // Añade etiqueta para mostrar mensajes
         messageLabel = new JLabel("");
         messageLabel.setFont(font);
         messageLabel.setForeground(Color.RED);
@@ -140,15 +140,19 @@ public class Registro_Empresa_Direccion extends JFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(messageLabel, constraints);
 
-        // Add action listener to the register button
+        // «Escuchador» del botón de registro
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (validateFields()) {
+                    // Se crea un usuario con los datos introducidos indicando la dirección vacía
                     Usuario usuario = new Usuario(usuario_sin_direccion.getUsuario(), usuario_sin_direccion.getPassword(), usuario_sin_direccion.getEmail(), "", usuario_sin_direccion.getTelefono(), 10, "");
+                    // Se le asigna la direccion con el formato correcto
                     usuario.setDireccion(Usuario.formatoDireccion(streetField.getText(), numberField.getText(), localityField.getText(), municipalityField.getText(), provinceField.getText(), postalCodeField.getText(), countryField.getText()));
+                    //Se muestra un mensaje con el resultado del registro
                     String mensaje = addEmpresa(usuario);
                     JOptionPane.showMessageDialog(null, mensaje, "Registro Empresa", JOptionPane.INFORMATION_MESSAGE);
+                    //Se cierra la ventana y se abre la de inicio de sesión
                     dispose();
                     new InicioSesion_Vista().setVisible(true);
                 }
@@ -157,6 +161,7 @@ public class Registro_Empresa_Direccion extends JFrame {
         add(panel);
     }
 
+    // METODO para validar los campos
     private boolean validateFields() {
         if (streetField.getText().isEmpty()) {
             messageLabel.setText("La calle es obligatoria");

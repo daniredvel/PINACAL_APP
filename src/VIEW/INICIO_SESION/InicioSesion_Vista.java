@@ -21,26 +21,26 @@ public class InicioSesion_Vista extends JFrame {
     private JButton registerButton;
 
     public InicioSesion_Vista() {
-        // Set frame properties
+        // Propiedades del frame (Marco)
         setTitle("Inicio de Sesión");
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize the frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Create panel and set layout
+        // Panel y layout
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
         panel.setBackground(new Color(255, 255, 255)); // Background color
 
-        // Create constraints for layout
+        // Constraints del Layout
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(20, 20, 20, 20); // Increase padding
         constraints.anchor = GridBagConstraints.WEST;
 
-        // Set font for components
+        // Fuente de los elementos
         Font font = new Font("Arial", Font.PLAIN, 24);
 
-        // Add message label
+        // Etiqueta de mensaje
         messageLabel = new JLabel("");
         messageLabel.setFont(font);
         messageLabel.setForeground(Color.RED);
@@ -50,7 +50,7 @@ public class InicioSesion_Vista extends JFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(messageLabel, constraints);
 
-        // Add user label and text field
+        // Etiqueta y Campo de texto del usuario
         JLabel userLabel = new JLabel("Usuario:");
         userLabel.setFont(font);
         userLabel.setForeground(new Color(0, 0, 0)); // Text color
@@ -64,7 +64,7 @@ public class InicioSesion_Vista extends JFrame {
         constraints.gridx = 1;
         panel.add(userField, constraints);
 
-        // Add password label and password field
+        // Etiqueta y Campo de texto de la contraseña
         JLabel passLabel = new JLabel("Contraseña:");
         passLabel.setFont(font);
         passLabel.setForeground(new Color(0, 0, 0)); // Text color
@@ -78,7 +78,7 @@ public class InicioSesion_Vista extends JFrame {
         constraints.gridx = 1;
         panel.add(passField, constraints);
 
-        // Add login button
+        // Botón de inicio de sesión
         loginButton = new JButton("Iniciar Sesión");
         loginButton.setFont(font);
         loginButton.setBackground(new Color(174, 101, 7)); // Button background color
@@ -88,7 +88,7 @@ public class InicioSesion_Vista extends JFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(loginButton, constraints);
 
-        // Add register button
+        // Botón de registro
         registerButton = new JButton("REGÍSTRATE");
         registerButton.setFont(new Font("Arial", Font.PLAIN, 18));
         registerButton.setForeground(Color.BLUE);
@@ -99,7 +99,7 @@ public class InicioSesion_Vista extends JFrame {
         constraints.gridy = 4;
         panel.add(registerButton, constraints);
 
-        // Add action listener to the login button
+        // «Escuchador» del botón de inicio de sesión
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -108,18 +108,23 @@ public class InicioSesion_Vista extends JFrame {
                 String password = new String(passField.getPassword());
 
                 try {
+                    //Comprueba si el usuario y la contraseña son correctos
                     switch (comprobarPass(username, password, "2")) {
                         case 1:
+                            // Si el usuario y la contraseña son correctos, crea un objeto Usuario con los datos del usuario
                             usuario_actual = leerUsuarioPorNombre(username);
-                            // Close current window and open Inicio_Vista
+                            // Cierra la ventana actual
                             dispose();
+                            // Abre la ventana de inicio
                             new Inicio_Vista(usuario_actual).setVisible(true);
                             break;
                         case -1:
+                            //Indica en un mensaje que la contraseña es incorrecta
                             messageLabel.setText("Contraseña incorrecta");
                             messageLabel.setForeground(new Color(233, 30, 99));
                             break;
                         case 0:
+                            //Indica en un mensaje que el usuario no existe
                             messageLabel.setText("Usuario no encontrado");
                             messageLabel.setForeground(new Color(233, 30, 99));
                             break;
@@ -129,17 +134,18 @@ public class InicioSesion_Vista extends JFrame {
             }
         });
 
-        // Add action listener to the register button
+        // «Escuchador» del botón de registro
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Open Registro_Vista
+                // Cierra la ventana de inicio de sesión
                 dispose();
+                // Abre la ventana de registro
                 new Registro_Vista().setVisible(true);
             }
         });
 
-        // Add panel to frame
+        // Añade el panel al marco
         add(panel);
     }
 }

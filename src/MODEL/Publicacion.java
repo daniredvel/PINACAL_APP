@@ -108,12 +108,4 @@ public class Publicacion {
         return tipos[indice];
     }
 
-    //METODO PARA DAR FORMATO A LA FECHA
-
-    public String toStringDate(Date fecha_publicacion){
-        String pattern = "kk'h':mm'm' dd/MM/yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        return simpleDateFormat.format(fecha_publicacion);
-    }
-
 }

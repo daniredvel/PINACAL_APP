@@ -31,7 +31,7 @@ public class Registro_Empresa extends JFrame {
 
         Font font = new Font("Arial", Font.PLAIN, 18);
 
-        // Add company name label and text field
+        // Etiqueta y campo de texto del Nombre de la Empresa
         JLabel companyNameLabel = new JLabel("Nombre de la Empresa:");
         companyNameLabel.setFont(font);
         constraints.gridx = 0;
@@ -43,7 +43,7 @@ public class Registro_Empresa extends JFrame {
         constraints.gridx = 1;
         panel.add(companyNameField, constraints);
 
-        // Add company email label and text field
+        // Etiqueta y campo de texto del Correo electrónico de la Empresa
         JLabel companyEmailLabel = new JLabel("Correo Electrónico:");
         companyEmailLabel.setFont(font);
         constraints.gridx = 0;
@@ -55,7 +55,7 @@ public class Registro_Empresa extends JFrame {
         constraints.gridx = 1;
         panel.add(companyEmailField, constraints);
 
-        // Add company phone label and text field
+        // Etiqueta y campo de texto del teléfono de la Empresa
         JLabel companyPhoneLabel = new JLabel("Teléfono:");
         companyPhoneLabel.setFont(font);
         constraints.gridx = 0;
@@ -67,7 +67,7 @@ public class Registro_Empresa extends JFrame {
         constraints.gridx = 1;
         panel.add(companyPhoneField, constraints);
 
-        // Add company password label and password field
+        // Etiqueta y campo de texto del contraseña de la Empresa
         JLabel companyPasswordLabel = new JLabel("Contraseña:");
         companyPasswordLabel.setFont(font);
         constraints.gridx = 0;
@@ -79,8 +79,8 @@ public class Registro_Empresa extends JFrame {
         constraints.gridx = 1;
         panel.add(companyPasswordField, constraints);
 
-        // Add register button
-        JButton registerButton = new JButton("Registrar");
+        // Botón de Siguiente, para pasar a la ventana de la dirección de la empresa
+        JButton registerButton = new JButton("Siguiente");
         registerButton.setFont(font);
         registerButton.setBackground(new Color(174, 101, 7));
         registerButton.setForeground(new Color(255, 255, 255));
@@ -89,7 +89,7 @@ public class Registro_Empresa extends JFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(registerButton, constraints);
 
-        // Add message label
+        // Añadir etiqueta de mensaje
         messageLabel = new JLabel("");
         messageLabel.setFont(font);
         messageLabel.setForeground(Color.RED);
@@ -99,21 +99,27 @@ public class Registro_Empresa extends JFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(messageLabel, constraints);
 
-        // Add action listener to the register button
+        // «Escuchador» del botón de Siguiente
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //Si los campos están completos, se crea un usuario sin dirección y se pasa a la ventana de dirección
                 if (validateFields()) {
+                    // Crear un usuario sin dirección
                     Usuario usuario_sin_direccion = new Usuario(companyNameLabel.getText(),companyPasswordLabel.getText(),companyEmailLabel.getText(),"",companyPhoneLabel.getText(),10,"");
+                    // Cerrar la ventana actual
                     dispose();
+                    // Abrir la de dirección
                     new Registro_Empresa_Direccion(usuario_sin_direccion).setVisible(true);
                 }
             }
         });
 
+        //Añadir el panel al JFrame
         add(panel);
     }
 
+    //Validación
     private boolean validateFields() {
         if (companyNameField.getText().isEmpty()) {
             messageLabel.setText("El nombre de la empresa es obligatorio");
@@ -123,12 +129,16 @@ public class Registro_Empresa extends JFrame {
             messageLabel.setText("El correo electrónico es obligatorio");
             return false;
         }
-        if (!companyEmailField.getText().contains("@")) {
-            messageLabel.setText("El correo electrónico no es válido");
+        if (!companyEmailField.getText().matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+            messageLabel.setText("Indica un correo electrónico válido");
             return false;
         }
         if (companyPhoneField.getText().isEmpty()) {
             messageLabel.setText("El teléfono es obligatorio");
+            return false;
+        }
+        if (!companyPhoneField.getText().matches("\\d{9}")) {
+            messageLabel.setText("Indica un télefono válido");
             return false;
         }
         if (companyPasswordField.getPassword().length == 0) {

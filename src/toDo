@@ -15,7 +15,6 @@ Para cifrar la contraseña utilizando el algoritmo AES se utiliza una clave que 
 Para descifrar la contraseña se utiliza la misma clave que se utilizo para cifrarla.
 ¿La clave se puede generar mediante numeros aleatorios y almacenarla en un fichero cifrado con una clave común incluida en el programa?
 
-Modificacion de datos del usuario incluido eliminar usuario
 
 Los permisos para publicar y eliminar publicaciones propias responden al permios "1"
 Los permisos de adminstridar para eliminar publicaciones ajenas y usuarios responden al permiso "2"

@@ -3,7 +3,7 @@ package MODEL.ELIMINADO;
 import java.sql.Timestamp;
 
 
-
+//Modelo base para los usuarios y publicaciones eliminadas
 public class Eliminado {
     Timestamp fecha;
     String tipo;

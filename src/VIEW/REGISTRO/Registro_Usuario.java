@@ -32,7 +32,7 @@ public class Registro_Usuario extends JFrame {
 
         Font font = new Font("Arial", Font.PLAIN, 18);
 
-        // Add user name label and text field
+        // Etiqueta y campo de texto para el nombre de usuario
         JLabel userNameLabel = new JLabel("Nombre de Usuario:");
         userNameLabel.setFont(font);
         constraints.gridx = 0;
@@ -44,7 +44,7 @@ public class Registro_Usuario extends JFrame {
         constraints.gridx = 1;
         panel.add(userNameField, constraints);
 
-        // Add user email label and text field
+        // Etiqueta y campo de texto para el Correo electrónico de usuario
         JLabel userEmailLabel = new JLabel("Correo Electrónico:");
         userEmailLabel.setFont(font);
         constraints.gridx = 0;
@@ -56,7 +56,7 @@ public class Registro_Usuario extends JFrame {
         constraints.gridx = 1;
         panel.add(userEmailField, constraints);
 
-        // Add user phone label and text field
+        // Etiqueta y campo de texto para el telefóno del usuario
         JLabel userPhoneLabel = new JLabel("Teléfono:");
         userPhoneLabel.setFont(font);
         constraints.gridx = 0;
@@ -68,7 +68,7 @@ public class Registro_Usuario extends JFrame {
         constraints.gridx = 1;
         panel.add(userPhoneField, constraints);
 
-        // Add user password label and password field
+        // // Etiqueta y campo de texto para la contraseña del usuario
         JLabel userPasswordLabel = new JLabel("Contraseña:");
         userPasswordLabel.setFont(font);
         constraints.gridx = 0;
@@ -80,7 +80,7 @@ public class Registro_Usuario extends JFrame {
         constraints.gridx = 1;
         panel.add(userPasswordField, constraints);
 
-        // Add register button
+        // Botón de registro
         JButton registerButton = new JButton("Registrar");
         registerButton.setFont(font);
         registerButton.setBackground(new Color(174, 101, 7));
@@ -90,7 +90,7 @@ public class Registro_Usuario extends JFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(registerButton, constraints);
 
-        // Add message label
+        // Etiqueta para mostrar mensajes
         messageLabel = new JLabel("");
         messageLabel.setFont(font);
         messageLabel.setForeground(Color.RED);
@@ -100,25 +100,32 @@ public class Registro_Usuario extends JFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(messageLabel, constraints);
 
-        // Add action listener to the register button
+        // «Escuchador» del botón de registro
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                //Compueba si los campos son válidos
                 if (validateFields()) {
 
+                    //Crea un nuevo usuario con los datos introducidos
                     Usuario usuario = new Usuario(userNameField.getText(), new String(userPasswordField.getPassword()), userEmailField.getText(), userPhoneField.getText(),10,"" );
+                    //Añade el usuario a la base de datos y muestra el mensaje correspondiente
                     String mensaje = AddUsuario.addUsuario(usuario);
                     JOptionPane.showMessageDialog(null, mensaje, "Registro Usuario", JOptionPane.INFORMATION_MESSAGE);
 
+                    //Cierra la ventana actual y abre la de inicio de sesión
                     dispose();
                     new InicioSesion_Vista().setVisible(true);
                 }
             }
         });
 
+        //Añade el panel al JFrame
         add(panel);
     }
 
+    //METODO que valida los campos del formulario
     private boolean validateFields() {
         if (userNameField.getText().isEmpty()) {
             messageLabel.setText("El nombre de usuario es obligatorio");
