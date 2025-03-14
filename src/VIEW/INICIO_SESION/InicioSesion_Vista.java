@@ -112,11 +112,10 @@ public class InicioSesion_Vista extends JFrame {
                     switch (comprobarPass(username, password, "2")) {
                         case 1:
                             // Si el usuario y la contraseña son correctos, crea un objeto Usuario con los datos del usuario
-                            /*
+
                             usuario_actual = leerUsuarioPorNombre(username);
-                            */
+
                             // Cierra la ventana actual
-                             usuario_actual = new Usuario();
                             dispose();
                             // Abre la ventana de inicio
                             new Inicio_Vista(usuario_actual).setVisible(true);
