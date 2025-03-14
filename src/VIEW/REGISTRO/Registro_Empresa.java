@@ -4,6 +4,8 @@ import MODEL.Usuario;
 import VIEW.INICIO_SESION.InicioSesion_Vista;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +16,8 @@ public class Registro_Empresa extends JFrame {
     private JTextField companyPhoneField;
     private JPasswordField companyPasswordField;
     private JLabel messageLabel;
+    private JProgressBar passwordStrengthBar;
+    private JCheckBox showPasswordCheckBox;
 
     public Registro_Empresa() {
         setTitle("Registro Empresa");
@@ -79,13 +83,58 @@ public class Registro_Empresa extends JFrame {
         constraints.gridx = 1;
         panel.add(companyPasswordField, constraints);
 
+        // Barra de progreso para la fuerza de la contraseña
+        passwordStrengthBar = new JProgressBar(0, 100);
+        passwordStrengthBar.setStringPainted(true);
+        constraints.gridx = 1;
+        constraints.gridy = 4;
+        panel.add(passwordStrengthBar, constraints);
+
+        // Añadir un document listener al campo de contraseña para actualizar la barra de fuerza
+        companyPasswordField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updatePasswordStrength();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updatePasswordStrength();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updatePasswordStrength();
+            }
+        });
+
+        // Añadir un checkbox para mostrar/ocultar la contraseña
+        showPasswordCheckBox = new JCheckBox("Mostrar Contraseña");
+        showPasswordCheckBox.setFont(font);
+        showPasswordCheckBox.setBackground(new Color(211, 205, 192));
+        showPasswordCheckBox.setFocusPainted(false);
+        constraints.gridx = 1;
+        constraints.gridy = 5;
+        panel.add(showPasswordCheckBox, constraints);
+
+        showPasswordCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (showPasswordCheckBox.isSelected()) {
+                    companyPasswordField.setEchoChar((char) 0);
+                } else {
+                    companyPasswordField.setEchoChar('•');
+                }
+            }
+        });
+
         // Botón de Siguiente, para pasar a la ventana de la dirección de la empresa
         JButton registerButton = new JButton("Siguiente");
         registerButton.setFont(font);
         registerButton.setBackground(new Color(174, 101, 7));
         registerButton.setForeground(new Color(255, 255, 255));
         constraints.gridx = 1;
-        constraints.gridy = 4;
+        constraints.gridy = 6;
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(registerButton, constraints);
 
@@ -94,7 +143,7 @@ public class Registro_Empresa extends JFrame {
         messageLabel.setFont(font);
         messageLabel.setForeground(Color.RED);
         constraints.gridx = 0;
-        constraints.gridy = 5;
+        constraints.gridy = 7;
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(messageLabel, constraints);
@@ -106,7 +155,7 @@ public class Registro_Empresa extends JFrame {
                 //Si los campos están completos, se crea un usuario sin dirección y se pasa a la ventana de dirección
                 if (validateFields()) {
                     // Crear un usuario sin dirección
-                    Usuario usuario_sin_direccion = new Usuario(companyNameLabel.getText(),companyPasswordLabel.getText(),companyEmailLabel.getText(),"",companyPhoneLabel.getText(),10,"");
+                    Usuario usuario_sin_direccion = new Usuario(companyNameField.getText(), new String(companyPasswordField.getPassword()), companyEmailField.getText(), companyPhoneField.getText(), 10, "");
                     // Cerrar la ventana actual
                     dispose();
                     // Abrir la de dirección
@@ -145,7 +194,55 @@ public class Registro_Empresa extends JFrame {
             messageLabel.setText("La contraseña es obligatoria");
             return false;
         }
+        String password = new String(companyPasswordField.getPassword());
+        if (password.length() < 8) {
+            messageLabel.setText("La contraseña debe tener al menos 8 caracteres");
+            return false;
+        }
+        if (!password.matches(".*[A-Z].*")) {
+            messageLabel.setText("La contraseña debe contener al menos una letra mayúscula");
+            return false;
+        }
+        if (!password.matches(".*[a-z].*")) {
+            messageLabel.setText("La contraseña debe contener al menos una letra minúscula");
+            return false;
+        }
+        if (!password.matches(".*\\d.*")) {
+            messageLabel.setText("La contraseña debe contener al menos un número");
+            return false;
+        }
+        if (!password.matches(".*\\W.*")) {
+            messageLabel.setText("La contraseña debe contener al menos un símbolo");
+            return false;
+        }
         return true;
     }
 
+    // METODO para actualizar la barra de fuerza de la contraseña
+    private void updatePasswordStrength() {
+        String password = new String(companyPasswordField.getPassword());
+        int strength = calculatePasswordStrength(password);
+        passwordStrengthBar.setValue(strength);
+        if (strength < 50) {
+            passwordStrengthBar.setString("Débil");
+            passwordStrengthBar.setForeground(new Color(255, 102, 102)); // Soft red
+        } else if (strength < 75) {
+            passwordStrengthBar.setString("Media");
+            passwordStrengthBar.setForeground(new Color(255, 178, 102)); // Soft orange
+        } else {
+            passwordStrengthBar.setString("Fuerte");
+            passwordStrengthBar.setForeground(new Color(153, 255, 153)); // Soft green
+        }
+    }
+
+    // METODO para calcular la fuerza de la contraseña
+    private int calculatePasswordStrength(String password) {
+        int strength = 0;
+        if (password.length() >= 8) strength += 25;
+        if (password.matches(".*[A-Z].*")) strength += 25;
+        if (password.matches(".*[a-z].*")) strength += 25;
+        if (password.matches(".*\\d.*")) strength += 15;
+        if (password.matches(".*\\W.*")) strength += 10;
+        return strength;
+    }
 }

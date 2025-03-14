@@ -5,6 +5,8 @@ import MODEL.Usuario;
 import VIEW.INICIO_SESION.InicioSesion_Vista;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +17,8 @@ public class Registro_Usuario extends JFrame {
     private JTextField userPhoneField;
     private JPasswordField userPasswordField;
     private JLabel messageLabel;
+    private JProgressBar passwordStrengthBar;
+    private JCheckBox showPasswordCheckBox;
 
     public Registro_Usuario() {
         setTitle("Registro Usuario");
@@ -24,7 +28,7 @@ public class Registro_Usuario extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        panel.setBackground(new Color(211, 205, 192));
+        panel.setBackground(new Color(211, 205, 192)); // Background color similar to Registro_Empresa
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
@@ -44,7 +48,7 @@ public class Registro_Usuario extends JFrame {
         constraints.gridx = 1;
         panel.add(userNameField, constraints);
 
-        // Etiqueta y campo de texto para el Correo electrónico de usuario
+        // Etiqueta y campo de texto para el Correo Electrónico de usuario
         JLabel userEmailLabel = new JLabel("Correo Electrónico:");
         userEmailLabel.setFont(font);
         constraints.gridx = 0;
@@ -56,7 +60,7 @@ public class Registro_Usuario extends JFrame {
         constraints.gridx = 1;
         panel.add(userEmailField, constraints);
 
-        // Etiqueta y campo de texto para el telefóno del usuario
+        // Etiqueta y campo de texto para el teléfono del usuario
         JLabel userPhoneLabel = new JLabel("Teléfono:");
         userPhoneLabel.setFont(font);
         constraints.gridx = 0;
@@ -68,7 +72,7 @@ public class Registro_Usuario extends JFrame {
         constraints.gridx = 1;
         panel.add(userPhoneField, constraints);
 
-        // // Etiqueta y campo de texto para la contraseña del usuario
+        // Etiqueta y campo de texto para la contraseña del usuario
         JLabel userPasswordLabel = new JLabel("Contraseña:");
         userPasswordLabel.setFont(font);
         constraints.gridx = 0;
@@ -80,13 +84,58 @@ public class Registro_Usuario extends JFrame {
         constraints.gridx = 1;
         panel.add(userPasswordField, constraints);
 
+        // Barra de progreso para la fuerza de la contraseña
+        passwordStrengthBar = new JProgressBar(0, 100);
+        passwordStrengthBar.setStringPainted(true);
+        constraints.gridx = 1;
+        constraints.gridy = 4;
+        panel.add(passwordStrengthBar, constraints);
+
+        // Añadir un document listener al campo de contraseña para actualizar la barra de fuerza
+        userPasswordField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updatePasswordStrength();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updatePasswordStrength();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updatePasswordStrength();
+            }
+        });
+
+        // Añadir un checkbox para mostrar/ocultar la contraseña
+        showPasswordCheckBox = new JCheckBox("Mostrar Contraseña");
+        showPasswordCheckBox.setFont(font);
+        showPasswordCheckBox.setBackground(new Color(211, 205, 192));
+        showPasswordCheckBox.setFocusPainted(false);
+        constraints.gridx = 1;
+        constraints.gridy = 5;
+        panel.add(showPasswordCheckBox, constraints);
+
+        showPasswordCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (showPasswordCheckBox.isSelected()) {
+                    userPasswordField.setEchoChar((char) 0);
+                } else {
+                    userPasswordField.setEchoChar('•');
+                }
+            }
+        });
+
         // Botón de registro
         JButton registerButton = new JButton("Registrar");
         registerButton.setFont(font);
-        registerButton.setBackground(new Color(174, 101, 7));
-        registerButton.setForeground(new Color(255, 255, 255));
+        registerButton.setBackground(new Color(174, 101, 7)); // Button background color
+        registerButton.setForeground(new Color(255, 255, 255)); // Button text color
         constraints.gridx = 1;
-        constraints.gridy = 4;
+        constraints.gridy = 6;
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(registerButton, constraints);
 
@@ -95,7 +144,7 @@ public class Registro_Usuario extends JFrame {
         messageLabel.setFont(font);
         messageLabel.setForeground(Color.RED);
         constraints.gridx = 0;
-        constraints.gridy = 5;
+        constraints.gridy = 7;
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(messageLabel, constraints);
@@ -104,28 +153,26 @@ public class Registro_Usuario extends JFrame {
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                //Compueba si los campos son válidos
+                // Comprueba si los campos son válidos
                 if (validateFields()) {
-
-                    //Crea un nuevo usuario con los datos introducidos
-                    Usuario usuario = new Usuario(userNameField.getText(), new String(userPasswordField.getPassword()), userEmailField.getText(), userPhoneField.getText(),10,"" );
-                    //Añade el usuario a la base de datos y muestra el mensaje correspondiente
+                    // Crea un nuevo usuario con los datos introducidos
+                    Usuario usuario = new Usuario(userNameField.getText(), new String(userPasswordField.getPassword()), userEmailField.getText(), userPhoneField.getText(), 10, "");
+                    // Añade el usuario a la base de datos y muestra el mensaje correspondiente
                     String mensaje = AddUsuario.addUsuario(usuario);
                     JOptionPane.showMessageDialog(null, mensaje, "Registro Usuario", JOptionPane.INFORMATION_MESSAGE);
 
-                    //Cierra la ventana actual y abre la de inicio de sesión
+                    // Cierra la ventana actual y abre la de inicio de sesión
                     dispose();
                     new InicioSesion_Vista().setVisible(true);
                 }
             }
         });
 
-        //Añade el panel al JFrame
+        // Añade el panel al JFrame
         add(panel);
     }
 
-    //METODO que valida los campos del formulario
+    // METODO que valida los campos del formulario
     private boolean validateFields() {
         if (userNameField.getText().isEmpty()) {
             messageLabel.setText("El nombre de usuario es obligatorio");
@@ -135,19 +182,71 @@ public class Registro_Usuario extends JFrame {
             messageLabel.setText("El correo electrónico es obligatorio");
             return false;
         }
-        if (!userEmailField.getText().contains("@")) {
-            messageLabel.setText("El correo electrónico no es válido");
+        if (!userEmailField.getText().matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+            messageLabel.setText("Indica un correo electrónico válido");
             return false;
         }
         if (userPhoneField.getText().isEmpty()) {
             messageLabel.setText("El teléfono es obligatorio");
             return false;
         }
+        if (!userPhoneField.getText().matches("\\d{9}")) {
+            messageLabel.setText("El teléfono debe contener exactamente 9 números");
+            return false;
+        }
         if (userPasswordField.getPassword().length == 0) {
             messageLabel.setText("La contraseña es obligatoria");
+            return false;
+        }
+        String password = new String(userPasswordField.getPassword());
+        if (password.length() < 8) {
+            messageLabel.setText("La contraseña debe tener al menos 8 caracteres");
+            return false;
+        }
+        if (!password.matches(".*[A-Z].*")) {
+            messageLabel.setText("La contraseña debe contener al menos una letra mayúscula");
+            return false;
+        }
+        if (!password.matches(".*[a-z].*")) {
+            messageLabel.setText("La contraseña debe contener al menos una letra minúscula");
+            return false;
+        }
+        if (!password.matches(".*\\d.*")) {
+            messageLabel.setText("La contraseña debe contener al menos un número");
+            return false;
+        }
+        if (!password.matches(".*\\W.*")) {
+            messageLabel.setText("La contraseña debe contener al menos un símbolo");
             return false;
         }
         return true;
     }
 
+    // METODO para actualizar la barra de fuerza de la contraseña
+    private void updatePasswordStrength() {
+        String password = new String(userPasswordField.getPassword());
+        int strength = calculatePasswordStrength(password);
+        passwordStrengthBar.setValue(strength);
+        if (strength < 50) {
+            passwordStrengthBar.setString("Débil");
+            passwordStrengthBar.setForeground(new Color(255, 102, 102)); // Soft red
+        } else if (strength < 75) {
+            passwordStrengthBar.setString("Media");
+            passwordStrengthBar.setForeground(new Color(255, 178, 102)); // Soft orange
+        } else {
+            passwordStrengthBar.setString("Fuerte");
+            passwordStrengthBar.setForeground(new Color(153, 255, 153)); // Soft green
+        }
+    }
+
+    // METODO para calcular la fuerza de la contraseña
+    private int calculatePasswordStrength(String password) {
+        int strength = 0;
+        if (password.length() >= 8) strength += 25;
+        if (password.matches(".*[A-Z].*")) strength += 25;
+        if (password.matches(".*[a-z].*")) strength += 25;
+        if (password.matches(".*\\d.*")) strength += 15;
+        if (password.matches(".*\\W.*")) strength += 10;
+        return strength;
+    }
 }

@@ -2,8 +2,6 @@ Revisión de la codificación de la contraseña
 
 ¿Olvide mi contraseña?
 
-Comprobar la seguridad de la contraseña (números, simbolos, minúsculas, mayúsculas...)
-
 Interfaces graficas
 
 Controlador de Datos que recibe los datos de la base de datos y se lo envia a la interfaz grafica

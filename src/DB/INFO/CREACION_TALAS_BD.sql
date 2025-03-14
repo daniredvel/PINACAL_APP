@@ -69,3 +69,7 @@ CREATE TABLE JUSTIFICACIONES_ELIMINACION_USUARIOS (
     FOREIGN KEY (id_usuario_eliminado) REFERENCES USUARIOS(id_usuario) ON DELETE CASCADE, -- Clave foránea de la tabla USUARIOS
     FOREIGN KEY (id_admin) REFERENCES USUARIOS(id_usuario) -- Clave foránea de la tabla USUARIOS
 );
+
+-- INSERTAMOS LOS TIPOS DE USUARIOS
+INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES ('1', 'Usuario', 'publicar, guardar_publicacion, ver_publicaciones, ver_publicaciones_guardadas, eliminar_publicacion_propia');
+INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES ('2', 'Administrador', 'eliminar_publicacion_ajena, eliminar_usuario');
