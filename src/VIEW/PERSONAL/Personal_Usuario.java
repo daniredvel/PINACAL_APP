@@ -1,39 +1,37 @@
 package VIEW.PERSONAL;
 
-import CONTROLLER.ControladorDatos;
-import MODEL.Publicacion;
+import CONTROLLER.CRUD.USER.ActualizarUsuario;
 import MODEL.Usuario;
 import VIEW.INICIO.Inicio_Vista;
-import VIEW.PUBLICACIONES.Publicacion_Vista;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 public class Personal_Usuario extends JFrame {
     private JButton inicioButton;
     private JButton personalButton;
     private JButton anadirButton;
-    private JList<Publicacion> publicacionesList;
-    private DefaultListModel<Publicacion> listModel;
-    private ControladorDatos controladorDatos;
+    private JButton modificarButton;
+    private ActualizarUsuario actualizarUsuario;
     private Usuario usuario_actual;
+    private JTextField nombreField;
+    private JTextField direccionField;
+    private JTextField telefonoField;
 
     public Personal_Usuario(Usuario usuario_actual) {
         this.usuario_actual = usuario_actual;
-        controladorDatos = new ControladorDatos();
+        actualizarUsuario = new ActualizarUsuario();
 
         setTitle("Personal Usuario");
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Adjust the window to the screen
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         setLayout(new BorderLayout());
-        getContentPane().setBackground(new Color(211, 205, 192)); // Background color similar to Registro and InicioSesion
+        getContentPane().setBackground(new Color(211, 205, 192));
 
-        // Panel superior con botones
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(new GridBagLayout()); // Use GridBagLayout to center buttons
+        topPanel.setLayout(new GridBagLayout());
         topPanel.setBackground(new Color(211, 205, 192));
 
         Font buttonFont = new Font("Arial", Font.PLAIN, 18);
@@ -42,25 +40,32 @@ public class Personal_Usuario extends JFrame {
         inicioButton.setFont(buttonFont);
         inicioButton.setBackground(new Color(174, 101, 7));
         inicioButton.setForeground(Color.WHITE);
-        inicioButton.setPreferredSize(new Dimension(150, 50)); // Set button size
-        inicioButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
+        inicioButton.setPreferredSize(new Dimension(150, 50));
+        inicioButton.setMargin(new Insets(10, 20, 10, 20));
 
         personalButton = new JButton("Personal");
         personalButton.setFont(buttonFont);
         personalButton.setBackground(new Color(174, 101, 7));
         personalButton.setForeground(Color.WHITE);
-        personalButton.setPreferredSize(new Dimension(150, 50)); // Set button size
-        personalButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
+        personalButton.setPreferredSize(new Dimension(150, 50));
+        personalButton.setMargin(new Insets(10, 20, 10, 20));
 
         anadirButton = new JButton("Añadir");
         anadirButton.setFont(buttonFont);
         anadirButton.setBackground(new Color(174, 101, 7));
         anadirButton.setForeground(Color.WHITE);
-        anadirButton.setPreferredSize(new Dimension(150, 50)); // Set button size
-        anadirButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
+        anadirButton.setPreferredSize(new Dimension(150, 50));
+        anadirButton.setMargin(new Insets(10, 20, 10, 20));
+
+        modificarButton = new JButton("Modificar");
+        modificarButton.setFont(buttonFont);
+        modificarButton.setBackground(new Color(174, 101, 7));
+        modificarButton.setForeground(Color.WHITE);
+        modificarButton.setPreferredSize(new Dimension(150, 50));
+        modificarButton.setMargin(new Insets(10, 20, 10, 20));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10); // Set margins between buttons
+        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0;
         gbc.gridy = 0;
         topPanel.add(inicioButton, gbc);
@@ -71,47 +76,58 @@ public class Personal_Usuario extends JFrame {
         gbc.gridx = 2;
         topPanel.add(anadirButton, gbc);
 
+        gbc.gridx = 3;
+        topPanel.add(modificarButton, gbc);
+
         add(topPanel, BorderLayout.NORTH);
 
-        // Lista de publicaciones en la parte inferior
-        listModel = new DefaultListModel<>();
-        publicacionesList = new JList<>(listModel);
-        publicacionesList.setCellRenderer(new ListCellRenderer<Publicacion>() {
-            @Override
-            public Component getListCellRendererComponent(JList<? extends Publicacion> list, Publicacion value, int index, boolean isSelected, boolean cellHasFocus) {
-                Publicacion_Vista publicacionVista = new Publicacion_Vista(value);
-                if (isSelected) {
-                    publicacionVista.setBackground(new Color(174, 101, 7));
-                    publicacionVista.setForeground(Color.WHITE);
-                }
-                return publicacionVista;
-            }
-        });
+        JPanel userPanel = new JPanel();
+        userPanel.setLayout(new GridLayout(3, 2));
+        userPanel.setBackground(new Color(211, 205, 192));
+        userPanel.setBorder(BorderFactory.createTitledBorder("Datos del Usuario"));
 
-        JScrollPane scrollPane = new JScrollPane(publicacionesList);
-        add(scrollPane, BorderLayout.CENTER);
+        JLabel nombreLabel = new JLabel("Nombre:");
+        nombreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        userPanel.add(nombreLabel);
 
-        // Load and display publications
-        cargarPublicaciones();
+        nombreField = new JTextField(usuario_actual.getUsuario());
+        nombreField.setFont(new Font("Arial", Font.PLAIN, 18));
+        userPanel.add(nombreField);
 
-        // Add action listeners to buttons
+        JLabel direccionLabel = new JLabel("Dirección:");
+        direccionLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        userPanel.add(direccionLabel);
+
+        direccionField = new JTextField(usuario_actual.getDireccion());
+        direccionField.setFont(new Font("Arial", Font.PLAIN, 18));
+        userPanel.add(direccionField);
+
+        JLabel telefonoLabel = new JLabel("Teléfono:");
+        telefonoLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        userPanel.add(telefonoLabel);
+
+        telefonoField = new JTextField(usuario_actual.getTelefono());
+        telefonoField.setFont(new Font("Arial", Font.PLAIN, 18));
+        userPanel.add(telefonoField);
+
+        add(userPanel, BorderLayout.CENTER);
+
         inicioButton.addActionListener(e -> {
             dispose();
             new Inicio_Vista(usuario_actual).setVisible(true);
         });
         personalButton.addActionListener(e -> JOptionPane.showMessageDialog(null, "Personal button clicked"));
         anadirButton.addActionListener(e -> JOptionPane.showMessageDialog(null, "Añadir button clicked"));
-    }
+        modificarButton.addActionListener(e -> {
+            usuario_actual.setUsuario(nombreField.getText());
+            usuario_actual.setDireccion(direccionField.getText());
+            usuario_actual.setTelefono(telefonoField.getText());
 
-    private void cargarPublicaciones() {
-        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones("example");
-        for (Publicacion publicacion : publicaciones) {
-            listModel.addElement(publicacion);
-        }
-    }
-
-    // METODO para añadir publicaciones a la lista
-    public void addPublicacion(Publicacion publicacion) {
-        listModel.addElement(publicacion);
+            if (actualizarUsuario.actualizarUsuario(usuario_actual).equals("Usuario actualizado correctamente")) {
+                JOptionPane.showMessageDialog(null, "Datos actualizados correctamente");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al actualizar los datos");
+            }
+        });
     }
 }
