@@ -10,6 +10,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class Registro_Usuario extends JFrame {
     private JTextField userNameField;
@@ -19,8 +20,10 @@ public class Registro_Usuario extends JFrame {
     private JLabel messageLabel;
     private JProgressBar passwordStrengthBar;
     private JCheckBox showPasswordCheckBox;
+    private static Connection conn;
 
-    public Registro_Usuario() {
+    public Registro_Usuario(Connection conn) {
+        this.conn = conn;
         setTitle("Registro Usuario");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -163,7 +166,7 @@ public class Registro_Usuario extends JFrame {
 
                     // Cierra la ventana actual y abre la de inicio de sesión
                     dispose();
-                    new InicioSesion_Vista().setVisible(true);
+                    new InicioSesion_Vista(conn).setVisible(true);
                 }
             }
         });

@@ -7,6 +7,7 @@ import VIEW.INICIO.Inicio_Vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
 
 public class Personal_Empresa extends JFrame {
     private JButton inicioButton;
@@ -18,8 +19,10 @@ public class Personal_Empresa extends JFrame {
     private JTextField nombreField;
     private JTextField direccionField;
     private JTextField telefonoField;
+    private static Connection conn;
 
-    public Personal_Empresa(Usuario usuario_actual) {
+    public Personal_Empresa(Usuario usuario_actual, Connection conn) {
+        this.conn = conn;
         this.usuario_actual = usuario_actual;
         actualizarUsuario = new ActualizarUsuario();
 
@@ -116,17 +119,17 @@ public class Personal_Empresa extends JFrame {
 
         inicioButton.addActionListener(e -> {
             dispose();
-            new Inicio_Vista(usuario_actual).setVisible(true);
+            new Inicio_Vista(usuario_actual, conn).setVisible(true);
         });
         personalButton.addActionListener(e ->{
                 dispose();
-        new Personal_Empresa(usuario_actual).setVisible(true);
+        new Personal_Empresa(usuario_actual, conn).setVisible(true);
         });
         anadirButton.addActionListener(e -> {
 
             dispose();
             if (usuario_actual.getTipo().equals("EMPRESA_ASOCIADA")||usuario_actual.getTipo().equals("EMPRESA_NO_ASOCIADA")) {
-                new Add_Empresa(usuario_actual).setVisible(true);
+                new Add_Empresa(usuario_actual, conn).setVisible(true);
             }
         });
 

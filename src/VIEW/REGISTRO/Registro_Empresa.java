@@ -9,6 +9,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class Registro_Empresa extends JFrame {
     private JTextField companyNameField;
@@ -18,8 +19,10 @@ public class Registro_Empresa extends JFrame {
     private JLabel messageLabel;
     private JProgressBar passwordStrengthBar;
     private JCheckBox showPasswordCheckBox;
+    private static Connection conn;
 
-    public Registro_Empresa() {
+    public Registro_Empresa(Connection conn) {
+        this.conn = conn;
         setTitle("Registro Empresa");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -159,7 +162,7 @@ public class Registro_Empresa extends JFrame {
                     // Cerrar la ventana actual
                     dispose();
                     // Abrir la de dirección
-                    new Registro_Empresa_Direccion(usuario_sin_direccion).setVisible(true);
+                    new Registro_Empresa_Direccion(usuario_sin_direccion, conn).setVisible(true);
                 }
             }
         });

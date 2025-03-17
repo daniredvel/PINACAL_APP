@@ -22,6 +22,7 @@ public class AddPublicacion {
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -31,9 +32,11 @@ public class AddPublicacion {
 
         try (Connection conn = GestorConexion.getConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, publicacion.getId_publicacion());
-            ps.executeUpdate();
-            return true;
+            int rowsAffected = ps.executeUpdate();
+            System.out.println("Rows affected: " + rowsAffected); // Debug statement
+            return rowsAffected > 0;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }

@@ -4,10 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 //Ventana basica de registro, donde se escoge si es usuario o empresa
 public class Registro_Vista extends JFrame {
-    public Registro_Vista() {
+    private static Connection conn;
+    public Registro_Vista(Connection conn) {
+        this.conn = conn;
         // Set frame properties
         setTitle("REGISTRO");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -62,7 +65,7 @@ public class Registro_Vista extends JFrame {
 
                 //Cierra la ventana actual y abre la de registro de empresa
                 dispose();
-                new Registro_Empresa().setVisible(true);
+                new Registro_Empresa(conn).setVisible(true);
             }
         });
 
@@ -72,7 +75,7 @@ public class Registro_Vista extends JFrame {
 
                 //Cierra la ventana actual y abre la de registro de usuario
                 dispose();
-                new Registro_Usuario().setVisible(true);
+                new Registro_Usuario(conn).setVisible(true);
             }
         });
 

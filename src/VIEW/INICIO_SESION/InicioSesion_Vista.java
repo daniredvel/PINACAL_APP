@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.Connection;
 
 import MODEL.Usuario;
 import VIEW.INICIO.Inicio_Vista;
@@ -22,8 +23,10 @@ public class InicioSesion_Vista extends JFrame {
     private JButton loginButton;
     private JButton registerButton;
     private JCheckBox showPasswordCheckBox;
+    private static Connection conn = null;
 
-    public InicioSesion_Vista() {
+    public InicioSesion_Vista(Connection conn) {
+        this.conn = conn;
         // Propiedades del frame (Marco)
         setTitle("Inicio de Sesión");
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize the frame
@@ -131,7 +134,7 @@ public class InicioSesion_Vista extends JFrame {
                             // Cierra la ventana actual
                             dispose();
                             // Abre la ventana de inicio
-                            new Inicio_Vista(usuario_actual).setVisible(true);
+                            new Inicio_Vista(usuario_actual, conn).setVisible(true);
                             break;
                         case -1: case 0:
                             // Indica en un mensaje que la contraseña es incorrecta
@@ -154,7 +157,7 @@ public class InicioSesion_Vista extends JFrame {
                 // Cierra la ventana de inicio de sesión
                 dispose();
                 // Abre la ventana de registro
-                new Registro_Vista().setVisible(true);
+                new Registro_Vista(conn).setVisible(true);
             }
         });
 

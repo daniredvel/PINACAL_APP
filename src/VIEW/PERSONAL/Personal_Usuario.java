@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.sql.Connection;
 
 public class Personal_Usuario extends JFrame {
     private JButton inicioButton;
@@ -19,8 +20,10 @@ public class Personal_Usuario extends JFrame {
     private JTextField nombreField;
     private JTextField direccionField;
     private JTextField telefonoField;
+    private static Connection conn;
 
-    public Personal_Usuario(Usuario usuario_actual) {
+    public Personal_Usuario(Usuario usuario_actual, Connection conn) {
+        this.conn = conn;
         this.usuario_actual = usuario_actual;
         actualizarUsuario = new ActualizarUsuario();
 
@@ -116,11 +119,11 @@ public class Personal_Usuario extends JFrame {
 
         inicioButton.addActionListener(e -> {
             dispose();
-            new Inicio_Vista(usuario_actual).setVisible(true);
+            new Inicio_Vista(usuario_actual, conn).setVisible(true);
         });
         personalButton.addActionListener(e -> {
             dispose();
-            new Personal_Usuario(usuario_actual).setVisible(true);
+            new Personal_Usuario(usuario_actual, conn).setVisible(true);
         });
 
         modificarButton.addActionListener(e -> {

@@ -11,6 +11,7 @@ import VIEW.PUBLICACIONES.Publicacion_Vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
 import java.util.List;
 
 public class Inicio_Vista extends JFrame {
@@ -22,8 +23,10 @@ public class Inicio_Vista extends JFrame {
     private DefaultListModel<Publicacion> listModel;
     private ControladorDatos controladorDatos;
     private Usuario usuario_actual;
+    private static Connection conn;
 
-    public Inicio_Vista(Usuario usuario_actual) {
+    public Inicio_Vista(Usuario usuario_actual, Connection conn) {
+        this.conn = conn;
         this.usuario_actual = usuario_actual;
         controladorDatos = new ControladorDatos();
 
@@ -115,7 +118,7 @@ public class Inicio_Vista extends JFrame {
         // Add action listeners to buttons
         inicioButton.addActionListener(e -> {
             dispose();
-            new Inicio_Vista(usuario_actual).setVisible(true);
+            new Inicio_Vista(usuario_actual, conn).setVisible(true);
         });
         personalButton.addActionListener(e -> {
             dispose();
@@ -124,18 +127,18 @@ public class Inicio_Vista extends JFrame {
             } else if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.USUARIO))||usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
                 new Personal_Usuario(usuario_actual).setVisible(true);
             } else {
-                new Inicio_Vista(usuario_actual).setVisible(true);}
+                new Inicio_Vista(usuario_actual, conn).setVisible(true);}
         });
         if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA))||usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA))) {
             anadirButton.addActionListener(e -> {
                 dispose();
-                new Add_Empresa(usuario_actual).setVisible(true);
+                new Add_Empresa(usuario_actual, conn).setVisible(true);
             });
         }
         if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
             adminButton.addActionListener(e -> {
                 dispose();
-                new Administar_Vista(usuario_actual).setVisible(true);
+                new Administar_Vista(usuario_actual, conn).setVisible(true);
             });
         }
     }

@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 import static CONTROLLER.CRUD.USER.AddUsuario.addEmpresa;
 
@@ -19,8 +20,10 @@ public class Registro_Empresa_Direccion extends JFrame {
     private JTextField postalCodeField;
     private JTextField countryField;
     private JLabel messageLabel;
+    private static Connection conn;
 
-    public Registro_Empresa_Direccion(Usuario usuario_sin_direccion) {
+    public Registro_Empresa_Direccion(Usuario usuario_sin_direccion, Connection conn) {
+        this.conn = conn;
         setTitle("Registro Dirección Empresa");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -154,7 +157,7 @@ public class Registro_Empresa_Direccion extends JFrame {
                     JOptionPane.showMessageDialog(null, mensaje, "Registro Empresa", JOptionPane.INFORMATION_MESSAGE);
                     //Se cierra la ventana y se abre la de inicio de sesión
                     dispose();
-                    new InicioSesion_Vista().setVisible(true);
+                    new InicioSesion_Vista(conn).setVisible(true);
                 }
             }
         });

@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.util.List;
 
 public class Administar_Vista extends JFrame {
@@ -24,9 +25,11 @@ public class Administar_Vista extends JFrame {
     private JRadioButton denegadaButton;
     private JButton siguienteButton;
     private ControladorDatos controladorDatos;
-    private ButtonGroup group; // Declare group as a class member
+    private ButtonGroup group; //
+    private static Connection conn;
 
-    public Administar_Vista(Usuario usuario_actual) {
+    public Administar_Vista(Usuario usuario_actual, Connection conn) {
+        this.conn = conn;
         this.usuario_actual = usuario_actual;
         controladorDatos = new ControladorDatos();
         publicaciones = controladorDatos.obtenerPublicaciones("example");
@@ -113,9 +116,9 @@ public class Administar_Vista extends JFrame {
         denegadaButton.setFont(new Font("Arial", Font.PLAIN, 18));
         denegadaButton.setBackground(new Color(211, 205, 192));
 
-        group = new ButtonGroup(); // Initialize group
-        group.add(aceptadaButton);
-        group.add(denegadaButton);
+        group = new ButtonGroup(); // Grupo de botones circulares
+        group.add(aceptadaButton); //Aceptar
+        group.add(denegadaButton); //Denegar
 
         aceptadaButton.addActionListener(e -> justificacionField.setEnabled(false));
         denegadaButton.addActionListener(e -> justificacionField.setEnabled(true));
@@ -167,19 +170,19 @@ public class Administar_Vista extends JFrame {
         // Add action listeners to buttons
         inicioButton.addActionListener(e -> {
             dispose();
-            new Inicio_Vista(usuario_actual).setVisible(true);
+            new Inicio_Vista(usuario_actual, conn).setVisible(true);
         });
         personalButton.addActionListener(e -> {
             dispose();
-            new Personal_Usuario(usuario_actual).setVisible(true);
+            new Personal_Usuario(usuario_actual, conn).setVisible(true);
         });
         anadirButton.addActionListener(e -> {
             dispose();
-            new Add_Empresa(usuario_actual).setVisible(true);
+            new Add_Empresa(usuario_actual, conn).setVisible(true);
         });
         adminButton.addActionListener(e -> {
             dispose();
-            new Administar_Vista(usuario_actual).setVisible(true);
+            new Administar_Vista(usuario_actual, conn).setVisible(true);
         });
     }
 

@@ -10,6 +10,7 @@ import VIEW.PERSONAL.Personal_Empresa;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
 import java.util.List;
 
 public class Add_Empresa extends JFrame {
@@ -20,8 +21,10 @@ public class Add_Empresa extends JFrame {
     private Usuario usuario_actual;
     private ControladorDatos controladorDatos;
     private AddPublicacion addPublicacion;
+    private static Connection conn;
 
-    public Add_Empresa(Usuario usuario_actual) {
+    public Add_Empresa(Usuario usuario_actual, Connection conn) {
+        this.conn=conn;
         this.usuario_actual = usuario_actual;
         controladorDatos = new ControladorDatos();
         addPublicacion = new AddPublicacion();
@@ -131,17 +134,17 @@ public class Add_Empresa extends JFrame {
 
         inicioButton.addActionListener(e -> {
             dispose();
-            new Inicio_Vista(usuario_actual).setVisible(true);
+            new Inicio_Vista(usuario_actual, conn).setVisible(true);
         });
         personalButton.addActionListener(e -> {
 
             dispose();
-            new Personal_Empresa(usuario_actual).setVisible(true);
+            new Personal_Empresa(usuario_actual, conn).setVisible(true);
 
         });
         anadirButton.addActionListener(e -> {
             dispose();
-            new Add_Empresa(usuario_actual).setVisible(true);
+            new Add_Empresa(usuario_actual, conn).setVisible(true);
                 });
 
         nuevaPublicacionButton.addActionListener(e -> {
