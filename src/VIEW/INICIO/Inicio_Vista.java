@@ -3,6 +3,8 @@ package VIEW.INICIO;
 import CONTROLLER.ControladorDatos;
 import MODEL.Publicacion;
 import MODEL.Usuario;
+import VIEW.ADD.Add_Empresa;
+import VIEW.ADMINISTRAR.Administar_Vista;
 import VIEW.PERSONAL.Personal_Empresa;
 import VIEW.PERSONAL.Personal_Usuario;
 import VIEW.PUBLICACIONES.Publicacion_Vista;
@@ -15,6 +17,7 @@ public class Inicio_Vista extends JFrame {
     private JButton inicioButton;
     private JButton personalButton;
     private JButton anadirButton;
+    private JButton adminButton;
     private JList<Publicacion> publicacionesList;
     private DefaultListModel<Publicacion> listModel;
     private ControladorDatos controladorDatos;
@@ -53,13 +56,6 @@ public class Inicio_Vista extends JFrame {
         personalButton.setPreferredSize(new Dimension(150, 50)); // Set button size
         personalButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
 
-        anadirButton = new JButton("Añadir");
-        anadirButton.setFont(buttonFont);
-        anadirButton.setBackground(new Color(174, 101, 7));
-        anadirButton.setForeground(Color.WHITE);
-        anadirButton.setPreferredSize(new Dimension(150, 50)); // Set button size
-        anadirButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
-
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10); // Set margins between buttons
         gbc.gridx = 0;
@@ -69,8 +65,29 @@ public class Inicio_Vista extends JFrame {
         gbc.gridx = 1;
         topPanel.add(personalButton, gbc);
 
-        gbc.gridx = 2;
-        topPanel.add(anadirButton, gbc);
+        if (usuario_actual.getTipo().equals("EMPRESA_ASOCIADA")||usuario_actual.getTipo().equals("EMPRESA_NO_ASOCIADA")) {
+            anadirButton = new JButton("Añadir");
+            anadirButton.setFont(buttonFont);
+            anadirButton.setBackground(new Color(174, 101, 7));
+            anadirButton.setForeground(Color.WHITE);
+            anadirButton.setPreferredSize(new Dimension(150, 50)); // Set button size
+            anadirButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
+
+            gbc.gridx = 2;
+            topPanel.add(anadirButton, gbc);
+        }
+
+        if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
+            adminButton = new JButton("Administrador");
+            adminButton.setFont(buttonFont);
+            adminButton.setBackground(new Color(174, 101, 7));
+            adminButton.setForeground(Color.WHITE);
+            adminButton.setPreferredSize(new Dimension(150, 50)); // Set button size
+            adminButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
+
+            gbc.gridx = 3;
+            topPanel.add(adminButton, gbc);
+        }
 
         add(topPanel, BorderLayout.NORTH);
 
@@ -102,13 +119,25 @@ public class Inicio_Vista extends JFrame {
         });
         personalButton.addActionListener(e -> {
             dispose();
-            if (usuario_actual.getTipo().equals("EMPRESA")) {
+            if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA))||usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA))) {
                 new Personal_Empresa(usuario_actual).setVisible(true);
-            } else if (usuario_actual.getTipo().equals("USUARIO")) {
+            } else if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.USUARIO))||usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
                 new Personal_Usuario(usuario_actual).setVisible(true);
-            }
+            } else {
+                new Inicio_Vista(usuario_actual).setVisible(true);}
         });
-        anadirButton.addActionListener(e -> JOptionPane.showMessageDialog(null, "Añadir button clicked"));
+        if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA))||usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA))) {
+            anadirButton.addActionListener(e -> {
+                dispose();
+                new Add_Empresa(usuario_actual).setVisible(true);
+            });
+        }
+        if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
+            adminButton.addActionListener(e -> {
+                dispose();
+                new Administar_Vista(usuario_actual).setVisible(true);
+            });
+        }
     }
 
     private void cargarPublicaciones() {

@@ -5,13 +5,15 @@ import MODEL.Usuario;
 import VIEW.INICIO.Inicio_Vista;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public class Personal_Usuario extends JFrame {
     private JButton inicioButton;
     private JButton personalButton;
-    private JButton anadirButton;
     private JButton modificarButton;
+    private JButton aceptarButton;
     private ActualizarUsuario actualizarUsuario;
     private Usuario usuario_actual;
     private JTextField nombreField;
@@ -30,57 +32,57 @@ public class Personal_Usuario extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(211, 205, 192));
 
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new GridBagLayout());
-        topPanel.setBackground(new Color(211, 205, 192));
+        JPanel panelSuperior = new JPanel();
+        panelSuperior.setLayout(new GridBagLayout());
+        panelSuperior.setBackground(new Color(211, 205, 192));
 
-        Font buttonFont = new Font("Arial", Font.PLAIN, 18);
+        Font fuenteButton = new Font("Arial", Font.PLAIN, 18);
 
         inicioButton = new JButton("Inicio");
-        inicioButton.setFont(buttonFont);
+        inicioButton.setFont(fuenteButton);
         inicioButton.setBackground(new Color(174, 101, 7));
         inicioButton.setForeground(Color.WHITE);
         inicioButton.setPreferredSize(new Dimension(150, 50));
         inicioButton.setMargin(new Insets(10, 20, 10, 20));
 
         personalButton = new JButton("Personal");
-        personalButton.setFont(buttonFont);
+        personalButton.setFont(fuenteButton);
         personalButton.setBackground(new Color(174, 101, 7));
         personalButton.setForeground(Color.WHITE);
         personalButton.setPreferredSize(new Dimension(150, 50));
         personalButton.setMargin(new Insets(10, 20, 10, 20));
 
-        anadirButton = new JButton("Añadir");
-        anadirButton.setFont(buttonFont);
-        anadirButton.setBackground(new Color(174, 101, 7));
-        anadirButton.setForeground(Color.WHITE);
-        anadirButton.setPreferredSize(new Dimension(150, 50));
-        anadirButton.setMargin(new Insets(10, 20, 10, 20));
-
         modificarButton = new JButton("Modificar");
-        modificarButton.setFont(buttonFont);
+        modificarButton.setFont(fuenteButton);
         modificarButton.setBackground(new Color(174, 101, 7));
         modificarButton.setForeground(Color.WHITE);
         modificarButton.setPreferredSize(new Dimension(150, 50));
         modificarButton.setMargin(new Insets(10, 20, 10, 20));
-        modificarButton.setEnabled(false);
+
+        aceptarButton = new JButton("Aceptar");
+        aceptarButton.setFont(fuenteButton);
+        aceptarButton.setBackground(new Color(174, 101, 7));
+        aceptarButton.setForeground(Color.WHITE);
+        aceptarButton.setPreferredSize(new Dimension(150, 50));
+        aceptarButton.setMargin(new Insets(10, 20, 10, 20));
+        aceptarButton.setEnabled(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        topPanel.add(inicioButton, gbc);
+        panelSuperior.add(inicioButton, gbc);
 
         gbc.gridx = 1;
-        topPanel.add(personalButton, gbc);
+        panelSuperior.add(personalButton, gbc);
 
         gbc.gridx = 2;
-        topPanel.add(anadirButton, gbc);
+        panelSuperior.add(modificarButton, gbc);
 
         gbc.gridx = 3;
-        topPanel.add(modificarButton, gbc);
+        panelSuperior.add(aceptarButton, gbc);
 
-        add(topPanel, BorderLayout.NORTH);
+        add(panelSuperior, BorderLayout.NORTH);
 
         JPanel userPanel = new JPanel();
         userPanel.setLayout(new GridLayout(3, 2));
@@ -116,10 +118,19 @@ public class Personal_Usuario extends JFrame {
             dispose();
             new Inicio_Vista(usuario_actual).setVisible(true);
         });
-        personalButton.addActionListener(e -> JOptionPane.showMessageDialog(null, "Personal button clicked"));
-        anadirButton.addActionListener(e -> JOptionPane.showMessageDialog(null, "Añadir button clicked"));
+        personalButton.addActionListener(e -> {
+            dispose();
+            new Personal_Usuario(usuario_actual).setVisible(true);
+        });
 
         modificarButton.addActionListener(e -> {
+            nombreField.setEnabled(true);
+            direccionField.setEnabled(true);
+            telefonoField.setEnabled(true);
+            aceptarButton.setEnabled(true);
+        });
+
+        aceptarButton.addActionListener(e -> {
             usuario_actual.setUsuario(nombreField.getText());
             usuario_actual.setDireccion(direccionField.getText());
             usuario_actual.setTelefono(telefonoField.getText());
@@ -128,8 +139,8 @@ public class Personal_Usuario extends JFrame {
 
             nombreField.setEnabled(false);
             direccionField.setEnabled(false);
-                telefonoField.setEnabled(false);
-                modificarButton.setEnabled(false);
+            telefonoField.setEnabled(false);
+            aceptarButton.setEnabled(false);
         });
     }
 }

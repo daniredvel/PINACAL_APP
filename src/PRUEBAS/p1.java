@@ -1,20 +1,18 @@
 package PRUEBAS;
 
-import VIEW.UTIL.CustomListCellRenderer;
-
 import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
 
 public class p1 extends JFrame {
 
     public p1() {}
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new p1().setVisible(true);
-            }
-        });
+        System.out.println(formatoDireccion("Jeronimo Muñoz","7 2","Parque Tecnologico", "Boecillo", "Valladolid", "47151", "España"));
+    }
+        public static String formatoDireccion(String calle, String numero, String localidad, String municipio, String provincia, String codigoPostal, String pais){
+            return "C/"+ formato(calle) + ", Nº " + numero.replaceAll("\\s+", "") + ", " + formato(localidad) + ", " + formato(municipio) + ", " + formato(provincia) + ", C.P.: " + codigoPostal + ", " + formato(pais);
+
+        }
+    private static String formato(String palabra){
+        return palabra.substring(0,1).toUpperCase()+palabra.substring(1).toLowerCase();
     }
 }

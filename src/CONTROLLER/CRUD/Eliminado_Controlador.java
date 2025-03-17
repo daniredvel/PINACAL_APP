@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class Eliminado_Controlador extends Eliminado {
 
 
-    public String eliminar(String mensaje, String tipo, Publicacion publicacion, Usuario usuario) {
+    public static String eliminar(String mensaje, String tipo, Publicacion publicacion, Usuario usuario) {
         String mensaje_retorno = Mensajes.getMensaje(Mensajes.ERROR_ELIMINAR);
 
         try (Connection conn = GestorConexion.getConexion()) {

@@ -39,7 +39,7 @@ public class ControladorInicioSesion {
         }
 
     }
-
+//TODO:Eliminar método
     public static int comprobarPass(String usuario, String password, String op) throws Exception {
 
         //Si devuelve 1, el usuario y la contraseña son correctos

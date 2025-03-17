@@ -1,5 +1,7 @@
 package MODEL;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -20,13 +22,31 @@ public class Publicacion {
 
     //CONSTRUCTORES
 
+    //Constructor por defecto
     public Publicacion(){}
 
+    //Constructor para crear la publicacion por el usuario
+    public Publicacion(
+            String  titulo,
+            String  descripcion,
+            int     indice,
+            int     id_usuario,
+            String  usuario
+    ){
+        this.titulo             = titulo;
+        this.descripcion        = descripcion;
+        this.fecha_publicacion  = new Timestamp(System.currentTimeMillis());
+        this.tipo               = indicarTipo(indice);
+        this.id_usuario         = id_usuario;
+        this.usuario            = usuario;
+    }
+
+    //Constructor para leer publicaciones de la base de datos
     public Publicacion(
             int     id_publicacion,
             String  titulo,
             String  descripcion,
-            Date    fecha_publicacion,
+            Timestamp fecha_publicacion,
             int     indice,
             int     id_usuario,
             String  usuario

@@ -1,3 +1,10 @@
+DROP TABLE TIPOS_USUARIOS;
+DROP TABLE USUARIOS;
+DROP TABLE PUBLICACIONES;
+DROP TABLE PUBLICACIONES_GUARDADAS;
+DROP TABLE JUSTIFICACIONES_ELIMINACION_PUBLICACIONES;
+DROP TABLE JUSTIFICACIONES_ELIMINACION_USUARIOS;
+
 -- BASE DE DATOS DE PINACAL
 
 -- La app recoge ofertas o demandas de trabajo publicadas por empresas asociadas
@@ -23,7 +30,7 @@ CREATE TABLE USUARIOS (
     nombre VARCHAR(50) NOT NULL UNIQUE, -- Nombre de usuario para inicio de sesión
     password VARCHAR(50) NOT NULL, -- Contraseña
     email VARCHAR(50) NOT NULL UNIQUE, -- Email para el registro
-    direccion VARCHAR(50), -- Dirección del usuario
+    direccion VARCHAR(250), -- Dirección del usuario
     telefono VARCHAR(9) NOT NULL UNIQUE, -- Teléfono del usuario
     id_tipo_usuario INT NOT NULL, -- ID del tipo de usuario
     FOREIGN KEY (id_tipo_usuario) REFERENCES TIPOS_USUARIOS(id_tipo_usuario) ON DELETE CASCADE -- Clave foránea de la tabla TIPOS_USUARIOS
@@ -49,7 +56,7 @@ CREATE TABLE PUBLICACIONES_GUARDADAS (
 );
 
 
---LOS DATOS DE ESTAS TABLAS DEBERAN ELIMINARSE AUTOMATICAMENTE PASADO CIERTO TIEMPO
+--LOS DATOS DE ESTAS TABLAS DEBERAN ELIMINARSE AUTOMATICAMENTE PASADO CIERTO TIEMPO 
 CREATE TABLE JUSTIFICACIONES_ELIMINACION_PUBLICACIONES (
     id_justificacion INT PRIMARY KEY AUTO_INCREMENT, -- ID como clave primaria
     id_publicacion INT NOT NULL, -- ID de la publicación eliminada
@@ -73,3 +80,6 @@ CREATE TABLE JUSTIFICACIONES_ELIMINACION_USUARIOS (
 -- INSERTAMOS LOS TIPOS DE USUARIOS
 INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES ('1', 'Usuario', 'publicar, guardar_publicacion, ver_publicaciones, ver_publicaciones_guardadas, eliminar_publicacion_propia');
 INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES ('2', 'Administrador', 'eliminar_publicacion_ajena, eliminar_usuario');
+
+--USUARIO ADMINISTRADOR
+INSERT INTO USUARIOS (nombre, password, email, direccion, telefono, id_tipo_usuario) VALUES ('PINACAL-INSER', 'e69U@d;J@£-Ly10f{jyC', 'pinacal@inser.com', 'C/Jeronimo muñoz, Nº 7, Parque tecnologico, Boecillo, Valladolid, C.P.: 47151, España', '983546599','2' );

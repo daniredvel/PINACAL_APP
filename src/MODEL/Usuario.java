@@ -47,7 +47,7 @@ public class Usuario {
         this.password   =   password;
         this.email      =   email;
         this.direccion  =   direccion;
-        this.telefono   =   telefono;
+        this.telefono   =   formatoTelefonoBD(telefono);
         this.tipo       =   indicarTipo(indice_tipo_usuario_tipo_usuario);
         this.permisos   =   permisos;
     }
@@ -67,7 +67,7 @@ public class Usuario {
         this.usuario    =   usuario;
         this.password   =   password;
         this.email      =   email;
-        this.telefono   =   telefono;
+        this.telefono   =   formatoTelefonoBD(telefono);
         this.tipo       =   indicarTipo(indice_tipo_usuario_tipo_usuario);
         this.permisos   =   permisos;
 
@@ -89,7 +89,7 @@ public class Usuario {
         this.password   =   password;
         this.email      =   email;
         this.direccion  =   direccion;
-        this.telefono   =   telefono;
+        this.telefono   =   formatoTelefonoBD(telefono);
         this.tipo       =   indicarTipo(indice_tipo_usuario_tipo_usuario);
         this.permisos   =   permisos;
 
@@ -108,7 +108,7 @@ public class Usuario {
         this.usuario    =   usuario;
         this.password   =   password;
         this.email      =   email;
-        this.telefono   =   telefono;
+        this.telefono   =   formatoTelefonoBD(telefono);
         this.tipo       =   indicarTipo(indice_tipo_usuario_tipo_usuario);
         this.permisos   =   permisos;
 
@@ -193,10 +193,16 @@ public class Usuario {
 
     }
     private static String formato(String palabra){
-        return palabra.toUpperCase().substring(1,palabra.length()-1).toLowerCase();
+        return palabra.substring(0,1).toUpperCase()+palabra.substring(1).toLowerCase();
     }
     public static String getTipos(int codigo){
         return tipos[codigo];
     }
-
+    public static String formatoTelefono(String telefono){
+        return telefono.substring(0,3) + " " + telefono.substring(3,6) + " " + telefono.substring(6,9);
+    }
+    public static String formatoTelefonoBD(String telefono){
+        return telefono.replaceAll("\\s+", "");
+    }
+    
 }
