@@ -1,28 +1,23 @@
 package VIEW.REGISTRO;
 
 import MODEL.Usuario;
-import VIEW.INICIO_SESION.InicioSesion_Vista;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 
 public class Registro_Empresa extends JFrame {
-    private JTextField companyNameField;
-    private JTextField companyEmailField;
-    private JTextField companyPhoneField;
-    private JPasswordField companyPasswordField;
-    private JLabel messageLabel;
-    private JProgressBar passwordStrengthBar;
-    private JCheckBox showPasswordCheckBox;
-    private static Connection conn;
+    private final JTextField companyNameField;
+    private final JTextField companyEmailField;
+    private final JTextField companyPhoneField;
+    private final JPasswordField companyPasswordField;
+    private final JLabel messageLabel;
+    private final JProgressBar passwordStrengthBar;
+    private final JCheckBox showPasswordCheckBox;
 
     public Registro_Empresa(Connection conn) {
-        this.conn = conn;
         setTitle("Registro Empresa");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -120,14 +115,11 @@ public class Registro_Empresa extends JFrame {
         constraints.gridy = 5;
         panel.add(showPasswordCheckBox, constraints);
 
-        showPasswordCheckBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (showPasswordCheckBox.isSelected()) {
-                    companyPasswordField.setEchoChar((char) 0);
-                } else {
-                    companyPasswordField.setEchoChar('•');
-                }
+        showPasswordCheckBox.addActionListener(e -> {
+            if (showPasswordCheckBox.isSelected()) {
+                companyPasswordField.setEchoChar((char) 0);
+            } else {
+                companyPasswordField.setEchoChar('•');
             }
         });
 
@@ -152,18 +144,15 @@ public class Registro_Empresa extends JFrame {
         panel.add(messageLabel, constraints);
 
         // «Escuchador» del botón de Siguiente
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Si los campos están completos, se crea un usuario sin dirección y se pasa a la ventana de dirección
-                if (validateFields()) {
-                    // Crear un usuario sin dirección
-                    Usuario usuario_sin_direccion = new Usuario(companyNameField.getText(), new String(companyPasswordField.getPassword()), companyEmailField.getText(), companyPhoneField.getText(), 10, "");
-                    // Cerrar la ventana actual
-                    dispose();
-                    // Abrir la de dirección
-                    new Registro_Empresa_Direccion(usuario_sin_direccion, conn).setVisible(true);
-                }
+        registerButton.addActionListener(e -> {
+            //Si los campos están completos, se crea un usuario sin dirección y se pasa a la ventana de dirección
+            if (validateFields()) {
+                // Crear un usuario sin dirección
+                Usuario usuario_sin_direccion = new Usuario(companyNameField.getText(), new String(companyPasswordField.getPassword()), companyEmailField.getText(), companyPhoneField.getText(), 10, "");
+                // Cerrar la ventana actual
+                dispose();
+                // Abrir la de dirección
+                new Registro_Empresa_Direccion(usuario_sin_direccion, conn).setVisible(true);
             }
         });
 
@@ -181,7 +170,7 @@ public class Registro_Empresa extends JFrame {
             messageLabel.setText("El correo electrónico es obligatorio");
             return false;
         }
-        if (!companyEmailField.getText().matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+        if (!companyEmailField.getText().matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
             messageLabel.setText("Indica un correo electrónico válido");
             return false;
         }

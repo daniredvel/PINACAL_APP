@@ -15,19 +15,12 @@ import java.sql.Connection;
 import java.util.List;
 
 public class Inicio_Vista extends JFrame {
-    private JButton inicioButton;
-    private JButton personalButton;
     private JButton anadirButton;
     private JButton adminButton;
-    private JList<Publicacion> publicacionesList;
-    private DefaultListModel<Publicacion> listModel;
-    private ControladorDatos controladorDatos;
-    private Usuario usuario_actual;
-    private static Connection conn;
+    private final DefaultListModel<Publicacion> listModel;
+    private final ControladorDatos controladorDatos;
 
     public Inicio_Vista(Usuario usuario_actual, Connection conn) {
-        this.conn = conn;
-        this.usuario_actual = usuario_actual;
         controladorDatos = new ControladorDatos();
 
         setTitle("Inicio Vista");
@@ -45,14 +38,14 @@ public class Inicio_Vista extends JFrame {
 
         Font buttonFont = new Font("Arial", Font.PLAIN, 18);
 
-        inicioButton = new JButton("Inicio");
+        JButton inicioButton = new JButton("Inicio");
         inicioButton.setFont(buttonFont);
         inicioButton.setBackground(new Color(174, 101, 7));
         inicioButton.setForeground(Color.WHITE);
         inicioButton.setPreferredSize(new Dimension(150, 50)); // Set button size
         inicioButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
 
-        personalButton = new JButton("Personal");
+        JButton personalButton = new JButton("Personal");
         personalButton.setFont(buttonFont);
         personalButton.setBackground(new Color(174, 101, 7));
         personalButton.setForeground(Color.WHITE);
@@ -96,20 +89,7 @@ public class Inicio_Vista extends JFrame {
 
         // Lista de publicaciones en la parte inferior
         listModel = new DefaultListModel<>();
-        publicacionesList = new JList<>(listModel);
-        publicacionesList.setCellRenderer(new ListCellRenderer<Publicacion>() {
-            @Override
-            public Component getListCellRendererComponent(JList<? extends Publicacion> list, Publicacion value, int index, boolean isSelected, boolean cellHasFocus) {
-                Publicacion_Vista publicacionVista = new Publicacion_Vista(value);
-                if (isSelected) {
-                    publicacionVista.setBackground(new Color(174, 101, 7));
-                    publicacionVista.setForeground(Color.WHITE);
-                }
-                return publicacionVista;
-            }
-        });
-
-        JScrollPane scrollPane = new JScrollPane(publicacionesList);
+        JScrollPane scrollPane = getJScrollPane();
         add(scrollPane, BorderLayout.CENTER);
 
         // Load and display publications
@@ -143,6 +123,20 @@ public class Inicio_Vista extends JFrame {
         }
     }
 
+    private JScrollPane getJScrollPane() {
+        JList<Publicacion> publicacionesList = new JList<>(listModel);
+        publicacionesList.setCellRenderer((list, value, index, isSelected, cellHasFocus) -> {
+            Publicacion_Vista publicacionVista = new Publicacion_Vista(value);
+            if (isSelected) {
+                publicacionVista.setBackground(new Color(174, 101, 7));
+                publicacionVista.setForeground(Color.WHITE);
+            }
+            return publicacionVista;
+        });
+
+        return new JScrollPane(publicacionesList);
+    }
+
     private void cargarPublicaciones() {
         List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones("example");
         for (Publicacion publicacion : publicaciones) {
@@ -150,8 +144,4 @@ public class Inicio_Vista extends JFrame {
         }
     }
 
-    // METODO para añadir publicaciones a la lista
-    public void addPublicacion(Publicacion publicacion) {
-        listModel.addElement(publicacion);
-    }
 }

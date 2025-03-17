@@ -5,25 +5,21 @@ import VIEW.INICIO_SESION.InicioSesion_Vista;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 
 import static CONTROLLER.CRUD.USER.AddUsuario.addEmpresa;
 
 public class Registro_Empresa_Direccion extends JFrame {
-    private JTextField streetField;
-    private JTextField numberField;
-    private JTextField localityField;
-    private JTextField municipalityField;
-    private JTextField provinceField;
-    private JTextField postalCodeField;
-    private JTextField countryField;
-    private JLabel messageLabel;
-    private static Connection conn;
+    private final JTextField streetField;
+    private final JTextField numberField;
+    private final JTextField localityField;
+    private final JTextField municipalityField;
+    private final JTextField provinceField;
+    private final JTextField postalCodeField;
+    private final JTextField countryField;
+    private final JLabel messageLabel;
 
     public Registro_Empresa_Direccion(Usuario usuario_sin_direccion, Connection conn) {
-        this.conn = conn;
         setTitle("Registro Dirección Empresa");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -144,21 +140,18 @@ public class Registro_Empresa_Direccion extends JFrame {
         panel.add(messageLabel, constraints);
 
         // «Escuchador» del botón de registro
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (validateFields()) {
-                    // Se crea un usuario con los datos introducidos indicando la dirección vacía
-                    Usuario usuario = new Usuario(usuario_sin_direccion.getUsuario(), usuario_sin_direccion.getPassword(), usuario_sin_direccion.getEmail(), "", usuario_sin_direccion.getTelefono(), 10, "");
-                    // Se le asigna la direccion con el formato correcto
-                    usuario.setDireccion(Usuario.formatoDireccion(streetField.getText(), numberField.getText(), localityField.getText(), municipalityField.getText(), provinceField.getText(), postalCodeField.getText(), countryField.getText()));
-                    //Se muestra un mensaje con el resultado del registro
-                    String mensaje = addEmpresa(usuario);
-                    JOptionPane.showMessageDialog(null, mensaje, "Registro Empresa", JOptionPane.INFORMATION_MESSAGE);
-                    //Se cierra la ventana y se abre la de inicio de sesión
-                    dispose();
-                    new InicioSesion_Vista(conn).setVisible(true);
-                }
+        registerButton.addActionListener(e -> {
+            if (validateFields()) {
+                // Se crea un usuario con los datos introducidos indicando la dirección vacía
+                Usuario usuario = new Usuario(usuario_sin_direccion.getUsuario(), usuario_sin_direccion.getPassword(), usuario_sin_direccion.getEmail(), "", usuario_sin_direccion.getTelefono(), 10, "");
+                // Se le asigna la direccion con el formato correcto
+                usuario.setDireccion(Usuario.formatoDireccion(streetField.getText(), numberField.getText(), localityField.getText(), municipalityField.getText(), provinceField.getText(), postalCodeField.getText(), countryField.getText()));
+                //Se muestra un mensaje con el resultado del registro
+                String mensaje = addEmpresa(usuario);
+                JOptionPane.showMessageDialog(null, mensaje, "Registro Empresa", JOptionPane.INFORMATION_MESSAGE);
+                //Se cierra la ventana y se abre la de inicio de sesión
+                dispose();
+                new InicioSesion_Vista(conn).setVisible(true);
             }
         });
         add(panel);

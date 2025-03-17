@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 
 public class Publicacion_Vista extends JPanel {
     private boolean isOriginalIcon = true;
-    private JLabel messageLabel;
-    private JPanel messagePanel;
+    private final JLabel messageLabel;
+    private final JPanel messagePanel;
 
     public Publicacion_Vista(Publicacion publicacion) {
 

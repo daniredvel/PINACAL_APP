@@ -14,19 +14,10 @@ import java.sql.Connection;
 import java.util.List;
 
 public class Add_Empresa extends JFrame {
-    private JButton inicioButton;
-    private JButton personalButton;
-    private JButton anadirButton;
-    private JButton nuevaPublicacionButton;
-    private Usuario usuario_actual;
-    private ControladorDatos controladorDatos;
-    private AddPublicacion addPublicacion;
-    private static Connection conn;
+    private final AddPublicacion addPublicacion;
 
     public Add_Empresa(Usuario usuario_actual, Connection conn) {
-        this.conn=conn;
-        this.usuario_actual = usuario_actual;
-        controladorDatos = new ControladorDatos();
+        ControladorDatos controladorDatos = new ControladorDatos();
         addPublicacion = new AddPublicacion();
 
         setTitle("Publicaciones del Usuario");
@@ -43,28 +34,28 @@ public class Add_Empresa extends JFrame {
 
         Font buttonFont = new Font("Arial", Font.PLAIN, 18);
 
-        inicioButton = new JButton("Inicio");
+        JButton inicioButton = new JButton("Inicio");
         inicioButton.setFont(buttonFont);
         inicioButton.setBackground(new Color(174, 101, 7));
         inicioButton.setForeground(Color.WHITE);
         inicioButton.setPreferredSize(new Dimension(150, 50));
         inicioButton.setMargin(new Insets(10, 20, 10, 20));
 
-        personalButton = new JButton("Personal");
+        JButton personalButton = new JButton("Personal");
         personalButton.setFont(buttonFont);
         personalButton.setBackground(new Color(174, 101, 7));
         personalButton.setForeground(Color.WHITE);
         personalButton.setPreferredSize(new Dimension(150, 50));
         personalButton.setMargin(new Insets(10, 20, 10, 20));
 
-        anadirButton = new JButton("Añadir");
+        JButton anadirButton = new JButton("Añadir");
         anadirButton.setFont(buttonFont);
         anadirButton.setBackground(new Color(174, 101, 7));
         anadirButton.setForeground(Color.WHITE);
         anadirButton.setPreferredSize(new Dimension(150, 50));
         anadirButton.setMargin(new Insets(10, 20, 10, 20));
 
-        nuevaPublicacionButton = new JButton("Nueva Publicación");
+        JButton nuevaPublicacionButton = new JButton("Nueva Publicación");
         nuevaPublicacionButton.setFont(buttonFont);
         nuevaPublicacionButton.setBackground(new Color(174, 101, 7));
         nuevaPublicacionButton.setForeground(Color.WHITE);
@@ -106,27 +97,8 @@ public class Add_Empresa extends JFrame {
             descripcionArea.setEditable(false);
             publicacionPanel.add(new JScrollPane(descripcionArea), BorderLayout.CENTER);
 
-            JButton eliminarButton = new JButton("Eliminar");
-            eliminarButton.setFont(new Font("Arial", Font.PLAIN, 18));
-            eliminarButton.setBackground(new Color(174, 101, 7));
-            eliminarButton.setForeground(Color.WHITE);
-            eliminarButton.setPreferredSize(new Dimension(150, 50));
-            eliminarButton.setMargin(new Insets(10, 20, 10, 20));
-            eliminarButton.addActionListener(e -> {
-                int response = JOptionPane.showConfirmDialog(null, "¿Estás seguro?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-                if (response == JOptionPane.YES_OPTION) {
-                    if (addPublicacion.eliminarPublicacion(publicacion)) {
-                        JOptionPane.showMessageDialog(null, "Publicación eliminada correctamente");
-                        publicacionesPanel.remove(publicacionPanel);
-                        publicacionesPanel.revalidate();
-                        publicacionesPanel.repaint();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error al eliminar la publicación");
-                    }
-                }
-            });
+            JButton eliminarButton = getJButton(publicacion, publicacionesPanel, publicacionPanel);
             publicacionPanel.add(eliminarButton, BorderLayout.SOUTH);
-
             publicacionesPanel.add(publicacionPanel);
         }
 
@@ -192,5 +164,28 @@ public class Add_Empresa extends JFrame {
                 }
             }
         });
+    }
+
+    private JButton getJButton(Publicacion publicacion, JPanel publicacionesPanel, JPanel publicacionPanel) {
+        JButton eliminarButton = new JButton("Eliminar");
+        eliminarButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        eliminarButton.setBackground(new Color(174, 101, 7));
+        eliminarButton.setForeground(Color.WHITE);
+        eliminarButton.setPreferredSize(new Dimension(150, 50));
+        eliminarButton.setMargin(new Insets(10, 20, 10, 20));
+        eliminarButton.addActionListener(e -> {
+            int response = JOptionPane.showConfirmDialog(null, "¿Estás seguro?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                if (addPublicacion.eliminarPublicacion(publicacion)) {
+                    JOptionPane.showMessageDialog(null, "Publicación eliminada correctamente");
+                    publicacionesPanel.remove(publicacionPanel);
+                    publicacionesPanel.revalidate();
+                    publicacionesPanel.repaint();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error al eliminar la publicación");
+                }
+            }
+        });
+        return eliminarButton;
     }
 }

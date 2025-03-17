@@ -10,28 +10,21 @@ import VIEW.PERSONAL.Personal_Usuario;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.util.List;
 
 public class Administar_Vista extends JFrame {
-    private Usuario usuario_actual;
-    private List<Publicacion> publicaciones;
+    private final Usuario usuario_actual;
+    private final List<Publicacion> publicaciones;
     private int currentIndex = 0;
-    private JTextArea publicacionArea;
-    private JTextField justificacionField;
-    private JRadioButton aceptadaButton;
-    private JRadioButton denegadaButton;
-    private JButton siguienteButton;
-    private ControladorDatos controladorDatos;
-    private ButtonGroup group; //
-    private static Connection conn;
+    private final JTextArea publicacionArea;
+    private final JTextField justificacionField;
+    private final JRadioButton denegadaButton;
+    private final ButtonGroup group; //
 
     public Administar_Vista(Usuario usuario_actual, Connection conn) {
-        this.conn = conn;
         this.usuario_actual = usuario_actual;
-        controladorDatos = new ControladorDatos();
+        ControladorDatos controladorDatos = new ControladorDatos();
         publicaciones = controladorDatos.obtenerPublicaciones("example");
 
         setTitle("Administrar Publicaciones");
@@ -108,7 +101,7 @@ public class Administar_Vista extends JFrame {
         justificacionField.setFont(new Font("Arial", Font.PLAIN, 18));
         justificacionField.setEnabled(false);
 
-        aceptadaButton = new JRadioButton("Aceptada");
+        JRadioButton aceptadaButton = new JRadioButton("Aceptada");
         aceptadaButton.setFont(new Font("Arial", Font.PLAIN, 18));
         aceptadaButton.setBackground(new Color(211, 205, 192));
 
@@ -123,24 +116,7 @@ public class Administar_Vista extends JFrame {
         aceptadaButton.addActionListener(e -> justificacionField.setEnabled(false));
         denegadaButton.addActionListener(e -> justificacionField.setEnabled(true));
 
-        siguienteButton = new JButton("Siguiente");
-        siguienteButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        siguienteButton.setBackground(new Color(174, 101, 7));
-        siguienteButton.setForeground(Color.WHITE);
-
-        siguienteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gestionarPublicacion();
-                currentIndex++;
-                if (currentIndex < publicaciones.size()) {
-                    mostrarPublicacion();
-                } else {
-                    JOptionPane.showMessageDialog(null, "No hay más publicaciones.");
-                    dispose();
-                }
-            }
-        });
+        JButton siguienteButton = getJButton();
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -184,6 +160,25 @@ public class Administar_Vista extends JFrame {
             dispose();
             new Administar_Vista(usuario_actual, conn).setVisible(true);
         });
+    }
+
+    private JButton getJButton() {
+        JButton siguienteButton = new JButton("Siguiente");
+        siguienteButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        siguienteButton.setBackground(new Color(174, 101, 7));
+        siguienteButton.setForeground(Color.WHITE);
+
+        siguienteButton.addActionListener(e -> {
+            gestionarPublicacion();
+            currentIndex++;
+            if (currentIndex < publicaciones.size()) {
+                mostrarPublicacion();
+            } else {
+                JOptionPane.showMessageDialog(null, "No hay más publicaciones.");
+                dispose();
+            }
+        });
+        return siguienteButton;
     }
 
     private void mostrarPublicacion() {

@@ -2,10 +2,7 @@ package VIEW.INICIO_SESION;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.sql.Connection;
 
 import MODEL.Usuario;
@@ -20,13 +17,8 @@ public class InicioSesion_Vista extends JFrame {
     private final JTextField userField;
     private final JPasswordField passField;
     private final JLabel messageLabel;
-    private JButton loginButton;
-    private JButton registerButton;
-    private JCheckBox showPasswordCheckBox;
-    private static Connection conn = null;
 
     public InicioSesion_Vista(Connection conn) {
-        this.conn = conn;
         // Propiedades del frame (Marco)
         setTitle("Inicio de Sesión");
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize the frame
@@ -81,12 +73,12 @@ public class InicioSesion_Vista extends JFrame {
 
         passField = new JPasswordField(20);
         passField.setFont(font);
-        passField.setEchoChar('\u2022'); // Set echo character to bullet point
+        passField.setEchoChar('•'); // Set echo character to bullet point
         constraints.gridx = 1;
         panel.add(passField, constraints);
 
         // Checkbox para mostrar la contraseña
-        showPasswordCheckBox = new JCheckBox("Mostrar Contraseña");
+        JCheckBox showPasswordCheckBox = new JCheckBox("Mostrar Contraseña");
         showPasswordCheckBox.setFont(new Font("Arial", Font.PLAIN, 18));
         showPasswordCheckBox.setBackground(new Color(211, 205, 192));
         constraints.gridx = 1;
@@ -94,7 +86,7 @@ public class InicioSesion_Vista extends JFrame {
         panel.add(showPasswordCheckBox, constraints);
 
         // Botón de inicio de sesión
-        loginButton = new JButton("Iniciar Sesión");
+        JButton loginButton = new JButton("Iniciar Sesión");
         loginButton.setFont(font);
         loginButton.setBackground(new Color(174, 101, 7)); // Button background color
         loginButton.setForeground(new Color(255, 255, 255)); // Button text color
@@ -104,7 +96,7 @@ public class InicioSesion_Vista extends JFrame {
         panel.add(loginButton, constraints);
 
         // Botón de registro
-        registerButton = new JButton("REGÍSTRATE");
+        JButton registerButton = new JButton("REGÍSTRATE");
         registerButton.setFont(new Font("Arial", Font.PLAIN, 18));
         registerButton.setForeground(Color.BLUE);
         registerButton.setContentAreaFilled(false);
@@ -115,61 +107,51 @@ public class InicioSesion_Vista extends JFrame {
         panel.add(registerButton, constraints);
 
         // «Escuchador» del botón de inicio de sesión
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Handle login action
-                String username = userField.getText();
-                String password = new String(passField.getPassword());
+        loginButton.addActionListener(e -> {
+            // Handle login action
+            String username = userField.getText();
+            String password = new String(passField.getPassword());
 
-                try {
-                    // Comprueba si el usuario y la contraseña son correctos
-                    int result = comprobarPass(username, password);
-                    System.out.println("comprobarPass result: " + result); // Debug statement
-                    switch (result) {
-                        case 1:
-                            // Si el usuario y la contraseña son correctos, crea un objeto Usuario con los datos del usuario
-                            usuario_actual = leerUsuarioPorNombre(username);
-                            System.out.println("Usuario encontrado: " + usuario_actual); // Debug statement
-                            // Cierra la ventana actual
-                            dispose();
-                            // Abre la ventana de inicio
-                            new Inicio_Vista(usuario_actual, conn).setVisible(true);
-                            break;
-                        case -1: case 0:
-                            // Indica en un mensaje que la contraseña es incorrecta
-                            messageLabel.setText("Contraseña o usuario incorrectos");
-                            messageLabel.setForeground(new Color(233, 30, 99));
-                            break;
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace(); // Print stack trace for debugging
-                    messageLabel.setText("Error al iniciar sesión");
-                    messageLabel.setForeground(new Color(233, 30, 99));
+            try {
+                // Comprueba si el usuario y la contraseña son correctos
+                int result = comprobarPass(username, password);
+                System.out.println("comprobarPass result: " + result); // Debug statement
+                switch (result) {
+                    case 1:
+                        // Si el usuario y la contraseña son correctos, crea un objeto Usuario con los datos del usuario
+                        usuario_actual = leerUsuarioPorNombre(username);
+                        System.out.println("Usuario encontrado: " + usuario_actual); // Debug statement
+                        // Cierra la ventana actual
+                        dispose();
+                        // Abre la ventana de inicio
+                        new Inicio_Vista(usuario_actual, conn).setVisible(true);
+                        break;
+                    case -1: case 0:
+                        // Indica en un mensaje que la contraseña es incorrecta
+                        messageLabel.setText("Contraseña o usuario incorrectos");
+                        messageLabel.setForeground(new Color(233, 30, 99));
+                        break;
                 }
+            } catch (Exception ex) {
+                messageLabel.setText("Error al iniciar sesión");
+                messageLabel.setForeground(new Color(233, 30, 99));
             }
         });
 
         // «Escuchador» del botón de registro
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Cierra la ventana de inicio de sesión
-                dispose();
-                // Abre la ventana de registro
-                new Registro_Vista(conn).setVisible(true);
-            }
+        registerButton.addActionListener(e -> {
+            // Cierra la ventana de inicio de sesión
+            dispose();
+            // Abre la ventana de registro
+            new Registro_Vista(conn).setVisible(true);
         });
 
         // «Escuchador» del checkbox para mostrar la contraseña
-        showPasswordCheckBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    passField.setEchoChar((char) 0); // Muestra la contraseña
-                } else {
-                    passField.setEchoChar('\u2022'); // Oculta la contraseña
-                }
+        showPasswordCheckBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                passField.setEchoChar((char) 0); // Muestra la contraseña
+            } else {
+                passField.setEchoChar('•'); // Oculta la contraseña
             }
         });
 

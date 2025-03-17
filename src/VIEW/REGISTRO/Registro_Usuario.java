@@ -8,22 +8,18 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 
 public class Registro_Usuario extends JFrame {
-    private JTextField userNameField;
-    private JTextField userEmailField;
-    private JTextField userPhoneField;
-    private JPasswordField userPasswordField;
-    private JLabel messageLabel;
-    private JProgressBar passwordStrengthBar;
-    private JCheckBox showPasswordCheckBox;
-    private static Connection conn;
+    private final JTextField userNameField;
+    private final JTextField userEmailField;
+    private final JTextField userPhoneField;
+    private final JPasswordField userPasswordField;
+    private final JLabel messageLabel;
+    private final JProgressBar passwordStrengthBar;
+    private final JCheckBox showPasswordCheckBox;
 
     public Registro_Usuario(Connection conn) {
-        this.conn = conn;
         setTitle("Registro Usuario");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -121,14 +117,11 @@ public class Registro_Usuario extends JFrame {
         constraints.gridy = 5;
         panel.add(showPasswordCheckBox, constraints);
 
-        showPasswordCheckBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (showPasswordCheckBox.isSelected()) {
-                    userPasswordField.setEchoChar((char) 0);
-                } else {
-                    userPasswordField.setEchoChar('•');
-                }
+        showPasswordCheckBox.addActionListener(e -> {
+            if (showPasswordCheckBox.isSelected()) {
+                userPasswordField.setEchoChar((char) 0);
+            } else {
+                userPasswordField.setEchoChar('•');
             }
         });
 
@@ -153,21 +146,18 @@ public class Registro_Usuario extends JFrame {
         panel.add(messageLabel, constraints);
 
         // «Escuchador» del botón de registro
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Comprueba si los campos son válidos
-                if (validateFields()) {
-                    // Crea un nuevo usuario con los datos introducidos
-                    Usuario usuario = new Usuario(userNameField.getText(), new String(userPasswordField.getPassword()), userEmailField.getText(), userPhoneField.getText(), 10, "");
-                    // Añade el usuario a la base de datos y muestra el mensaje correspondiente
-                    String mensaje = AddUsuario.addUsuario(usuario);
-                    JOptionPane.showMessageDialog(null, mensaje, "Registro Usuario", JOptionPane.INFORMATION_MESSAGE);
+        registerButton.addActionListener(e -> {
+            // Comprueba si los campos son válidos
+            if (validateFields()) {
+                // Crea un nuevo usuario con los datos introducidos
+                Usuario usuario = new Usuario(userNameField.getText(), new String(userPasswordField.getPassword()), userEmailField.getText(), userPhoneField.getText(), 10, "");
+                // Añade el usuario a la base de datos y muestra el mensaje correspondiente
+                String mensaje = AddUsuario.addUsuario(usuario);
+                JOptionPane.showMessageDialog(null, mensaje, "Registro Usuario", JOptionPane.INFORMATION_MESSAGE);
 
-                    // Cierra la ventana actual y abre la de inicio de sesión
-                    dispose();
-                    new InicioSesion_Vista(conn).setVisible(true);
-                }
+                // Cierra la ventana actual y abre la de inicio de sesión
+                dispose();
+                new InicioSesion_Vista(conn).setVisible(true);
             }
         });
 
@@ -185,7 +175,7 @@ public class Registro_Usuario extends JFrame {
             messageLabel.setText("El correo electrónico es obligatorio");
             return false;
         }
-        if (!userEmailField.getText().matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+        if (!userEmailField.getText().matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
             messageLabel.setText("Indica un correo electrónico válido");
             return false;
         }

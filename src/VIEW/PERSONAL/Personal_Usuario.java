@@ -5,27 +5,17 @@ import MODEL.Usuario;
 import VIEW.INICIO.Inicio_Vista;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+
 import java.awt.*;
 import java.sql.Connection;
 
 public class Personal_Usuario extends JFrame {
-    private JButton inicioButton;
-    private JButton personalButton;
-    private JButton modificarButton;
-    private JButton aceptarButton;
-    private ActualizarUsuario actualizarUsuario;
-    private Usuario usuario_actual;
-    private JTextField nombreField;
-    private JTextField direccionField;
-    private JTextField telefonoField;
-    private static Connection conn;
+    private final JTextField nombreField;
+    private final JTextField direccionField;
+    private final JTextField telefonoField;
 
     public Personal_Usuario(Usuario usuario_actual, Connection conn) {
-        this.conn = conn;
-        this.usuario_actual = usuario_actual;
-        actualizarUsuario = new ActualizarUsuario();
+        ActualizarUsuario actualizarUsuario = new ActualizarUsuario();
 
         setTitle("Personal Usuario");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -41,27 +31,28 @@ public class Personal_Usuario extends JFrame {
 
         Font fuenteButton = new Font("Arial", Font.PLAIN, 18);
 
-        inicioButton = new JButton("Inicio");
+        JButton inicioButton = new JButton("Inicio");
         inicioButton.setFont(fuenteButton);
         inicioButton.setBackground(new Color(174, 101, 7));
         inicioButton.setForeground(Color.WHITE);
         inicioButton.setPreferredSize(new Dimension(150, 50));
         inicioButton.setMargin(new Insets(10, 20, 10, 20));
 
-        personalButton = new JButton("Personal");
+        JButton personalButton = new JButton("Personal");
         personalButton.setFont(fuenteButton);
         personalButton.setBackground(new Color(174, 101, 7));
         personalButton.setForeground(Color.WHITE);
         personalButton.setPreferredSize(new Dimension(150, 50));
         personalButton.setMargin(new Insets(10, 20, 10, 20));
 
-        modificarButton = new JButton("Modificar");
+        JButton modificarButton = new JButton("Modificar");
         modificarButton.setFont(fuenteButton);
         modificarButton.setBackground(new Color(174, 101, 7));
         modificarButton.setForeground(Color.WHITE);
         modificarButton.setPreferredSize(new Dimension(150, 50));
         modificarButton.setMargin(new Insets(10, 20, 10, 20));
 
+        JButton aceptarButton;
         aceptarButton = new JButton("Aceptar");
         aceptarButton.setFont(fuenteButton);
         aceptarButton.setBackground(new Color(174, 101, 7));
