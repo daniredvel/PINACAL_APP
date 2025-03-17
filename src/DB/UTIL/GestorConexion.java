@@ -13,8 +13,7 @@ public class GestorConexion {
     /**
      * Objeto estático de conexión con la base de datos.
      */
-    private static Connection conexion=null;
-
+    private static Connection conexion = null;
 
     /**
      * METODO que crea una conexión con la base de datos.
@@ -23,32 +22,23 @@ public class GestorConexion {
      * @param pass Contraseña del usuario de la base de datos.
      * @return Código de error.
      */
-    public static int crearConexion(String bd,String usr,String pass){
-        try{
+    public static int crearConexion(String bd, String usr, String pass) {
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conexion = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/"+bd,
+                    "jdbc:mysql://localhost:3306/" + bd,
                     usr,
                     pass
             );
-
-            /*
-            //Conexión remota a base de Datos MySQL
-
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conexion = DriverManager.getConnection(
-                    "mysql://mysql. nombre_dominio.es :3306/"+bd,
-                    usr,
-                    pass
-            );
-             */
-
+            System.out.println("Conexión a la base de datos establecida correctamente."); // Debug statement
             return Mensajes.OK;
-        }
-        catch(ClassNotFoundException cnfe){
+        } catch (ClassNotFoundException cnfe) {
+            System.err.println("Error: Driver no encontrado."); // Debug statement
+            cnfe.printStackTrace();
             return Mensajes.FALLO_DRIVER;
-        }
-        catch(SQLException sqle){
+        } catch (SQLException sqle) {
+            System.err.println("Error: No se pudo establecer la conexión a la base de datos."); // Debug statement
+            sqle.printStackTrace();
             return Mensajes.FALLO_CONEXION;
         }
     }
@@ -65,14 +55,19 @@ public class GestorConexion {
      * Método que cierra la conexión con la base de datos.
      * @return Código de error.
      */
-    public static int cerrarConexion(){
+    public static int cerrarConexion() {
         try {
-            conexion.close();
-            return Mensajes.OK;
-        }
-        catch(SQLException | NullPointerException sqle){
+            if (conexion != null && !conexion.isClosed()) {
+                conexion.close();
+                System.out.println("Conexión a la base de datos cerrada correctamente."); // Debug statement
+                return Mensajes.OK;
+            } else {
+                return Mensajes.FALLO_CERRAR_CONEXION;
+            }
+        } catch (SQLException sqle) {
+            System.err.println("Error: No se pudo cerrar la conexión a la base de datos."); // Debug statement
+            sqle.printStackTrace();
             return Mensajes.FALLO_CERRAR_CONEXION;
         }
     }
 }
-

@@ -15,7 +15,7 @@ public class ControladorInicioSesion {
         Connection conn = GestorConexion.getConexion();
 
         //Obtenemos la contraseña del usuario
-        PreparedStatement consulta = conn.prepareStatement("SELECT * FROM usuarios WHERE usuario = ?");
+        PreparedStatement consulta = conn.prepareStatement("SELECT * FROM usuarios WHERE nombre = ?");
         consulta.setString(1, usuario);
 
         ResultSet resultSet = consulta.executeQuery();

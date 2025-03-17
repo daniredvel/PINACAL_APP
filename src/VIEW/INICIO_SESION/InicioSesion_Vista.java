@@ -121,13 +121,13 @@ public class InicioSesion_Vista extends JFrame {
 
                 try {
                     // Comprueba si el usuario y la contraseña son correctos
-                    switch (comprobarPass(username, password, "2")) {
+                    int result = comprobarPass(username, password);
+                    System.out.println("comprobarPass result: " + result); // Debug statement
+                    switch (result) {
                         case 1:
                             // Si el usuario y la contraseña son correctos, crea un objeto Usuario con los datos del usuario
-                            //usuario_actual = leerUsuarioPorNombre(username);
-                            // TODO: Cambiar la línea siguiente por la anterior
-                            usuario_actual = new Usuario(username,password,"aaaaa","nnnnn","000",0,"");
-
+                            usuario_actual = leerUsuarioPorNombre(username);
+                            System.out.println("Usuario encontrado: " + usuario_actual); // Debug statement
                             // Cierra la ventana actual
                             dispose();
                             // Abre la ventana de inicio
@@ -139,7 +139,10 @@ public class InicioSesion_Vista extends JFrame {
                             messageLabel.setForeground(new Color(233, 30, 99));
                             break;
                     }
-                } catch (Exception ignored) {
+                } catch (Exception ex) {
+                    ex.printStackTrace(); // Print stack trace for debugging
+                    messageLabel.setText("Error al iniciar sesión");
+                    messageLabel.setForeground(new Color(233, 30, 99));
                 }
             }
         });
@@ -162,7 +165,7 @@ public class InicioSesion_Vista extends JFrame {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     passField.setEchoChar((char) 0); // Muestra la contraseña
                 } else {
-                    passField.setEchoChar('•'); // Oculta la contraseña
+                    passField.setEchoChar('\u2022'); // Oculta la contraseña
                 }
             }
         });

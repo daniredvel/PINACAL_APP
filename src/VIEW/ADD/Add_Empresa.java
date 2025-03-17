@@ -139,9 +139,10 @@ public class Add_Empresa extends JFrame {
             new Personal_Empresa(usuario_actual).setVisible(true);
 
         });
-        anadirButton.addActionListener(e -> JOptionPane.showMessageDialog(null, "Añadir button clicked"));
-        dispose();
+        anadirButton.addActionListener(e -> {
+            dispose();
             new Add_Empresa(usuario_actual).setVisible(true);
+                });
 
         nuevaPublicacionButton.addActionListener(e -> {
             String titulo = JOptionPane.showInputDialog("Ingrese el título de la publicación:");
