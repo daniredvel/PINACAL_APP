@@ -20,7 +20,6 @@ public class Main {
         } else{
             SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
         }
-        GestorConexion.cerrarConexion();
     }
         public static boolean crearConexion() {
             int estadoConexion = GestorConexion.crearConexion(DB_NAME, DB_USER, DB_PASSWORD);

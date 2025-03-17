@@ -123,9 +123,9 @@ public class Inicio_Vista extends JFrame {
         personalButton.addActionListener(e -> {
             dispose();
             if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA))||usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA))) {
-                new Personal_Empresa(usuario_actual).setVisible(true);
+                new Personal_Empresa(usuario_actual,conn).setVisible(true);
             } else if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.USUARIO))||usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
-                new Personal_Usuario(usuario_actual).setVisible(true);
+                new Personal_Usuario(usuario_actual,conn).setVisible(true);
             } else {
                 new Inicio_Vista(usuario_actual, conn).setVisible(true);}
         });
