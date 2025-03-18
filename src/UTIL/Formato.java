@@ -2,8 +2,6 @@ package UTIL;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-
 //METODO para formatear la fecha de publicación
 public class Formato {
     public static String toStringDate(Timestamp fecha_publicacion){

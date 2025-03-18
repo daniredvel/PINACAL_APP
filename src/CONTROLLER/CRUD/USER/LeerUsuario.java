@@ -59,7 +59,6 @@ public class LeerUsuario {
             }
         } catch (SQLException e) {
             mensaje = Mensajes.getMensaje(Mensajes.FALLO_CONEXION);
-            e.printStackTrace();
         }
         return null;
     }

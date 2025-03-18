@@ -34,12 +34,4 @@ public class Error_INICIAR_BD extends JFrame {
         // Add the panel to the frame
         add(panel);
     }
-
-    public static void main(String[] args) {
-        // Create and display the error frame
-        SwingUtilities.invokeLater(() -> {
-            Error_INICIAR_BD errorFrame = new Error_INICIAR_BD();
-            errorFrame.setVisible(true);
-        });
-    }
 }

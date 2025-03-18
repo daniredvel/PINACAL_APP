@@ -1,0 +1,3 @@
+Los permisos para publicar y eliminar publicaciones propias responden al permios "1"
+Los permisos de adminstridar para eliminar publicaciones ajenas y usuarios responden al permiso "2"
+Ningun usuario puede eliminar a un administrador, ni siquiera otro administrador o el mismo

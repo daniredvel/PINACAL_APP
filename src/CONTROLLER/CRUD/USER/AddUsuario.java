@@ -7,8 +7,6 @@ import MODEL.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Objects;
-
 public class AddUsuario {
     //Indicamos los tipos y permisos de usuario
 

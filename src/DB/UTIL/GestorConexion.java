@@ -34,11 +34,9 @@ public class GestorConexion {
             return Mensajes.OK;
         } catch (ClassNotFoundException cnfe) {
             System.err.println("Error: Driver no encontrado."); // Debug statement
-            cnfe.printStackTrace();
             return Mensajes.FALLO_DRIVER;
         } catch (SQLException sqle) {
             System.err.println("Error: No se pudo establecer la conexión a la base de datos."); // Debug statement
-            sqle.printStackTrace();
             return Mensajes.FALLO_CONEXION;
         }
     }
@@ -66,7 +64,6 @@ public class GestorConexion {
             }
         } catch (SQLException sqle) {
             System.err.println("Error: No se pudo cerrar la conexión a la base de datos."); // Debug statement
-            sqle.printStackTrace();
             return Mensajes.FALLO_CERRAR_CONEXION;
         }
     }

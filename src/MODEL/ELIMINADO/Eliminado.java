@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 public class Eliminado {
     Timestamp fecha;
     String tipo;
-    static String  []tipos={"USUARIO","PUBLICACION"};
+    static final String  []tipos={"USUARIO","PUBLICACION"};
     String mensaje;
 
     public String getMensaje() {
