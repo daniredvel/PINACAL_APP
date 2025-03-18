@@ -7,7 +7,7 @@ import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.PERSONAL.Personal_Empresa;
-import VIEW.PUBLICACIONES.Publicacion_Vista;
+import VIEW.PUBLICACIONES.Publicacion_Propia_Vista;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,15 +15,14 @@ import java.sql.Connection;
 import java.util.List;
 
 public class Add_Empresa extends JFrame {
+    private final Usuario usuario_actual;
     private final AddPublicacion addPublicacion;
-    private final JPanel publicacionesPanel;
-    private final CardLayout cardLayout;
-    private final List<Publicacion> publicaciones;
-    private int currentPage = 0;
-    private final int publicationsPerPage = 5;
+    private final DefaultListModel<Publicacion> listModel;
+    private final ControladorDatos controladorDatos;
 
     public Add_Empresa(Usuario usuario_actual, Connection conn) {
-        ControladorDatos controladorDatos = new ControladorDatos();
+        this.usuario_actual=usuario_actual;
+        controladorDatos = new ControladorDatos();
         addPublicacion = new AddPublicacion();
 
         setTitle("Publicaciones del Usuario");
@@ -85,39 +84,11 @@ public class Add_Empresa extends JFrame {
 
         add(topPanel, BorderLayout.NORTH);
 
-        publicacionesPanel = new JPanel();
-        cardLayout = new CardLayout();
-        publicacionesPanel.setLayout(cardLayout);
-        publicacionesPanel.setBackground(new Color(211, 205, 192));
+        listModel = new DefaultListModel<>();
+        JScrollPane scrollPane = getJScrollPane();
+        add(scrollPane, BorderLayout.CENTER);
 
-        publicaciones = controladorDatos.obtenerPublicaciones(usuario_actual.getUsuario());
-        updatePublicationsPanel();
-
-        add(new JScrollPane(publicacionesPanel), BorderLayout.CENTER);
-
-        JPanel navigationPanel = new JPanel();
-        navigationPanel.setBackground(new Color(211, 205, 192));
-
-        JButton prevButton = new JButton("Previous");
-        prevButton.addActionListener(e -> {
-            if (currentPage > 0) {
-                currentPage--;
-                cardLayout.show(publicacionesPanel, String.valueOf(currentPage));
-            }
-        });
-
-        JButton nextButton = new JButton("Next");
-        nextButton.addActionListener(e -> {
-            if ((currentPage + 1) * publicationsPerPage < publicaciones.size()) {
-                currentPage++;
-                cardLayout.show(publicacionesPanel, String.valueOf(currentPage));
-            }
-        });
-
-        navigationPanel.add(prevButton);
-        navigationPanel.add(nextButton);
-
-        add(navigationPanel, BorderLayout.SOUTH);
+        cargarPublicaciones(usuario_actual);
 
         inicioButton.addActionListener(e -> {
             dispose();
@@ -131,7 +102,6 @@ public class Add_Empresa extends JFrame {
             dispose();
             new Add_Empresa(usuario_actual, conn).setVisible(true);
         });
-
         nuevaPublicacionButton.addActionListener(e -> {
             String titulo = JOptionPane.showInputDialog("Ingrese el título de la publicación:");
             String descripcion = JOptionPane.showInputDialog("Ingrese la descripción de la publicación:");
@@ -139,8 +109,7 @@ public class Add_Empresa extends JFrame {
                 Publicacion nuevaPublicacion = new Publicacion(titulo, descripcion, 0, usuario_actual.getId_usuario(), usuario_actual.getUsuario());
                 if (addPublicacion.crearPublicacion(nuevaPublicacion)) {
                     JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.PUBLICACION_ANADIDO));
-                    publicaciones.add(nuevaPublicacion);
-                    updatePublicationsPanel();
+                    listModel.addElement(nuevaPublicacion);
                 } else {
                     JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.ERROR_GUARDAR_PUBLICACION));
                 }
@@ -148,23 +117,24 @@ public class Add_Empresa extends JFrame {
         });
     }
 
-    private void updatePublicationsPanel() {
-        publicacionesPanel.removeAll();
-        int totalPages = (int) Math.ceil((double) publicaciones.size() / publicationsPerPage);
-        for (int i = 0; i < totalPages; i++) {
-            JPanel pagePanel = new JPanel();
-            pagePanel.setLayout(new BoxLayout(pagePanel, BoxLayout.Y_AXIS));
-            pagePanel.setBackground(new Color(211, 205, 192));
-            int start = i * publicationsPerPage;
-            int end = Math.min(start + publicationsPerPage, publicaciones.size());
-            for (int j = start; j < end; j++) {
-                Publicacion_Vista publicacionVista = new Publicacion_Vista(publicaciones.get(j));
-                pagePanel.add(publicacionVista);
+    private JScrollPane getJScrollPane() {
+        JList<Publicacion> publicacionesList = new JList<>(listModel);
+        publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
+            Publicacion_Propia_Vista publicacionVista = new Publicacion_Propia_Vista(publicacion, usuario_actual);
+            if (isSelected) {
+                publicacionVista.setBackground(new Color(174, 101, 7));
+                publicacionVista.setForeground(Color.WHITE);
             }
-            publicacionesPanel.add(pagePanel, String.valueOf(i));
+            return publicacionVista;
+        });
+
+        return new JScrollPane(publicacionesList);
+    }
+
+    private void cargarPublicaciones(Usuario usuario_actual) {
+        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones(usuario_actual.getUsuario());
+        for (Publicacion publicacion : publicaciones) {
+            listModel.addElement(publicacion);
         }
-        cardLayout.show(publicacionesPanel, String.valueOf(currentPage));
-        publicacionesPanel.revalidate();
-        publicacionesPanel.repaint();
     }
 }

@@ -7,16 +7,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 
-public class Publicacion_Vista extends JPanel {
+public class Publicacion_Propia_Vista extends JPanel {
     private boolean isOriginalIcon = true;
     private final JLabel messageLabel;
     private final JPanel messagePanel;
 
-    public Publicacion_Vista(Publicacion publicacion, Usuario usuario_actual) {
+    public Publicacion_Propia_Vista(Publicacion publicacion, Usuario usuario_actual) {
         setLayout(new BorderLayout());
         setBackground(new Color(211, 205, 192));
         setBorder(BorderFactory.createLineBorder(new Color(174, 101, 7), 2)); // Orange border
-        setPreferredSize(new Dimension(800, 300)); // Set preferred size
+        setPreferredSize(new Dimension(500, 300)); // Set preferred size
 
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(new Color(211, 205, 192));
@@ -75,6 +75,12 @@ public class Publicacion_Vista extends JPanel {
         saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         leftPanel.add(saveButton);
 
+        JButton deleteButton = new JButton("Eliminar");
+        deleteButton.setBackground(new Color(174, 101, 7));
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        leftPanel.add(deleteButton);
+
         messagePanel = new JPanel();
         messagePanel.setBackground(new Color(174, 101, 7));
         messagePanel.setLayout(new BorderLayout());
@@ -106,6 +112,13 @@ public class Publicacion_Vista extends JPanel {
             Timer timer = new Timer(3000, event -> messagePanel.setVisible(false));
             timer.setRepeats(false);
             timer.start();
+        });
+
+        deleteButton.addActionListener(e -> {
+            int response = JOptionPane.showConfirmDialog(null, "¿Estás seguro?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                //TODO: Delete publication
+            }
         });
 
         add(contentPanel, BorderLayout.CENTER);

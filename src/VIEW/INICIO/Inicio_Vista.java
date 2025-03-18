@@ -19,9 +19,11 @@ public class Inicio_Vista extends JFrame {
     private JButton adminButton;
     private final DefaultListModel<Publicacion> listModel;
     private final ControladorDatos controladorDatos;
+    private static Usuario usuario_actual = null;
 
     public Inicio_Vista(Usuario usuario_actual, Connection conn) {
         controladorDatos = new ControladorDatos();
+        this.usuario_actual = usuario_actual;
 
         setTitle("Inicio Vista");
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Adjust the window to the screen
@@ -125,8 +127,8 @@ public class Inicio_Vista extends JFrame {
 
     private JScrollPane getJScrollPane() {
         JList<Publicacion> publicacionesList = new JList<>(listModel);
-        publicacionesList.setCellRenderer((list, value, index, isSelected, cellHasFocus) -> {
-            Publicacion_Vista publicacionVista = new Publicacion_Vista(value);
+        publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
+            Publicacion_Vista publicacionVista = new Publicacion_Vista(publicacion, usuario_actual);
             if (isSelected) {
                 publicacionVista.setBackground(new Color(174, 101, 7));
                 publicacionVista.setForeground(Color.WHITE);

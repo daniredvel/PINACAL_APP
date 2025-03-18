@@ -2,8 +2,11 @@ Revisión de la codificación de la contraseña
 
 ¿Olvide mi contraseña?
 
-Las publicaciones han de usar la vista Publicacion_Vista
+Eliminar publicaciones
 
+Guardar publicaciones
+
+Corregir la interfaz grafica
 
 Para cifrar la contraseña utilizando el algoritmo AES se utiliza una clave que puede ser de 128, 192 y 256 bits.
 Para descifrar la contraseña se utiliza la misma clave que se utilizo para cifrarla.
