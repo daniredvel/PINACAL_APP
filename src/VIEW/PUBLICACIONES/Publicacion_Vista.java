@@ -12,32 +12,43 @@ public class Publicacion_Vista extends JPanel {
     private final JPanel messagePanel;
 
     public Publicacion_Vista(Publicacion publicacion) {
-
-        setLayout(null);
+        setLayout(new BorderLayout());
         setBackground(new Color(211, 205, 192));
+        setBorder(BorderFactory.createLineBorder(new Color(174, 101, 7), 2)); // Orange border
+        setPreferredSize(new Dimension(800, 300)); // Set preferred size
 
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBackground(new Color(211, 205, 192));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding
 
         JLabel textViewNombre = new JLabel(publicacion.getTitulo());
         textViewNombre.setFont(new Font("Arial", Font.PLAIN, 30));
-        textViewNombre.setBounds(20, 20, 200, 40);
-        add(textViewNombre);
+        textViewNombre.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPanel.add(textViewNombre);
+
+        JLabel textViewUsuario = new JLabel("Autor: " + publicacion.getUsuario());
+        textViewUsuario.setFont(new Font("Arial", Font.PLAIN, 20));
+        textViewUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPanel.add(textViewUsuario);
 
         JLabel textViewTipo = new JLabel(publicacion.getTipo());
         textViewTipo.setFont(new Font("Arial", Font.PLAIN, 30));
         textViewTipo.setForeground(new Color(174, 101, 7));
-        textViewTipo.setBounds(20, 90, 200, 40);
-        add(textViewTipo);
+        textViewTipo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPanel.add(textViewTipo);
 
         JLabel textViewDescripcion = new JLabel("<html>" + publicacion.getDescripcion() + "</html>");
         textViewDescripcion.setFont(new Font("Arial", Font.PLAIN, 20));
-        textViewDescripcion.setBounds(20, 160, 760, 209);
-        add(textViewDescripcion);
+        textViewDescripcion.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPanel.add(textViewDescripcion);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         JLabel textViewFecha = new JLabel(dateFormat.format(publicacion.getFecha_publicacion()));
         textViewFecha.setFont(new Font("Arial", Font.BOLD, 20));
-        textViewFecha.setBounds(450, 370, 200, 40);
-        add(textViewFecha);
+        textViewFecha.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        contentPanel.add(Box.createVerticalGlue()); // Pushes the date to the bottom
+        contentPanel.add(textViewFecha);
 
         ImageIcon originalIcon = new ImageIcon("src/VIEW/RES/guardar.png");
         Image originalImage = originalIcon.getImage();
@@ -51,16 +62,14 @@ public class Publicacion_Vista extends JPanel {
 
         JButton saveButton = new JButton(scaledIcon);
         saveButton.setBackground(null);
-        saveButton.setBounds(20, 370, 42, 42);
-        saveButton.setHorizontalAlignment(SwingConstants.CENTER);
-        saveButton.setVerticalAlignment(SwingConstants.CENTER);
-        add(saveButton);
+        saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPanel.add(saveButton);
 
         messagePanel = new JPanel();
         messagePanel.setBackground(new Color(174, 101, 7));
         messagePanel.setLayout(new BorderLayout());
         messagePanel.setVisible(false);
-        add(messagePanel);
+        contentPanel.add(messagePanel);
 
         messageLabel = new JLabel("", SwingConstants.CENTER);
         messageLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -88,5 +97,7 @@ public class Publicacion_Vista extends JPanel {
             timer.setRepeats(false);
             timer.start();
         });
+
+        add(contentPanel, BorderLayout.CENTER);
     }
 }

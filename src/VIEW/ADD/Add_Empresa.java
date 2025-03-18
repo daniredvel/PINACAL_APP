@@ -7,6 +7,7 @@ import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.PERSONAL.Personal_Empresa;
+import VIEW.PUBLICACIONES.Publicacion_Vista;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +16,11 @@ import java.util.List;
 
 public class Add_Empresa extends JFrame {
     private final AddPublicacion addPublicacion;
+    private final JPanel publicacionesPanel;
+    private final CardLayout cardLayout;
+    private final List<Publicacion> publicaciones;
+    private int currentPage = 0;
+    private final int publicationsPerPage = 5;
 
     public Add_Empresa(Usuario usuario_actual, Connection conn) {
         ControladorDatos controladorDatos = new ControladorDatos();
@@ -79,45 +85,52 @@ public class Add_Empresa extends JFrame {
 
         add(topPanel, BorderLayout.NORTH);
 
-        JPanel publicacionesPanel = new JPanel();
-        publicacionesPanel.setLayout(new BoxLayout(publicacionesPanel, BoxLayout.Y_AXIS));
+        publicacionesPanel = new JPanel();
+        cardLayout = new CardLayout();
+        publicacionesPanel.setLayout(cardLayout);
         publicacionesPanel.setBackground(new Color(211, 205, 192));
 
-        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones(usuario_actual.getUsuario());
-        for (Publicacion publicacion : publicaciones) {
-            JPanel publicacionPanel = new JPanel();
-            publicacionPanel.setLayout(new BorderLayout());
-            publicacionPanel.setBorder(BorderFactory.createTitledBorder(publicacion.getTitulo()));
-            publicacionPanel.setBackground(new Color(211, 205, 192));
-
-            JTextArea descripcionArea = new JTextArea(publicacion.getDescripcion());
-            descripcionArea.setFont(new Font("Arial", Font.PLAIN, 18));
-            descripcionArea.setLineWrap(true);
-            descripcionArea.setWrapStyleWord(true);
-            descripcionArea.setEditable(false);
-            publicacionPanel.add(new JScrollPane(descripcionArea), BorderLayout.CENTER);
-
-            JButton eliminarButton = getJButton(publicacion, publicacionesPanel, publicacionPanel);
-            publicacionPanel.add(eliminarButton, BorderLayout.SOUTH);
-            publicacionesPanel.add(publicacionPanel);
-        }
+        publicaciones = controladorDatos.obtenerPublicaciones(usuario_actual.getUsuario());
+        updatePublicationsPanel();
 
         add(new JScrollPane(publicacionesPanel), BorderLayout.CENTER);
+
+        JPanel navigationPanel = new JPanel();
+        navigationPanel.setBackground(new Color(211, 205, 192));
+
+        JButton prevButton = new JButton("Previous");
+        prevButton.addActionListener(e -> {
+            if (currentPage > 0) {
+                currentPage--;
+                cardLayout.show(publicacionesPanel, String.valueOf(currentPage));
+            }
+        });
+
+        JButton nextButton = new JButton("Next");
+        nextButton.addActionListener(e -> {
+            if ((currentPage + 1) * publicationsPerPage < publicaciones.size()) {
+                currentPage++;
+                cardLayout.show(publicacionesPanel, String.valueOf(currentPage));
+            }
+        });
+
+        navigationPanel.add(prevButton);
+        navigationPanel.add(nextButton);
+
+        add(navigationPanel, BorderLayout.SOUTH);
 
         inicioButton.addActionListener(e -> {
             dispose();
             new Inicio_Vista(usuario_actual, conn).setVisible(true);
         });
         personalButton.addActionListener(e -> {
-
             dispose();
             new Personal_Empresa(usuario_actual, conn).setVisible(true);
-
         });
         anadirButton.addActionListener(e -> {
             dispose();
             new Add_Empresa(usuario_actual, conn).setVisible(true);
-                });
+        });
 
         nuevaPublicacionButton.addActionListener(e -> {
             String titulo = JOptionPane.showInputDialog("Ingrese el título de la publicación:");
@@ -126,39 +139,8 @@ public class Add_Empresa extends JFrame {
                 Publicacion nuevaPublicacion = new Publicacion(titulo, descripcion, 0, usuario_actual.getId_usuario(), usuario_actual.getUsuario());
                 if (addPublicacion.crearPublicacion(nuevaPublicacion)) {
                     JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.PUBLICACION_ANADIDO));
-                    publicacionesPanel.add(new JPanel() {{
-                        setLayout(new BorderLayout());
-                        setBorder(BorderFactory.createTitledBorder(nuevaPublicacion.getTitulo()));
-                        setBackground(new Color(211, 205, 192));
-                        add(new JScrollPane(new JTextArea(nuevaPublicacion.getDescripcion()) {{
-                            setFont(new Font("Arial", Font.PLAIN, 18));
-                            setLineWrap(true);
-                            setWrapStyleWord(true);
-                            setEditable(false);
-                        }}), BorderLayout.CENTER);
-                        add(new JButton("Eliminar") {{
-                            setFont(new Font("Arial", Font.PLAIN, 18));
-                            setBackground(new Color(174, 101, 7));
-                            setForeground(Color.WHITE);
-                            setPreferredSize(new Dimension(150, 50));
-                            setMargin(new Insets(10, 20, 10, 20));
-                            addActionListener(e -> {
-                                int response = JOptionPane.showConfirmDialog(null, "¿Estás seguro?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-                                if (response == JOptionPane.YES_OPTION) {
-                                    if (addPublicacion.eliminarPublicacion(nuevaPublicacion)) {
-                                        JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.PUBLICACION_RETIRADA));
-                                        publicacionesPanel.remove(this.getParent());
-                                        publicacionesPanel.revalidate();
-                                        publicacionesPanel.repaint();
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.ERROR_ELIMINAR_PUBLICACION));
-                                    }
-                                }
-                            });
-                        }}, BorderLayout.SOUTH);
-                    }});
-                    publicacionesPanel.revalidate();
-                    publicacionesPanel.repaint();
+                    publicaciones.add(nuevaPublicacion);
+                    updatePublicationsPanel();
                 } else {
                     JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.ERROR_GUARDAR_PUBLICACION));
                 }
@@ -166,26 +148,23 @@ public class Add_Empresa extends JFrame {
         });
     }
 
-    private JButton getJButton(Publicacion publicacion, JPanel publicacionesPanel, JPanel publicacionPanel) {
-        JButton eliminarButton = new JButton("Eliminar");
-        eliminarButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        eliminarButton.setBackground(new Color(174, 101, 7));
-        eliminarButton.setForeground(Color.WHITE);
-        eliminarButton.setPreferredSize(new Dimension(150, 50));
-        eliminarButton.setMargin(new Insets(10, 20, 10, 20));
-        eliminarButton.addActionListener(e -> {
-            int response = JOptionPane.showConfirmDialog(null, "¿Estás seguro?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-            if (response == JOptionPane.YES_OPTION) {
-                if (addPublicacion.eliminarPublicacion(publicacion)) {
-                    JOptionPane.showMessageDialog(null, "Publicación eliminada correctamente");
-                    publicacionesPanel.remove(publicacionPanel);
-                    publicacionesPanel.revalidate();
-                    publicacionesPanel.repaint();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error al eliminar la publicación");
-                }
+    private void updatePublicationsPanel() {
+        publicacionesPanel.removeAll();
+        int totalPages = (int) Math.ceil((double) publicaciones.size() / publicationsPerPage);
+        for (int i = 0; i < totalPages; i++) {
+            JPanel pagePanel = new JPanel();
+            pagePanel.setLayout(new BoxLayout(pagePanel, BoxLayout.Y_AXIS));
+            pagePanel.setBackground(new Color(211, 205, 192));
+            int start = i * publicationsPerPage;
+            int end = Math.min(start + publicationsPerPage, publicaciones.size());
+            for (int j = start; j < end; j++) {
+                Publicacion_Vista publicacionVista = new Publicacion_Vista(publicaciones.get(j));
+                pagePanel.add(publicacionVista);
             }
-        });
-        return eliminarButton;
+            publicacionesPanel.add(pagePanel, String.valueOf(i));
+        }
+        cardLayout.show(publicacionesPanel, String.valueOf(currentPage));
+        publicacionesPanel.revalidate();
+        publicacionesPanel.repaint();
     }
 }
