@@ -4,6 +4,7 @@ import CONTROLLER.CRUD.USER.ActualizarUsuario;
 import MODEL.Usuario;
 import VIEW.ADD.Add_Empresa;
 import VIEW.INICIO.Inicio_Vista;
+import VIEW.RES.Rutas;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +24,9 @@ public class Personal_Empresa extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        //Icono
+        setIconImage(Rutas.getIcono());
 
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(211, 205, 192));

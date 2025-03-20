@@ -8,6 +8,7 @@ import VIEW.ADMINISTRAR.Administar_Vista;
 import VIEW.PERSONAL.Personal_Empresa;
 import VIEW.PERSONAL.Personal_Usuario;
 import VIEW.PUBLICACIONES.Publicacion_Vista;
+import VIEW.RES.Rutas;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +24,10 @@ public class Inicio_Vista extends JFrame {
 
     public Inicio_Vista(Usuario usuario_actual, Connection conn) {
         controladorDatos = new ControladorDatos();
-        this.usuario_actual = usuario_actual;
+        Inicio_Vista.usuario_actual = usuario_actual;
+
+        //Icono
+        setIconImage(Rutas.getIcono());
 
         setTitle("Inicio Vista");
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Adjust the window to the screen

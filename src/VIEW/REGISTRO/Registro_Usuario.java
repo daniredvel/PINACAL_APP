@@ -3,6 +3,7 @@ package VIEW.REGISTRO;
 import CONTROLLER.CRUD.USER.AddUsuario;
 import MODEL.Usuario;
 import VIEW.INICIO_SESION.InicioSesion_Vista;
+import VIEW.RES.Rutas;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -24,6 +25,9 @@ public class Registro_Usuario extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        //Icono
+        setIconImage(Rutas.getIcono());
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());

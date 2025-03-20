@@ -7,6 +7,7 @@ import MODEL.Usuario;
 import VIEW.ADD.Add_Empresa;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.PERSONAL.Personal_Usuario;
+import VIEW.RES.Rutas;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +27,9 @@ public class Administar_Vista extends JFrame {
         this.usuario_actual = usuario_actual;
         ControladorDatos controladorDatos = new ControladorDatos();
         publicaciones = controladorDatos.obtenerPublicaciones("example");
+
+        //Icono
+        setIconImage(Rutas.getIcono());
 
         setTitle("Administrar Publicaciones");
         setExtendedState(JFrame.MAXIMIZED_BOTH);

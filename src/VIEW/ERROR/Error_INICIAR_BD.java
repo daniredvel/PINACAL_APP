@@ -1,5 +1,7 @@
 package VIEW.ERROR;
 
+import VIEW.RES.Rutas;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,6 +13,9 @@ public class Error_INICIAR_BD extends JFrame {
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        //Icono
+        setIconImage(Rutas.getIcono());
 
         // Create a panel to hold the components
         JPanel panel = new JPanel();

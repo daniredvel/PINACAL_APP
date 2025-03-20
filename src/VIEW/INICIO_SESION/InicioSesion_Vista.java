@@ -4,10 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.sql.Connection;
+import java.util.Objects;
 
 import MODEL.Usuario;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.REGISTRO.Registro_Vista;
+import VIEW.RES.Rutas;
 
 import static CONTROLLER.CRUD.USER.LeerUsuario.leerUsuarioPorNombre;
 import static CONTROLLER.VALIDATION.ControladorInicioSesion.comprobarPass;
@@ -24,6 +26,9 @@ public class InicioSesion_Vista extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize the frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        //Icono
+        setIconImage(Rutas.getIcono());
 
         // Panel y layout
         JPanel panel = new JPanel();

@@ -8,11 +8,13 @@ import MODEL.Usuario;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.PERSONAL.Personal_Empresa;
 import VIEW.PUBLICACIONES.Publicacion_Propia_Vista;
+import VIEW.RES.Rutas;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Objects;
 
 public class Add_Empresa extends JFrame {
     private final Usuario usuario_actual;
@@ -24,6 +26,9 @@ public class Add_Empresa extends JFrame {
         this.usuario_actual=usuario_actual;
         controladorDatos = new ControladorDatos();
         addPublicacion = new AddPublicacion();
+
+        //Icono
+        setIconImage(Rutas.getIcono());
 
         setTitle("Publicaciones del Usuario");
         setExtendedState(JFrame.MAXIMIZED_BOTH);

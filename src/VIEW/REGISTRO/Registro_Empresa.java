@@ -1,6 +1,7 @@
 package VIEW.REGISTRO;
 
 import MODEL.Usuario;
+import VIEW.RES.Rutas;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -22,6 +23,9 @@ public class Registro_Empresa extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        //Icono
+        setIconImage(Rutas.getIcono());
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());

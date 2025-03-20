@@ -1,5 +1,7 @@
 package VIEW.REGISTRO;
 
+import VIEW.RES.Rutas;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
@@ -12,6 +14,9 @@ public class Registro_Vista extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        //Icono
+        setIconImage(Rutas.getIcono());
 
         // Crear Panel y Layout
         JPanel panel = new JPanel();
