@@ -68,7 +68,7 @@ public class Inicio_Vista extends JFrame {
         topPanel.add(personalButton, gbc);
 
         if (usuario_actual.getTipo().equals("EMPRESA_ASOCIADA")||usuario_actual.getTipo().equals("EMPRESA_NO_ASOCIADA")) {
-            anadirButton = new JButton("Añadir");
+            anadirButton = new JButton("Mis Publicaciones");
             anadirButton.setFont(buttonFont);
             anadirButton.setBackground(new Color(174, 101, 7));
             anadirButton.setForeground(Color.WHITE);
@@ -144,7 +144,7 @@ public class Inicio_Vista extends JFrame {
     }
 
     private void cargarPublicaciones() {
-        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones("example");
+        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones();
         for (Publicacion publicacion : publicaciones) {
             listModel.addElement(publicacion);
         }

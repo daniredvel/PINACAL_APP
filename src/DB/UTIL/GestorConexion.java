@@ -42,7 +42,7 @@ public class GestorConexion {
     }
 
     /**
-     * Método que devuelve la conexión con la base de datos.
+     * METODO que devuelve la conexión con la base de datos.
      * @return Conexión con la base de datos.
      */
     public static Connection getConexion() {
@@ -50,7 +50,7 @@ public class GestorConexion {
     }
 
     /**
-     * Método que cierra la conexión con la base de datos.
+     * METODO que cierra la conexión con la base de datos.
      * @return Código de error.
      */
     public static int cerrarConexion() {

@@ -14,7 +14,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
 import java.util.List;
-import java.util.Objects;
 
 public class Add_Empresa extends JFrame {
     private final Usuario usuario_actual;
@@ -58,7 +57,7 @@ public class Add_Empresa extends JFrame {
         personalButton.setPreferredSize(new Dimension(150, 50));
         personalButton.setMargin(new Insets(10, 20, 10, 20));
 
-        JButton anadirButton = new JButton("Añadir");
+        JButton anadirButton = new JButton("Mis Publicaciones");
         anadirButton.setFont(buttonFont);
         anadirButton.setBackground(new Color(174, 101, 7));
         anadirButton.setForeground(Color.WHITE);
@@ -137,7 +136,7 @@ public class Add_Empresa extends JFrame {
     }
 
     private void cargarPublicaciones(Usuario usuario_actual) {
-        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones(usuario_actual.getUsuario());
+        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones(usuario_actual);
         for (Publicacion publicacion : publicaciones) {
             listModel.addElement(publicacion);
         }

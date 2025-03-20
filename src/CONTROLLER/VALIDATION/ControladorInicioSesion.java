@@ -39,22 +39,4 @@ public class ControladorInicioSesion {
         }
 
     }
-//TODO:Eliminar método
-    public static int comprobarPass(String usuario, String password, String op) {
-
-        //Si devuelve 1, el usuario y la contraseña son correctos
-        //Si devuelve -1, la contraseña es incorrecta
-        //Si devuelve 0, el usuario no existe
-
-        if (usuario.equals("admin")) {
-            if (password.equals("admin")) {
-                return 1;
-            } else {
-                return -1;
-            }
-        } else {
-            return 0;
-        }
-
-    }
 }

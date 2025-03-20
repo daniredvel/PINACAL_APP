@@ -26,7 +26,7 @@ public class Administar_Vista extends JFrame {
     public Administar_Vista(Usuario usuario_actual, Connection conn) {
         this.usuario_actual = usuario_actual;
         ControladorDatos controladorDatos = new ControladorDatos();
-        publicaciones = controladorDatos.obtenerPublicaciones("example");
+        publicaciones = controladorDatos.obtenerPublicaciones();
 
         //Icono
         setIconImage(Rutas.getIcono());
@@ -60,7 +60,7 @@ public class Administar_Vista extends JFrame {
         personalButton.setPreferredSize(new Dimension(150, 50));
         personalButton.setMargin(new Insets(10, 20, 10, 20));
 
-        JButton anadirButton = new JButton("Añadir");
+        JButton anadirButton = new JButton("Mis Publicaciones");
         anadirButton.setFont(buttonFont);
         anadirButton.setBackground(new Color(174, 101, 7));
         anadirButton.setForeground(Color.WHITE);
