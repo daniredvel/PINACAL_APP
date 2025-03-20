@@ -1,10 +1,11 @@
 package VIEW.ADMINISTRAR;
 
-import CONTROLLER.CRUD.Eliminado_Controlador;
+import CONTROLLER.CRUD.PUBLICACION.AddPublicacion;
 import CONTROLLER.ControladorDatos;
 import MODEL.Publicacion;
 import MODEL.Usuario;
 import VIEW.ADD.Add_Empresa;
+import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.PERSONAL.Personal_Usuario;
 import VIEW.RES.Rutas;
@@ -13,22 +14,41 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
 import java.util.List;
+import java.util.logging.Level;
+
+import static DB.UTIL.CrearConn.conn;
+import static DB.UTIL.CrearConn.crearConexion;
+import static VIEW.INICIO.Inicio_Vista.LOGGER;
 
 public class Administar_Vista extends JFrame {
-    private final Usuario usuario_actual;
     private final List<Publicacion> publicaciones;
     private int currentIndex = 0;
     private final JTextArea publicacionArea;
     private final JTextField justificacionField;
     private final JRadioButton denegadaButton;
-    private final ButtonGroup group; //
+    private static Usuario usuario_actual = null;
+    private final ButtonGroup group;
+    public static Connection conn = null;
 
-    public Administar_Vista(Usuario usuario_actual, Connection conn) {
-        this.usuario_actual = usuario_actual;
+    public Administar_Vista(Usuario usuario_actual, Connection conexion) {
+        Administar_Vista.usuario_actual = usuario_actual;
         ControladorDatos controladorDatos = new ControladorDatos();
-        publicaciones = controladorDatos.obtenerPublicaciones();
+        publicaciones = controladorDatos.obtenerPublicaciones(conexion);
 
-        //Icono
+        LOGGER.log(Level.INFO, "Iniciando vista de administrar");
+        Administar_Vista.conn = conexion;
+
+        // Si la conexión es nula, se crea una nueva
+        if (conn == null) conn = conn();
+
+        // Nos aseguramos de que la conexión no sea nula
+        // Si la conexión es nula, se muestra la ventana de error de la aplicación
+        if (conn == null) {
+            LOGGER.log(Level.SEVERE, "Conexión nula");
+            SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
+        }
+
+        // Icono
         setIconImage(Rutas.getIcono());
 
         setTitle("Administrar Publicaciones");
@@ -113,9 +133,9 @@ public class Administar_Vista extends JFrame {
         denegadaButton.setFont(new Font("Arial", Font.PLAIN, 18));
         denegadaButton.setBackground(new Color(211, 205, 192));
 
-        group = new ButtonGroup(); // Grupo de botones circulares
-        group.add(aceptadaButton); //Aceptar
-        group.add(denegadaButton); //Denegar
+        group = new ButtonGroup();
+        group.add(aceptadaButton);
+        group.add(denegadaButton);
 
         aceptadaButton.addActionListener(e -> justificacionField.setEnabled(false));
         denegadaButton.addActionListener(e -> justificacionField.setEnabled(true));
@@ -160,6 +180,7 @@ public class Administar_Vista extends JFrame {
             dispose();
             new Add_Empresa(usuario_actual, conn).setVisible(true);
         });
+
         adminButton.addActionListener(e -> {
             dispose();
             new Administar_Vista(usuario_actual, conn).setVisible(true);
@@ -189,14 +210,19 @@ public class Administar_Vista extends JFrame {
         Publicacion publicacion = publicaciones.get(currentIndex);
         publicacionArea.setText(publicacion.getDescripcion());
         justificacionField.setText("");
-        group.clearSelection(); // Use group here
+        group.clearSelection();
     }
 
     private void gestionarPublicacion() {
         Publicacion publicacion = publicaciones.get(currentIndex);
+        AddPublicacion addPublicacion = new AddPublicacion();
         if (denegadaButton.isSelected()) {
-            String justificacion = justificacionField.getText();
-            JOptionPane.showMessageDialog(null, Eliminado_Controlador.eliminar(justificacion, "PUBLICACION", publicacion, usuario_actual));
+            boolean eliminado = addPublicacion.eliminarPublicacion(publicacion);
+            if (eliminado) {
+                JOptionPane.showMessageDialog(null, "Publicación denegada y eliminada.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al eliminar la publicación.");
+            }
         }
     }
 }

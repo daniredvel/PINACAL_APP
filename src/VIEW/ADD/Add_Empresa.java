@@ -5,6 +5,7 @@ import CONTROLLER.ControladorDatos;
 import MODEL.Publicacion;
 import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
+import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.PERSONAL.Personal_Empresa;
 import VIEW.PUBLICACIONES.Publicacion_Propia_Vista;
@@ -14,17 +15,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
 import java.util.List;
+import java.util.logging.Level;
+
+import static DB.UTIL.CrearConn.conn;
+import static VIEW.INICIO.Inicio_Vista.LOGGER;
 
 public class Add_Empresa extends JFrame {
     private final Usuario usuario_actual;
     private final AddPublicacion addPublicacion;
     private final DefaultListModel<Publicacion> listModel;
     private final ControladorDatos controladorDatos;
+    private static Connection conn=null;
 
-    public Add_Empresa(Usuario usuario_actual, Connection conn) {
+    public Add_Empresa(Usuario usuario_actual, Connection conexion) {
         this.usuario_actual=usuario_actual;
         controladorDatos = new ControladorDatos();
         addPublicacion = new AddPublicacion();
+
+        // Si la conexión es nula, se crea una nueva
+        if (conn==null) conn = conn();
+        else Inicio_Vista.conn = conexion;
+
+        //Nos aseguramos de que la conexión no sea nula
+        //Si la conexión es nula, se muestra la ventana de error de la aplicación
+        if (conn == null) {
+            LOGGER.log(Level.SEVERE, "Conexión nula");
+            SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
+        }
 
         //Icono
         setIconImage(Rutas.getIcono());
@@ -107,17 +124,7 @@ public class Add_Empresa extends JFrame {
             new Add_Empresa(usuario_actual, conn).setVisible(true);
         });
         nuevaPublicacionButton.addActionListener(e -> {
-            String titulo = JOptionPane.showInputDialog("Ingrese el título de la publicación:");
-            String descripcion = JOptionPane.showInputDialog("Ingrese la descripción de la publicación:");
-            if (titulo != null && descripcion != null) {
-                Publicacion nuevaPublicacion = new Publicacion(titulo, descripcion, 0, usuario_actual.getId_usuario(), usuario_actual.getUsuario());
-                if (addPublicacion.crearPublicacion(nuevaPublicacion)) {
-                    JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.PUBLICACION_ANADIDO));
-                    listModel.addElement(nuevaPublicacion);
-                } else {
-                    JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.ERROR_GUARDAR_PUBLICACION));
-                }
-            }
+            new Add_Publicacion(usuario_actual, conn).setVisible(true);
         });
     }
 
@@ -136,7 +143,7 @@ public class Add_Empresa extends JFrame {
     }
 
     private void cargarPublicaciones(Usuario usuario_actual) {
-        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones(usuario_actual);
+        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones(conn, usuario_actual);
         for (Publicacion publicacion : publicaciones) {
             listModel.addElement(publicacion);
         }

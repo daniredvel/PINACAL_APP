@@ -7,10 +7,10 @@ import VIEW.INICIO_SESION.InicioSesion_Vista;
 import javax.swing.*;
 import java.sql.Connection;
 
+import static DB.UTIL.CrearConn.crearConexion;
+
 public class Main {
-        private static final String DB_NAME = "Pinacal";
-        private static final String DB_USER = "Pinacal";
-        private static final String DB_PASSWORD = "pinacal";
+
         private static Connection conn;
     public static void main(String[] args) {
         if (crearConexion()) {
@@ -21,8 +21,5 @@ public class Main {
             SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
         }
     }
-        public static boolean crearConexion() {
-            int estadoConexion = GestorConexion.crearConexion(DB_NAME, DB_USER, DB_PASSWORD);
-            return estadoConexion == 0;
-        }
+
 }

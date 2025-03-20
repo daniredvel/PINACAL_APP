@@ -5,7 +5,6 @@ import MODEL.Publicacion;
 import MODEL.Usuario;
 import VIEW.ADD.Add_Empresa;
 import VIEW.ADMINISTRAR.Administar_Vista;
-import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.PERSONAL.Personal_Empresa;
 import VIEW.PERSONAL.Personal_Usuario;
 import VIEW.PUBLICACIONES.Publicacion_Vista;
@@ -15,37 +14,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static DB.UTIL.CrearConn.conn;
 
 public class Inicio_Vista extends JFrame {
-    public static final Logger LOGGER = Logger.getLogger(Inicio_Vista.class.getName());
     private JButton anadirButton;
     private JButton adminButton;
     private final DefaultListModel<Publicacion> listModel;
     private final ControladorDatos controladorDatos;
     private static Usuario usuario_actual = null;
-    public static Connection conn = null;
 
-    public Inicio_Vista(Usuario usuario_actual, Connection conexion) {
-        LOGGER.log(Level.INFO, "Iniciando vista de inicio");
+    public Inicio_Vista(Usuario usuario_actual, Connection conn) {
         controladorDatos = new ControladorDatos();
         Inicio_Vista.usuario_actual = usuario_actual;
 
-        // Si la conexión es nula, se crea una nueva
-        if (conn == null) conn = conn();
-        else Inicio_Vista.conn = conexion;
-
-        // Nos aseguramos de que la conexión no sea nula
-        // Si la conexión es nula, se muestra la ventana de error de la aplicación
-        if (conn == null) {
-            LOGGER.log(Level.SEVERE, "Conexión nula");
-            SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
-        }
-
-        // Icono
+        //Icono
         setIconImage(Rutas.getIcono());
 
         setTitle("Inicio Vista");
@@ -86,6 +67,7 @@ public class Inicio_Vista extends JFrame {
         gbc.gridx = 1;
         topPanel.add(personalButton, gbc);
 
+        if (usuario_actual.getTipo().equals("EMPRESA_ASOCIADA")||usuario_actual.getTipo().equals("EMPRESA_NO_ASOCIADA")) {
             anadirButton = new JButton("Mis Publicaciones");
             anadirButton.setFont(buttonFont);
             anadirButton.setBackground(new Color(174, 101, 7));
@@ -95,9 +77,9 @@ public class Inicio_Vista extends JFrame {
 
             gbc.gridx = 2;
             topPanel.add(anadirButton, gbc);
+        }
 
-
-        if (usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
+        if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
             adminButton = new JButton("Administrador");
             adminButton.setFont(buttonFont);
             adminButton.setBackground(new Color(174, 101, 7));
@@ -121,31 +103,26 @@ public class Inicio_Vista extends JFrame {
 
         // Add action listeners to buttons
         inicioButton.addActionListener(e -> {
-            LOGGER.log(Level.INFO, "Inicio button clicked");
             dispose();
             new Inicio_Vista(usuario_actual, conn).setVisible(true);
         });
         personalButton.addActionListener(e -> {
-            LOGGER.log(Level.INFO, "Personal button clicked");
             dispose();
-            if (usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA)) || usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA))) {
-                new Personal_Empresa(usuario_actual, conn).setVisible(true);
-            } else if (usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.USUARIO)) || usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
-                new Personal_Usuario(usuario_actual, conn).setVisible(true);
+            if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA))||usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA))) {
+                new Personal_Empresa(usuario_actual,conn).setVisible(true);
+            } else if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.USUARIO))||usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
+                new Personal_Usuario(usuario_actual,conn).setVisible(true);
             } else {
-                new Inicio_Vista(usuario_actual, conn).setVisible(true);
-            }
+                new Inicio_Vista(usuario_actual, conn).setVisible(true);}
         });
-        if (usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA)) || usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
+        if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA))||usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA))) {
             anadirButton.addActionListener(e -> {
-                LOGGER.log(Level.INFO, "Mis Publicaciones button clicked");
                 dispose();
                 new Add_Empresa(usuario_actual, conn).setVisible(true);
             });
         }
-        if (usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
+        if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
             adminButton.addActionListener(e -> {
-                LOGGER.log(Level.INFO, "Administrador button clicked");
                 dispose();
                 new Administar_Vista(usuario_actual, conn).setVisible(true);
             });
@@ -167,12 +144,10 @@ public class Inicio_Vista extends JFrame {
     }
 
     private void cargarPublicaciones() {
-        LOGGER.log(Level.INFO, "Loading publications");
-        listModel.clear(); // Clear the list before reloading
-        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones(conn);
+        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones();
         for (Publicacion publicacion : publicaciones) {
             listModel.addElement(publicacion);
         }
-        LOGGER.log(Level.INFO, "Publications loaded: {0}", listModel.size());
     }
+
 }

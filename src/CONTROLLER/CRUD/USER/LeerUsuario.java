@@ -14,7 +14,7 @@ public class LeerUsuario {
 
     public static Usuario leerUsuarioPorNombre(String username) {
         // Consulta SQL para unir las tablas USUARIOS y TIPOS_USUARIOS
-        String sql = "SELECT u.*, t.permisos FROM USUARIOS u " +
+        String sql = "SELECT u.*, t.nombre_tipo FROM USUARIOS u " +
                 "JOIN TIPOS_USUARIOS t ON u.id_tipo_usuario = t.id_tipo_usuario " +
                 "WHERE u.nombre = ?";
         try (Connection conn = GestorConexion.getConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -34,7 +34,7 @@ public class LeerUsuario {
                                 direccion,
                                 rs.getString("telefono"),
                                 rs.getInt("id_tipo_usuario"),
-                                rs.getString("permisos")
+                                rs.getString("nombre_tipo")
                         );
                         System.out.println("Usuario encontrado: " + usuario.getUsuario()); // Debug statement
                         return usuario;
@@ -47,7 +47,7 @@ public class LeerUsuario {
                                 rs.getString("email"),
                                 rs.getString("telefono"),
                                 rs.getInt("id_tipo_usuario"),
-                                rs.getString("permisos")
+                                rs.getString("nombre_tipo")
                         );
                         System.out.println("Usuario encontrado: " + usuario.getUsuario()); // Debug statement
                         return usuario;

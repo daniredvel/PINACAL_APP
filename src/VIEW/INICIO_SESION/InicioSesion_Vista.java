@@ -112,37 +112,36 @@ public class InicioSesion_Vista extends JFrame {
         panel.add(registerButton, constraints);
 
         // «Escuchador» del botón de inicio de sesión
+// En `InicioSesion_Vista.java`, dentro del `loginButton.addActionListener`
         loginButton.addActionListener(e -> {
-            // Handle login action
             String username = userField.getText();
             String password = new String(passField.getPassword());
 
             try {
-                // Comprueba si el usuario y la contraseña son correctos
                 int result = comprobarPass(username, password);
-                System.out.println("comprobarPass result: " + result); // Debug statement
+                System.out.println("comprobarPass result: " + result); // Registro debug
                 switch (result) {
                     case 1:
-                        // Si el usuario y la contraseña son correctos, crea un objeto Usuario con los datos del usuario
                         usuario_actual = leerUsuarioPorNombre(username);
-                        System.out.println("Usuario encontrado: " + usuario_actual); // Debug statement
-                        // Cierra la ventana actual
+                        System.out.println("Permisos de usuario: " + usuario_actual.getPermisos()); // Registro debug
+                        System.out.println("Usuario encontrado: " + usuario_actual); // Registro debug
                         dispose();
-                        // Abre la ventana de inicio
-                        new Inicio_Vista(usuario_actual, conn).setVisible(true);
+                        System.out.println("Creando Inicio_Vista..."); // Registro debug
+                        Inicio_Vista inicioVista = new Inicio_Vista(usuario_actual, conn);
+                        inicioVista.setVisible(true);
+                        System.out.println("Inicio_Vista creada y visible."); // Registro debug
                         break;
                     case -1: case 0:
-                        // Indica en un mensaje que la contraseña es incorrecta
                         messageLabel.setText("Contraseña o usuario incorrectos");
                         messageLabel.setForeground(new Color(233, 30, 99));
                         break;
                 }
             } catch (Exception ex) {
+                ex.printStackTrace(); // Registro de la excepción
                 messageLabel.setText("Error al iniciar sesión");
                 messageLabel.setForeground(new Color(233, 30, 99));
             }
         });
-
         // «Escuchador» del botón de registro
         registerButton.addActionListener(e -> {
             // Cierra la ventana de inicio de sesión

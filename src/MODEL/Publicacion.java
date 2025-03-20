@@ -7,7 +7,7 @@ public class Publicacion {
     //Tipo de publicaciones
     //Ofertas de trabajo, maquinaria...
     //Demandas de trabajo, maquinaria...
-    private final String [] tipos = {"OFERTA", "DEMANDA"};
+    private static final String [] tipos = {"OFERTA", "DEMANDA"};
 
     private int id_publicacion;
     private String titulo;
@@ -27,16 +27,13 @@ public class Publicacion {
     public Publicacion(
             String  titulo,
             String  descripcion,
-            int     indice,
-            int     id_usuario,
-            String  usuario
-    ){
+            String  tipo,
+            int     id_usuario){
         this.titulo             = titulo;
         this.descripcion        = descripcion;
         this.fecha_publicacion  = new Timestamp(System.currentTimeMillis());
-        this.tipo               = indicarTipo(indice);
+        this.tipo               = tipo.toUpperCase();
         this.id_usuario         = id_usuario;
-        this.usuario            = usuario;
     }
 
     //Constructor para leer publicaciones de la base de datos
@@ -45,19 +42,18 @@ public class Publicacion {
             String  titulo,
             String  descripcion,
             Timestamp fecha_publicacion,
-            int     indice,
+            String     tipo,
             int     id_usuario,
-            String  usuario
+            String usuario
     ){
         this.id_publicacion     = id_publicacion;
         this.titulo             = titulo;
         this.descripcion        = descripcion;
         this.fecha_publicacion  = fecha_publicacion;
-        this.tipo               = indicarTipo(indice);
+        this.tipo               = tipo.toUpperCase();
         this.id_usuario         = id_usuario;
         this.usuario            = usuario;
     }
-
     //GETTER
 
     public int getId_publicacion(){
@@ -122,7 +118,7 @@ public class Publicacion {
 
     //METODO QUE INDICA EL TIPO DE PUBLICACION A PARTIR DE UN INDICE
 
-    private String indicarTipo(int indice){
+    public static String indicarTipo(int indice){
         return tipos[indice];
     }
 

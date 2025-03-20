@@ -39,7 +39,7 @@ public class Usuario {
             String  email,
             String  direccion,
             String  telefono,
-            int     indice_tipo_usuario_tipo_usuario,
+            int     indice_tipo_usuario,
             String  permisos
     ){
         this.id_usuario =   id_usuario;
@@ -48,8 +48,8 @@ public class Usuario {
         this.email      =   email;
         this.direccion  =   direccion;
         this.telefono   =   formatoTelefonoBD(telefono);
-        this.tipo       =   indicarTipo(indice_tipo_usuario_tipo_usuario);
-        this.permisos   =   permisos;
+        this.tipo       =   indicarTipo(indice_tipo_usuario);
+        this.permisos   =   permisos.toUpperCase();
     }
     //Constructor para usuarios con id
     //Los usuarios no tienen direccion
@@ -59,7 +59,7 @@ public class Usuario {
             String  password,
             String  email,
             String  telefono,
-            int     indice_tipo_usuario_tipo_usuario,
+            int     indice_tipo_usuario,
             String  permisos
 
     ){
@@ -68,8 +68,8 @@ public class Usuario {
         this.password   =   password;
         this.email      =   email;
         this.telefono   =   formatoTelefonoBD(telefono);
-        this.tipo       =   indicarTipo(indice_tipo_usuario_tipo_usuario);
-        this.permisos   =   permisos;
+        this.tipo       =   indicarTipo(indice_tipo_usuario);
+        this.permisos   =   permisos.toUpperCase();
 
     }
 
@@ -91,7 +91,7 @@ public class Usuario {
         this.direccion  =   direccion;
         this.telefono   =   formatoTelefonoBD(telefono);
         this.tipo       =   indicarTipo(indice_tipo_usuario_tipo_usuario);
-        this.permisos   =   permisos;
+        this.permisos   =   permisos.toUpperCase();
 
     }
     //Constructor para usuarios sin id
@@ -110,7 +110,7 @@ public class Usuario {
         this.email      =   email;
         this.telefono   =   formatoTelefonoBD(telefono);
         this.tipo       =   indicarTipo(indice_tipo_usuario_tipo_usuario);
-        this.permisos   =   permisos;
+        this.permisos   =   permisos.toUpperCase();
 
     }
 

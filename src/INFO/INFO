@@ -14,6 +14,9 @@ Servidor de base de datos:
         basedir=<RUTA DE LA CARPETA mysql-9.2.0-winx64 (MYSQL)>
         # set datadir to the location of yout data directory
         datadir=<RUTA DE LA CARPETA mysql-9.2.0-winx64\\data (MYSQL/DATA)>
+        bind-address = 0.0.0.0
+        skip-networking=0
+
     Paso 3, Java:
         La IP debe ser la del ordenador/servidor que aloje la base de datos
         //String url = "jdbc:mysql://tu_IP_publica:3306/";

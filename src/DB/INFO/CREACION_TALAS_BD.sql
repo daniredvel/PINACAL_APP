@@ -70,8 +70,10 @@ CREATE TABLE JUSTIFICACIONES_ELIMINACION_USUARIOS (
 );
 
 -- INSERTAMOS LOS TIPOS DE USUARIOS
-INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (1, 'Usuario', 'publicar, guardar_publicacion, ver_publicaciones, ver_publicaciones_guardadas, eliminar_publicacion_propia');
-INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (2, 'Administrador', 'eliminar_publicacion_ajena, eliminar_usuario');
+INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (0, 'Administrador', 'eliminar_publicacion_ajena, eliminar_usuario');
+INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (1, 'Usuario', 'guardar_publicacion, ver_publicaciones');
+INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (2, 'Empresa_asociada', 'publicar, guardar_publicacion, ver_publicaciones, ver_publicaciones_guardadas, eliminar_publicacion_propia');
+INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (3, 'Empresa_no_asociada', 'guardar_publicacion, ver_publicaciones');
 
 -- USUARIO ADMINISTRADOR
 INSERT INTO USUARIOS (nombre, password, email, direccion, telefono, id_tipo_usuario)

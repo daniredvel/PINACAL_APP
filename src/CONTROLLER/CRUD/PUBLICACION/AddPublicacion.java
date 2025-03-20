@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class AddPublicacion {
 
-    public boolean crearPublicacion(Publicacion publicacion) {
+    public static boolean crearPublicacion(Publicacion publicacion) throws SQLException {
         String sql = "INSERT INTO PUBLICACIONES (titulo, descripcion, fecha_publicacion, tipo, id_usuario, usuario) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = GestorConexion.getConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
