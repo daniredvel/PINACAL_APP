@@ -1,3 +1,20 @@
-Los permisos para publicar y eliminar publicaciones propias responden al permios "1"
-Los permisos de adminstridar para eliminar publicaciones ajenas y usuarios responden al permiso "2"
-Ningun usuario puede eliminar a un administrador, ni siquiera otro administrador o el mismo
+INFORMACIÓN DE LA APLICACIÓN
+-------------------------------
+
+Permisos de usuario:
+    Los permisos para publicar y eliminar publicaciones propias responden al permios "1"
+    Los permisos de adminstridar para eliminar publicaciones ajenas y usuarios responden al permiso "2"
+    Ningun usuario puede eliminar a un administrador, ni siquiera otro administrador o el mismo
+
+Servidor de base de datos:
+    Paso 1, instalación de MySQL
+    Paso 2, fichero my.ini (usar doble barra):
+        [mysqld]
+        # set basedir to your installation path
+        basedir=<RUTA DE LA CARPETA mysql-9.2.0-winx64 (MYSQL)>
+        # set datadir to the location of yout data directory
+        datadir=<RUTA DE LA CARPETA mysql-9.2.0-winx64\\data (MYSQL/DATA)>
+    Paso 3, Java:
+        La IP debe ser la del ordenador/servidor que aloje la base de datos
+        //String url = "jdbc:mysql://tu_IP_publica:3306/";
+        Para saber tu IP: https://www.whatismyip.com/

@@ -23,13 +23,15 @@ public class GestorConexion {
      * @return Código de error.
      */
     public static int crearConexion(String bd, String usr, String pass) {
+        //URL para conexiones remotas
+        //String url = "jdbc:mysql://85.251.134.6:3306/";
+        String url = "jdbc:mysql://localhost:3306/";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conexion = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/" + bd,
-                    usr,
-                    pass
+                    url + bd, usr, pass
             );
+
             System.out.println("Conexión a la base de datos establecida correctamente."); // Debug statement
             return Mensajes.OK;
         } catch (ClassNotFoundException cnfe) {
