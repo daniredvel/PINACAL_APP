@@ -133,7 +133,7 @@ public class Personal_Usuario extends JFrame {
             usuario_actual.setDireccion(direccionField.getText());
             usuario_actual.setTelefono(telefonoField.getText());
 
-            JOptionPane.showMessageDialog(null, actualizarUsuario.actualizarUsuario(usuario_actual));
+            JOptionPane.showMessageDialog(null, ActualizarUsuario.actualizarUsuario(usuario_actual, conn));
 
             nombreField.setEnabled(false);
             direccionField.setEnabled(false);

@@ -14,6 +14,8 @@ Revisión de la codificación de la contraseña
 
 Corregir la interfaz grafica
 
+Comprobar el funcionamiento de añadir publicacion y de administracion
+
 
 Para cifrar la contraseña utilizando el algoritmo AES se utiliza una clave que puede ser de 128, 192 y 256 bits.
 Para descifrar la contraseña se utiliza la misma clave que se utilizo para cifrarla.

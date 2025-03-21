@@ -10,14 +10,6 @@ import java.sql.SQLException;
 public class AddUsuario {
     //Indicamos los tipos y permisos de usuario
 
-
-    public static String addEmpresaAsociada(Usuario empresa) {
-
-        empresa.setTipo(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA));
-        empresa.setPermisos("1");
-
-        return responder(insertUsuario(empresa));
-    }
     public static String addEmpresa(Usuario empresa) {
 
         empresa.setTipo(Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA));

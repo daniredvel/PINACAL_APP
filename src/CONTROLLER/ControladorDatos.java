@@ -108,7 +108,7 @@ public class ControladorDatos {
         return publicaciones;
     }
 
-    // Método para obtener todos los usuarios de la base de datos
+    // METODO para obtener todos los usuarios de la base de datos
     public static List<Usuario> obtenerUsuarios(Connection conexion) {
         Connection conn = conexion;
 

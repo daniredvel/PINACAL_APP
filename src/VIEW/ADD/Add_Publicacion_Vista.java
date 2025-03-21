@@ -20,9 +20,11 @@ public class Add_Publicacion_Vista extends JDialog {
     private final JTextArea descripcionArea;
     private final JComboBox<String> tipoComboBox;
     private final Usuario usuario_actual;
+    private final Connection conn;
 
-    public Add_Publicacion_Vista(Frame owner, Usuario usuario_actual, Connection conn) {
+    public Add_Publicacion_Vista(Frame owner, Usuario usuario_actual, Connection conexion) {
         super(owner, "Añadir Publicación", true);
+        this.conn = conexion;
         this.usuario_actual = usuario_actual;
 
         // Icono
