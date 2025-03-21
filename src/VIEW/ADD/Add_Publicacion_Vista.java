@@ -16,16 +16,14 @@ import java.util.logging.Logger;
 
 public class Add_Publicacion_Vista extends JDialog {
     private static final Logger LOGGER = Logger.getLogger(Add_Publicacion_Vista.class.getName());
-    private JTextField tituloField;
-    private JTextArea descripcionArea;
-    private JComboBox<String> tipoComboBox;
-    private Usuario usuario_actual;
-    private Connection conn;
+    private final JTextField tituloField;
+    private final JTextArea descripcionArea;
+    private final JComboBox<String> tipoComboBox;
+    private final Usuario usuario_actual;
 
     public Add_Publicacion_Vista(Frame owner, Usuario usuario_actual, Connection conn) {
         super(owner, "Añadir Publicación", true);
         this.usuario_actual = usuario_actual;
-        this.conn = conn;
 
         // Icono
         setIconImage(Rutas.getIcono());
@@ -110,24 +108,20 @@ public class Add_Publicacion_Vista extends JDialog {
 
         Publicacion publicacion = new Publicacion(0, titulo, descripcion, new java.sql.Timestamp(fecha_publicacion.getTime()), tipo, usuario_actual.getId_usuario(), usuario_actual.getUsuario());
 
-        try {
-            // Aquí puedes añadir el código para guardar la publicación en la base de datos
-            // Simulación de guardado en la base de datos
+        // Aquí puedes añadir el código para guardar la publicación en la base de datos
+        // Simulación de guardado en la base de datos
 
 
+        if (AddPublicacion.crearPublicacion(publicacion)) {
+            JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.PUBLICACION_ANADIDO));
+        } else {
+            JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.ERROR_ANADIR_PUBLICACION));
+            LOGGER.log(Level.SEVERE, "Error al crear la publicación: {0}");
 
-            if (AddPublicacion.crearPublicacion(publicacion)) {
-                JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.PUBLICACION_ANADIDO));
-            } else {
-                JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.ERROR_ANADIR_PUBLICACION));
-            }
-
-            LOGGER.log(Level.INFO, "Publicación creada: {0}", publicacion);
-            dispose();
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error al crear la publicación: {0}", e.getMessage());
-            JOptionPane.showMessageDialog(this, Mensajes.getMensaje(Mensajes.ERROR_ANADIR_PUBLICACION), "Error", JOptionPane.ERROR_MESSAGE);
         }
+
+        LOGGER.log(Level.INFO, "Publicación creada: {0}", publicacion);
+        dispose();
     }
 
 }

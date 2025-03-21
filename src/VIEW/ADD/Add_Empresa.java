@@ -18,12 +18,10 @@ import java.util.logging.Level;
 import static VIEW.INICIO.Inicio_Vista.LOGGER;
 
 public class Add_Empresa extends JFrame {
-    private final Usuario usuario_actual;
     private final DefaultListModel<Publicacion> listModel;
     private static Connection conn = null;
 
     public Add_Empresa(Usuario usuario_actual, Connection conexion) {
-        this.usuario_actual = usuario_actual;
 
         // Si la conexión es nula, se crea una nueva
         if (conn == null) conn = conexion;
@@ -125,7 +123,7 @@ public class Add_Empresa extends JFrame {
     private JScrollPane getJScrollPane() {
         JList<Publicacion> publicacionesList = new JList<>(listModel);
         publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
-            Publicacion_Propia_Vista publicacionVista = new Publicacion_Propia_Vista(publicacion, usuario_actual);
+            Publicacion_Propia_Vista publicacionVista = new Publicacion_Propia_Vista(publicacion);
             if (isSelected) {
                 publicacionVista.setBackground(new Color(174, 101, 7));
                 publicacionVista.setForeground(Color.WHITE);

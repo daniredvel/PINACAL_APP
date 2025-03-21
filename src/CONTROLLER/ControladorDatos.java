@@ -107,4 +107,47 @@ public class ControladorDatos {
 
         return publicaciones;
     }
+
+    // Método para obtener todos los usuarios de la base de datos
+    public static List<Usuario> obtenerUsuarios(Connection conexion) {
+        Connection conn = conexion;
+
+        // Si la conexión es nula, se crea una nueva
+        if (conn == null) conn = conn();
+
+        // Nos aseguramos de que la conexión no sea nula
+        // Si la conexión es nula, se muestra la ventana de error de la aplicación
+        if (conn == null) {
+            LOGGER.log(Level.SEVERE, "Conexión nula");
+            SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
+        }
+
+        List<Usuario> usuarios = new ArrayList<>();
+        String query = "SELECT id_usuario, nombre, email, direccion, telefono, tipo, permisos FROM usuarios";
+
+        try {
+            assert conn != null;
+            try (PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    Usuario usuario = new Usuario(
+                            rs.getInt("id_usuario"),
+                            rs.getString("nombre"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("direccion"),
+                            rs.getString("telefono"),
+                            rs.getInt("tipo"),
+                            rs.getString("permisos")
+                    );
+                    usuarios.add(usuario);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error al cargar los usuarios: {0}", e.getMessage());
+        }
+
+        return usuarios;
+    }
 }

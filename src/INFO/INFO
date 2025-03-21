@@ -21,3 +21,6 @@ Servidor de base de datos:
         La IP debe ser la del ordenador/servidor que aloje la base de datos
         //String url = "jdbc:mysql://tu_IP_publica:3306/";
         Para saber tu IP: https://www.whatismyip.com/
+
+
+Para registrar empresas asociadas, se registraran normal y el administrador les asignara los permisos correspondientes

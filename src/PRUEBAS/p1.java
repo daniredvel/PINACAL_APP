@@ -1,18 +1,25 @@
 package PRUEBAS;
 
+import DB.UTIL.GestorConexion;
+import VIEW.ERROR.Error_INICIAR_BD;
+import VIEW.INICIO_SESION.InicioSesion_Vista;
+
 import javax.swing.*;
+import java.sql.Connection;
 
-public class p1 extends JFrame {
+import static DB.UTIL.CrearConn.crearConexion;
 
-    public p1() {}
+public class p1 {
+
+    private static Connection conn;
     public static void main(String[] args) {
-        System.out.println(formatoDireccion("Jeronimo Muñoz","7 2","Parque Tecnologico", "Boecillo", "Valladolid", "47151", "España"));
-    }
-        public static String formatoDireccion(String calle, String numero, String localidad, String municipio, String provincia, String codigoPostal, String pais){
-            return "C/"+ formato(calle) + ", Nº " + numero.replaceAll("\\s+", "") + ", " + formato(localidad) + ", " + formato(municipio) + ", " + formato(provincia) + ", C.P.: " + codigoPostal + ", " + formato(pais);
-
+        if (crearConexion()) {
+            conn = GestorConexion.getConexion();
+            //Llamamos a la vista de inicio de sesion para iniciar el programa
+            SwingUtilities.invokeLater(() -> new InicioSesion_Vista(conn).setVisible(true));
+        } else{
+            SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
         }
-    private static String formato(String palabra){
-        return palabra.substring(0,1).toUpperCase()+palabra.substring(1).toLowerCase();
     }
+
 }

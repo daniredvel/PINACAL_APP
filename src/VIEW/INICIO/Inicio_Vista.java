@@ -9,6 +9,7 @@ import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.PERSONAL.Personal_Empresa;
 import VIEW.PERSONAL.Personal_Usuario;
 import VIEW.PUBLICACIONES.Publicacion_Vista;
+import VIEW.REGISTRO.Registro_Empresa;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
@@ -22,8 +23,8 @@ import static DB.UTIL.CrearConn.conn;
 
 public class Inicio_Vista extends JFrame {
     public static final Logger LOGGER = Logger.getLogger(Inicio_Vista.class.getName());
-    private JButton anadirButton;
     private JButton adminButton;
+    private JButton addEmpresaAsociadaButton;
     private final DefaultListModel<Publicacion> listModel;
     private final ControladorDatos controladorDatos;
     private static Usuario usuario_actual = null;
@@ -87,7 +88,7 @@ public class Inicio_Vista extends JFrame {
         gbc.gridx = 1;
         topPanel.add(personalButton, gbc);
 
-            anadirButton = new JButton("Mis Publicaciones");
+        JButton anadirButton = new JButton("Mis Publicaciones");
             anadirButton.setFont(buttonFont);
             anadirButton.setBackground(new Color(174, 101, 7));
             anadirButton.setForeground(Color.WHITE);
@@ -108,6 +109,16 @@ public class Inicio_Vista extends JFrame {
 
             gbc.gridx = 3;
             topPanel.add(adminButton, gbc);
+
+            addEmpresaAsociadaButton = new JButton("Añadir Empresa Asociada");
+            addEmpresaAsociadaButton.setFont(buttonFont);
+            addEmpresaAsociadaButton.setBackground(new Color(174, 101, 7));
+            addEmpresaAsociadaButton.setForeground(Color.WHITE);
+            addEmpresaAsociadaButton.setPreferredSize(new Dimension(150, 50)); // Set button size
+            addEmpresaAsociadaButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
+
+            gbc.gridx = 4;
+            topPanel.add(addEmpresaAsociadaButton, gbc);
         }
 
         add(topPanel, BorderLayout.NORTH);
@@ -150,6 +161,11 @@ public class Inicio_Vista extends JFrame {
                 dispose();
                 new Administar_Vista(usuario_actual, conn).setVisible(true);
             });
+            addEmpresaAsociadaButton.addActionListener(e -> {
+                LOGGER.log(Level.INFO, "Clic boton añadir empresa asociada");
+                dispose();
+                new Registro_Empresa(conn).setVisible(true);
+            });
         }
     }
 
@@ -170,7 +186,7 @@ public class Inicio_Vista extends JFrame {
     private void cargarPublicaciones() {
         LOGGER.log(Level.INFO, "Loading publications");
         listModel.clear(); // Clear the list before reloading
-        List<Publicacion> publicaciones = controladorDatos.obtenerPublicaciones(conn);
+        List<Publicacion> publicaciones = ControladorDatos.obtenerPublicaciones(conn);
         for (Publicacion publicacion : publicaciones) {
             listModel.addElement(publicacion);
         }

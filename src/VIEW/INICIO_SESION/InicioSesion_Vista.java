@@ -137,7 +137,6 @@ public class InicioSesion_Vista extends JFrame {
                         break;
                 }
             } catch (Exception ex) {
-                ex.printStackTrace(); // Registro de la excepción
                 messageLabel.setText("Error al iniciar sesión");
                 messageLabel.setForeground(new Color(233, 30, 99));
             }

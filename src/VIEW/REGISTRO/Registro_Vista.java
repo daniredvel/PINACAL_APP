@@ -1,5 +1,6 @@
 package VIEW.REGISTRO;
 
+import MODEL.Usuario;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;

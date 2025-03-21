@@ -10,14 +10,14 @@ import java.sql.SQLException;
 
 public class ActualizarUsuario {
 
-    public String actualizarUsuario(Usuario usuario) {
+    public static String actualizarUsuario(Usuario usuario, Connection conn) {
         //int id, String nombre, String email, String telefono, String password, String calle, String numero, String localidad, String municipio, String provincia, String codigoPostal, String pais
 
         if (actualizarUsuarioBD(usuario)) return Mensajes.getMensaje(Mensajes.USUARIO_ACTUALIZADO);
         else return Mensajes.getMensaje(Mensajes.ERROR_ACTUALIZAR_USUARIO);
     }
 
-    private boolean actualizarUsuarioBD(Usuario usuario) {
+    private static boolean actualizarUsuarioBD(Usuario usuario) {
         //Para actualizar el usuario le indicamos un nuevo objeto usuario, incluyendo los datos no modificados, que permanecen iguales
         String sql = "UPDATE USUARIOS SET usuario = ?, password = ?, email = ?, direccion = ?, telefono = ?, tipo = ?, permisos = ? WHERE id = ?";
 

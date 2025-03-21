@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 
 public class AddPublicacion {
 
-    public static boolean crearPublicacion(Publicacion publicacion) throws SQLException {
+    public static boolean crearPublicacion(Publicacion publicacion) {
         String sql = "INSERT INTO PUBLICACIONES (titulo, descripcion, fecha, tipo, id_usuario) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = GestorConexion.getConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -21,19 +21,6 @@ public class AddPublicacion {
             ps.setInt(5, publicacion.getId_usuario());
             ps.executeUpdate();
             return true;
-        } catch (SQLException e) {
-            return false;
-        }
-    }
-
-    public static boolean eliminarPublicacion(Publicacion publicacion) {
-        String sql = "DELETE FROM PUBLICACIONES WHERE id_publicacion = ?";
-
-        try (Connection conn = GestorConexion.getConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, publicacion.getId_publicacion());
-            int rowsAffected = ps.executeUpdate();
-            System.out.println("Rows affected: " + rowsAffected); // Debug statement
-            return rowsAffected > 0;
         } catch (SQLException e) {
             return false;
         }

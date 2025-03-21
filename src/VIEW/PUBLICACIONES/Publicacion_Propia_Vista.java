@@ -1,18 +1,19 @@
 package VIEW.PUBLICACIONES;
 
+import CONTROLLER.CRUD.PUBLICACION.EliminarPublicacion;
 import MODEL.Publicacion;
-import MODEL.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
+
 
 public class Publicacion_Propia_Vista extends JPanel {
     private boolean isOriginalIcon = true;
     private final JLabel messageLabel;
     private final JPanel messagePanel;
 
-    public Publicacion_Propia_Vista(Publicacion publicacion, Usuario usuario_actual) {
+    public Publicacion_Propia_Vista(Publicacion publicacion) {
         setLayout(new BorderLayout());
         setBackground(new Color(211, 205, 192));
         setBorder(BorderFactory.createLineBorder(new Color(174, 101, 7), 2)); // Orange border
@@ -77,11 +78,11 @@ public class Publicacion_Propia_Vista extends JPanel {
         saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         leftPanel.add(saveButton);
 
-        JButton deleteButton = new JButton("Eliminar");
-        deleteButton.setBackground(new Color(174, 101, 7));
-        deleteButton.setForeground(Color.WHITE);
-        deleteButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-        leftPanel.add(deleteButton);
+        JButton eliminarBoton = new JButton("Eliminar");
+        eliminarBoton.setBackground(new Color(174, 101, 7));
+        eliminarBoton.setForeground(Color.WHITE);
+        eliminarBoton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        leftPanel.add(eliminarBoton);
 
         messagePanel = new JPanel();
         messagePanel.setBackground(new Color(174, 101, 7));
@@ -116,13 +117,19 @@ public class Publicacion_Propia_Vista extends JPanel {
             timer.start();
         });
 
-        deleteButton.addActionListener(e -> {
+        eliminarBoton.setEnabled(true); //Nos aseguramos que el botón esta habilitado
+        eliminarBoton.addActionListener(e -> {
             int response = JOptionPane.showConfirmDialog(null, "¿Estás seguro?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
             if (response == JOptionPane.YES_OPTION) {
-                //TODO: Delete publication
+                if (EliminarPublicacion.eliminarPublicacion(publicacion)) {
+                    JOptionPane.showMessageDialog(null, "Publicación denegada y eliminada.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error al eliminar la publicación.");
+                }
             }
         });
 
         add(contentPanel, BorderLayout.CENTER);
     }
+
 }

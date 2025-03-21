@@ -1,6 +1,9 @@
 package VIEW.ADMINISTRAR;
 
-import CONTROLLER.CRUD.PUBLICACION.AddPublicacion;
+import CONTROLLER.CRUD.PUBLICACION.EliminarPublicacion;
+import CONTROLLER.CRUD.USER.ActualizarUsuario;
+import CONTROLLER.CRUD.USER.EliminarUsuario;
+import CONTROLLER.CRUD.USER.LeerUsuario;
 import CONTROLLER.ControladorDatos;
 import MODEL.Publicacion;
 import MODEL.Usuario;
@@ -11,13 +14,13 @@ import VIEW.PERSONAL.Personal_Usuario;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 
-import static DB.UTIL.CrearConn.conn;
-import static DB.UTIL.CrearConn.crearConexion;
 import static VIEW.INICIO.Inicio_Vista.LOGGER;
 
 public class Administar_Vista extends JFrame {
@@ -26,20 +29,22 @@ public class Administar_Vista extends JFrame {
     private final JTextArea publicacionArea;
     private final JTextField justificacionField;
     private final JRadioButton denegadaButton;
-    private static Usuario usuario_actual = null;
     private final ButtonGroup group;
+    private JTable table;
+    private DefaultTableModel tableModel;
+    private List<Usuario> usuarios;
+    private static Usuario usuario_actual = null;
     public static Connection conn = null;
 
     public Administar_Vista(Usuario usuario_actual, Connection conexion) {
         Administar_Vista.usuario_actual = usuario_actual;
-        ControladorDatos controladorDatos = new ControladorDatos();
-        publicaciones = controladorDatos.obtenerPublicaciones(conexion);
+        publicaciones = ControladorDatos.obtenerPublicaciones(conexion);
 
         LOGGER.log(Level.INFO, "Iniciando vista de administrar");
         Administar_Vista.conn = conexion;
 
         // Si la conexión es nula, se crea una nueva
-        if (conn == null) conn = conn();
+        if (conn == null) conn = conexion;
 
         // Nos aseguramos de que la conexión no sea nula
         // Si la conexión es nula, se muestra la ventana de error de la aplicación
@@ -51,7 +56,7 @@ public class Administar_Vista extends JFrame {
         // Icono
         setIconImage(Rutas.getIcono());
 
-        setTitle("Administrar Publicaciones");
+        setTitle("Administrar Publicaciones y Usuarios");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -167,7 +172,49 @@ public class Administar_Vista extends JFrame {
             dispose();
         }
 
-        // Add action listeners to buttons
+        // Panel inferior con la tabla de usuarios y botones
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        String[] columnNames = {"Usuario", "Email", "Dirección", "Teléfono", "Tipo", "Permisos", "Acciones"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+        table = new JTable(tableModel);
+        JScrollPane tableScrollPane = new JScrollPane(table);
+        bottomPanel.add(tableScrollPane, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel();
+        JButton modificarPermisosButton = new JButton("Modificar Permisos");
+        JButton eliminarUsuarioButton = new JButton("Eliminar Usuario");
+        buttonPanel.add(modificarPermisosButton);
+        buttonPanel.add(eliminarUsuarioButton);
+        bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        // Cargar datos de usuarios
+        cargarDatosUsuarios();
+
+        // Acción para modificar permisos
+        modificarPermisosButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                String usuario = (String) tableModel.getValueAt(selectedRow, 0);
+                modificarPermisos(Objects.requireNonNull(LeerUsuario.leerUsuarioPorNombre(usuario)));
+            } else {
+                JOptionPane.showMessageDialog(null, "Seleccione un usuario para modificar los permisos.");
+            }
+        });
+
+        // Acción para eliminar usuario
+        eliminarUsuarioButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                String usuario = (String) tableModel.getValueAt(selectedRow, 0);
+                eliminarUsuario(Objects.requireNonNull(LeerUsuario.leerUsuarioPorNombre(usuario)));
+            } else {
+                JOptionPane.showMessageDialog(null, "Seleccione un usuario para eliminar.");
+            }
+        });
+
+        // Add action listeners to navigation buttons
         inicioButton.addActionListener(e -> {
             dispose();
             new Inicio_Vista(usuario_actual, conn).setVisible(true);
@@ -180,7 +227,6 @@ public class Administar_Vista extends JFrame {
             dispose();
             new Add_Empresa(usuario_actual, conn).setVisible(true);
         });
-
         adminButton.addActionListener(e -> {
             dispose();
             new Administar_Vista(usuario_actual, conn).setVisible(true);
@@ -216,11 +262,57 @@ public class Administar_Vista extends JFrame {
     private void gestionarPublicacion() {
         Publicacion publicacion = publicaciones.get(currentIndex);
         if (denegadaButton.isSelected()) {
-            if (AddPublicacion.eliminarPublicacion(publicacion)) {
+            if (EliminarPublicacion.eliminarPublicacion(publicacion)) {
                 JOptionPane.showMessageDialog(null, "Publicación denegada y eliminada.");
             } else {
                 JOptionPane.showMessageDialog(null, "Error al eliminar la publicación.");
             }
         }
     }
+
+    private void cargarDatosUsuarios() {
+        usuarios = ControladorDatos.obtenerUsuarios(conn);
+        for (Usuario usuario : usuarios) {
+            tableModel.addRow(new Object[]{
+                    usuario.getUsuario(),
+                    usuario.getEmail(),
+                    usuario.getDireccion(),
+                    usuario.getTelefono(),
+                    usuario.getTipo(),
+                    usuario.getPermisos()
+            });
+        }
+    }
+
+    private void modificarPermisos(Usuario usuario) {
+        String[] opciones = {"ADMINISTRADOR", "EMPRESA_ASOCIADA", "EMPRESA_NO_ASOCIADA", "USUARIO"};
+        String nuevoPermiso = (String) JOptionPane.showInputDialog(
+                this,
+                "Seleccione el nuevo permiso para el usuario: " + usuario.getUsuario(),
+                "Modificar Permisos",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0]
+        );
+        if (nuevoPermiso != null) {
+            usuario.setPermisos(nuevoPermiso);
+            ActualizarUsuario.actualizarUsuario(usuario, conn);
+            cargarDatosUsuarios();
+        }
+    }
+
+    private void eliminarUsuario(Usuario usuario) {
+        int response = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de que desea eliminar el usuario: " + usuario.getUsuario() + "?",
+                "Confirmar Eliminación",
+                JOptionPane.YES_NO_OPTION
+        );
+        if (response == JOptionPane.YES_OPTION) {
+            EliminarUsuario.eliminarUsuario(conn, usuario);
+            cargarDatosUsuarios();
+        }
+    }
+
 }
