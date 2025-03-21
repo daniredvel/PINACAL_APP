@@ -29,6 +29,7 @@ public class Inicio_Vista extends JFrame {
     private static Usuario usuario_actual = null;
     public static Connection conn = null;
 
+    //public Inicio_Vista(Usuario usuario_actual, Connection conexion) {
     public Inicio_Vista(Usuario usuario_actual, Connection conexion) {
         LOGGER.log(Level.INFO, "Iniciando vista de inicio");
         controladorDatos = new ControladorDatos();

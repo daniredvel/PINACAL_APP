@@ -215,10 +215,8 @@ public class Administar_Vista extends JFrame {
 
     private void gestionarPublicacion() {
         Publicacion publicacion = publicaciones.get(currentIndex);
-        AddPublicacion addPublicacion = new AddPublicacion();
         if (denegadaButton.isSelected()) {
-            boolean eliminado = addPublicacion.eliminarPublicacion(publicacion);
-            if (eliminado) {
+            if (AddPublicacion.eliminarPublicacion(publicacion)) {
                 JOptionPane.showMessageDialog(null, "Publicación denegada y eliminada.");
             } else {
                 JOptionPane.showMessageDialog(null, "Error al eliminar la publicación.");

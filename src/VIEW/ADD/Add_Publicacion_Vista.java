@@ -1,8 +1,9 @@
 package VIEW.ADD;
 
+import CONTROLLER.CRUD.PUBLICACION.AddPublicacion;
 import MODEL.Publicacion;
+import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
-import VIEW.INICIO.Inicio_Vista;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
@@ -13,27 +14,24 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static CONTROLLER.CRUD.PUBLICACION.AddPublicacion.crearPublicacion;
-
-public class Add_Publicacion extends JFrame {
-    private static final Logger LOGGER = Logger.getLogger(Add_Publicacion.class.getName());
+public class Add_Publicacion_Vista extends JDialog {
+    private static final Logger LOGGER = Logger.getLogger(Add_Publicacion_Vista.class.getName());
     private JTextField tituloField;
     private JTextArea descripcionArea;
     private JComboBox<String> tipoComboBox;
     private Usuario usuario_actual;
     private Connection conn;
 
-    public Add_Publicacion(Usuario usuario_actual, Connection conn) {
+    public Add_Publicacion_Vista(Frame owner, Usuario usuario_actual, Connection conn) {
+        super(owner, "Añadir Publicación", true);
         this.usuario_actual = usuario_actual;
         this.conn = conn;
 
         // Icono
         setIconImage(Rutas.getIcono());
 
-        setTitle("Añadir Publicación");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setSize(600, 400);
+        setLocationRelativeTo(owner);
 
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(211, 205, 192));
@@ -89,12 +87,12 @@ public class Add_Publicacion extends JFrame {
         aceptarButton.setFont(new Font("Arial", Font.PLAIN, 18));
         aceptarButton.setBackground(new Color(174, 101, 7));
         aceptarButton.setForeground(Color.WHITE);
-        aceptarButton.addActionListener(e -> crearPublicacion_Vista());
+        aceptarButton.addActionListener(e -> crearPublicacion());
         bottomPanel.add(aceptarButton);
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    private void crearPublicacion_Vista() {
+    private void crearPublicacion() {
         String titulo = tituloField.getText();
         String descripcion = descripcionArea.getText();
         String tipo = (String) tipoComboBox.getSelectedItem();
@@ -113,16 +111,22 @@ public class Add_Publicacion extends JFrame {
         Publicacion publicacion = new Publicacion(0, titulo, descripcion, new java.sql.Timestamp(fecha_publicacion.getTime()), tipo, usuario_actual.getId_usuario(), usuario_actual.getUsuario());
 
         try {
+            // Aquí puedes añadir el código para guardar la publicación en la base de datos
+            // Simulación de guardado en la base de datos
 
-            crearPublicacion(publicacion);
+
+
+            if (AddPublicacion.crearPublicacion(publicacion)) {
+                JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.PUBLICACION_ANADIDO));
+            } else {
+                JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.ERROR_ANADIR_PUBLICACION));
+            }
 
             LOGGER.log(Level.INFO, "Publicación creada: {0}", publicacion);
-            JOptionPane.showMessageDialog(this, "Publicación creada con éxito.");
             dispose();
-            new Inicio_Vista(usuario_actual, conn).setVisible(true);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error al crear la publicación: {0}", e.getMessage());
-            JOptionPane.showMessageDialog(this, "Error al crear la publicación: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, Mensajes.getMensaje(Mensajes.ERROR_ANADIR_PUBLICACION), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

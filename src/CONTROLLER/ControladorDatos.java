@@ -19,7 +19,7 @@ public class ControladorDatos {
     private static final Logger LOGGER = Logger.getLogger(Inicio_Vista.class.getName());
 
     // Obtener todas las publicaciones
-    public List<Publicacion> obtenerPublicaciones(Connection conexion) {
+    public static List<Publicacion> obtenerPublicaciones(Connection conexion) {
         Connection conn = conexion;
 
         // Si la conexión es nula, se crea una nueva
@@ -63,7 +63,7 @@ public class ControladorDatos {
     }
 
     // Obtener publicaciones por usuario
-    public List<Publicacion> obtenerPublicaciones(Connection conexion, Usuario usuario) {
+    public static List<Publicacion> obtenerPublicaciones(Connection conexion, Usuario usuario) {
         Connection conn = conexion;
 
         // Si la conexión es nula, se crea una nueva

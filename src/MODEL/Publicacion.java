@@ -1,7 +1,6 @@
 package MODEL;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class Publicacion {
     //Tipo de publicaciones
@@ -12,7 +11,7 @@ public class Publicacion {
     private int id_publicacion;
     private String titulo;
     private String descripcion;
-    private Date fecha_publicacion;
+    private Timestamp fecha_publicacion;
     private String tipo;
     private int id_usuario;
     private String usuario;
@@ -68,7 +67,7 @@ public class Publicacion {
         return descripcion;
     }
 
-    public Date getFecha_publicacion(){
+    public Timestamp getFecha_publicacion(){
         return fecha_publicacion;
     }
 
@@ -102,7 +101,7 @@ public class Publicacion {
         this.descripcion = descripcion;
     }
 
-    public void setFecha_publicacion(Date fecha_publicacion){
+    public void setFecha_publicacion(Timestamp fecha_publicacion){
         this.fecha_publicacion = fecha_publicacion;
     }
 
@@ -113,13 +112,4 @@ public class Publicacion {
     public void setUsuario(String usuario){
         this.usuario = usuario;
     }
-
-    //METODOS
-
-    //METODO QUE INDICA EL TIPO DE PUBLICACION A PARTIR DE UN INDICE
-
-    public static String indicarTipo(int indice){
-        return tipos[indice];
-    }
-
 }

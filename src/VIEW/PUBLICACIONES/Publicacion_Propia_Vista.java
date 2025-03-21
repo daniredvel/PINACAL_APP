@@ -26,6 +26,12 @@ public class Publicacion_Propia_Vista extends JPanel {
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setBackground(new Color(211, 205, 192));
 
+        JLabel textViewTipo = new JLabel(publicacion.getTipo());
+        textViewTipo.setFont(new Font("Arial", Font.PLAIN, 30));
+        textViewTipo.setForeground(new Color(174, 101, 7));
+        textViewTipo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        leftPanel.add(textViewTipo);
+
         JLabel textViewNombre = new JLabel(publicacion.getTitulo());
         textViewNombre.setFont(new Font("Arial", Font.PLAIN, 30));
         textViewNombre.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -36,11 +42,7 @@ public class Publicacion_Propia_Vista extends JPanel {
         textViewUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
         leftPanel.add(textViewUsuario);
 
-        JLabel textViewTipo = new JLabel(publicacion.getTipo());
-        textViewTipo.setFont(new Font("Arial", Font.PLAIN, 30));
-        textViewTipo.setForeground(new Color(174, 101, 7));
-        textViewTipo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        leftPanel.add(textViewTipo);
+
 
         JLabel textViewDescripcion = new JLabel("<html>" + publicacion.getDescripcion() + "</html>");
         textViewDescripcion.setFont(new Font("Arial", Font.PLAIN, 20));
