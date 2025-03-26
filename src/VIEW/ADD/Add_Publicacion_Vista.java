@@ -4,12 +4,12 @@ import CONTROLLER.CRUD.PUBLICACION.AddPublicacion;
 import MODEL.Publicacion;
 import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
+import VIEW.INICIO.Inicio_Vista;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,22 +108,23 @@ public class Add_Publicacion_Vista extends JDialog {
             return;
         }
 
+        assert tipo != null;
         Publicacion publicacion = new Publicacion(0, titulo, descripcion, new java.sql.Timestamp(fecha_publicacion.getTime()), tipo, usuario_actual.getId_usuario(), usuario_actual.getUsuario());
-
-        // Aquí puedes añadir el código para guardar la publicación en la base de datos
-        // Simulación de guardado en la base de datos
-
 
         if (AddPublicacion.crearPublicacion(publicacion)) {
             JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.PUBLICACION_ANADIDO));
+            dispose();
+            new Inicio_Vista(usuario_actual, conn).setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.ERROR_ANADIR_PUBLICACION));
             LOGGER.log(Level.SEVERE, "Error al crear la publicación: {0}");
-
+            dispose();
+            new Inicio_Vista(usuario_actual, conn).setVisible(true);
         }
 
         LOGGER.log(Level.INFO, "Publicación creada: {0}", publicacion);
         dispose();
+        new Inicio_Vista(usuario_actual, conn).setVisible(true);
     }
 
 }
