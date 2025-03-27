@@ -26,14 +26,12 @@ public class Inicio_Vista extends JFrame {
     private JButton adminButton;
     private JButton addEmpresaAsociadaButton;
     private final DefaultListModel<Publicacion> listModel;
-    private final ControladorDatos controladorDatos;
     private static Usuario usuario_actual = null;
     public static Connection conn = null;
 
     //public Inicio_Vista(Usuario usuario_actual, Connection conexion) {
     public Inicio_Vista(Usuario usuario_actual, Connection conexion) {
         LOGGER.log(Level.INFO, "Iniciando vista de inicio");
-        controladorDatos = new ControladorDatos();
         Inicio_Vista.usuario_actual = usuario_actual;
 
         // Si la conexión es nula, se crea una nueva
