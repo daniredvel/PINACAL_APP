@@ -14,6 +14,8 @@ public class GestorConexion {
      * Objeto estático de conexión con la base de datos.
      */
     private static Connection conexion = null;
+    private GestorConexion() {}
+
 
     /**
      * METODO que crea una conexión con la base de datos.
@@ -22,6 +24,7 @@ public class GestorConexion {
      * @param pass Contraseña del usuario de la base de datos.
      * @return Código de error.
      */
+
     public static int crearConexion(String bd, String usr, String pass) {
         //URL para conexiones remotas
         //String url = "jdbc:mysql://85.251.134.6:3306/";

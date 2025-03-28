@@ -3,14 +3,34 @@ package CONTROLLER.CRUD.USER;
 import DB.UTIL.GestorConexion;
 import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
+import VIEW.ERROR.Error_INICIAR_BD;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static DB.UTIL.CrearConn.conn;
 
 public class ActualizarUsuario {
+    private static final Logger LOGGER = Logger.getLogger(ActualizarUsuario.class.getName());
 
-    public static String actualizarUsuario(Usuario usuario, Connection conn) {
+    public static String actualizarUsuario(Usuario usuario) {
+
+        Connection conn = GestorConexion.getConexion();
+
+        // Si la conexión es nula, se crea una nueva
+        if (conn == null) conn = conn();
+
+        // Nos aseguramos de que la conexión no sea nula
+        // Si la conexión es nula, se muestra la ventana de error de la aplicación
+        if (conn == null) {
+            LOGGER.log(Level.SEVERE, Mensajes.getMensaje(Mensajes.FALLO_CONEXION));
+            SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
+        }
+
         //int id, String nombre, String email, String telefono, String password, String calle, String numero, String localidad, String municipio, String provincia, String codigoPostal, String pais
 
         if (actualizarUsuarioBD(usuario,conn)) return Mensajes.getMensaje(Mensajes.USUARIO_ACTUALIZADO);

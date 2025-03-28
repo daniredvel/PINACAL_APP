@@ -1,12 +1,15 @@
 package MAIN;
 
 import DB.UTIL.GestorConexion;
+import MODEL.UTIL.Mensajes;
 import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.INICIO_SESION.InicioSesion_Vista;
 
 import javax.swing.*;
 import java.sql.Connection;
+import java.sql.SQLException;
 
+import static DB.UTIL.CrearConn.conn;
 import static DB.UTIL.CrearConn.crearConexion;
 
 public class Main {
@@ -20,6 +23,12 @@ public class Main {
         } else{
             SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
         }
-    }
+
+        // Agregar un Shutdown Hook para cerrar la conexión al cerrar la aplicación
+        //Crea un hilo que se ejecuta al cerrar la aplicación para cerrar la conexión a la base de datos
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Cerrando la conexión a la base de datos...");
+            System.out.println(Mensajes.getMensaje(GestorConexion.cerrarConexion()));
+        }));    }
 
 }

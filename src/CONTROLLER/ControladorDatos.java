@@ -43,8 +43,8 @@ public class ControladorDatos {
 
         try {
             assert conn != null;
-            try (PreparedStatement stmt = conn.prepareStatement(sql);
-                     ResultSet rs = stmt.executeQuery(sql)) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            try (stmt; ResultSet rs = stmt.executeQuery(sql)) {
 
                 while (rs.next()) {
                     Publicacion publicacion = new Publicacion(
@@ -143,12 +143,12 @@ public class ControladorDatos {
         }
 
         List<Usuario> usuarios = new ArrayList<>();
-        String sql = "SELECT u.*, t.nombre_tipo FROM USUARIOS u " +
-                "JOIN TIPOS_USUARIOS t ON u.id_tipo_usuario = t.id_tipo_usuario";
+        String sql = "SELECT u.*, t.nombre_tipo FROM USUARIOS u JOIN TIPOS_USUARIOS t ON u.id_tipo_usuario = t.id_tipo_usuario;";
         try {
             assert conn != null;
-            try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            try (ps; ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
                     // Consultamos la dirección
                     String direccion = rs.getString("direccion");
 

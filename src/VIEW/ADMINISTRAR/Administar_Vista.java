@@ -42,15 +42,14 @@ public class Administar_Vista extends JFrame {
         LOGGER.log(Level.INFO, "Iniciando vista de administrar");
         Administar_Vista.conn = conexion;
 
-        // Si la conexión es nula, se crea una nueva
-        if (conn == null) conn = conexion;
-
         // Nos aseguramos de que la conexión no sea nula
         // Si la conexión es nula, se muestra la ventana de error de la aplicación
         if (conn == null) {
             LOGGER.log(Level.SEVERE, "Conexión nula");
             SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
         }
+
+        assert conn != null;
 
         publicaciones = ControladorDatos.obtenerPublicaciones(conexion, true);
 
@@ -298,7 +297,7 @@ public class Administar_Vista extends JFrame {
         );
         if (nuevoPermiso != null) {
             usuario.setPermisos(nuevoPermiso);
-            ActualizarUsuario.actualizarUsuario(usuario, conn);
+            ActualizarUsuario.actualizarUsuario(usuario);
             cargarDatosUsuarios();
         }
     }
@@ -312,6 +311,7 @@ public class Administar_Vista extends JFrame {
         );
         if (response == JOptionPane.YES_OPTION) {
             EliminarUsuario.eliminarUsuario(conn, usuario);
+            JOptionPane.showMessageDialog(this, "Usuario: " + usuario.getUsuario() + " eliminado.");
             cargarDatosUsuarios();
         }
     }
