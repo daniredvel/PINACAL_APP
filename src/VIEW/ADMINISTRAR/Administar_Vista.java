@@ -38,7 +38,6 @@ public class Administar_Vista extends JFrame {
 
     public Administar_Vista(Usuario usuario_actual, Connection conexion) {
         Administar_Vista.usuario_actual = usuario_actual;
-        publicaciones = ControladorDatos.obtenerPublicaciones(conexion);
 
         LOGGER.log(Level.INFO, "Iniciando vista de administrar");
         Administar_Vista.conn = conexion;
@@ -52,6 +51,8 @@ public class Administar_Vista extends JFrame {
             LOGGER.log(Level.SEVERE, "Conexión nula");
             SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
         }
+
+        publicaciones = ControladorDatos.obtenerPublicaciones(conexion, true);
 
         // Icono
         setIconImage(Rutas.getIcono());
@@ -278,7 +279,7 @@ public class Administar_Vista extends JFrame {
                     usuario.getEmail(),
                     usuario.getDireccion(),
                     usuario.getTelefono(),
-                    usuario.getTipo(),
+                    usuario.getindice_tipo_usuario(),
                     usuario.getPermisos()
             });
         }

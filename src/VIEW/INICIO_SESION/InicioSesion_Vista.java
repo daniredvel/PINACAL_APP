@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.util.Objects;
 
 import MODEL.Usuario;
+import VIEW.INICIO.Inicio_Empresa_Asociada_Vista;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.REGISTRO.Registro_Vista;
 import VIEW.RES.Rutas;
@@ -123,19 +124,29 @@ public class InicioSesion_Vista extends JFrame {
                 switch (result) {
                     case 1:
                         usuario_actual = leerUsuarioPorNombre(username);
+                        assert usuario_actual != null;
                         System.out.println("Permisos de usuario: " + usuario_actual.getPermisos()); // Registro debug
                         System.out.println("Usuario encontrado: " + usuario_actual); // Registro debug
                         dispose();
                         System.out.println("Creando Inicio_Vista..."); // Registro debug
-                        Inicio_Vista inicioVista = new Inicio_Vista(usuario_actual, conn);
-                        inicioVista.setVisible(true);
-                        System.out.println("Inicio_Vista creada y visible."); // Registro debug
-                        break;
-                    case -1: case 0:
-                        messageLabel.setText("Contraseña o usuario incorrectos");
-                        messageLabel.setForeground(new Color(233, 30, 99));
-                        break;
-                }
+
+                        if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.ADMINISTRADOR)) || usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA))){
+                            Inicio_Empresa_Asociada_Vista inicioVista = new Inicio_Empresa_Asociada_Vista(usuario_actual, conn);
+                            inicioVista.setVisible(true);
+
+                        } else {
+                            Inicio_Vista inicioVista = new Inicio_Vista(usuario_actual, conn);
+                            inicioVista.setVisible(true);
+
+                        }
+                                System.out.println("Inicio_Vista creada y visible."); // Registro debug
+                                break;
+                                case -1: case 0:
+                                messageLabel.setText("Contraseña o usuario incorrectos");
+                                messageLabel.setForeground(new Color(233, 30, 99));
+                                break;
+
+                        }
             } catch (Exception ex) {
                 messageLabel.setText("Error al iniciar sesión");
                 messageLabel.setForeground(new Color(233, 30, 99));

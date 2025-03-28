@@ -18,8 +18,7 @@ public class ActualizarUsuario {
     }
 
     private static boolean actualizarUsuarioBD(Usuario usuario, Connection conn) {
-        //Para actualizar el usuario le indicamos un nuevo objeto usuario, incluyendo los datos no modificados, que permanecen iguales
-        String sql = "UPDATE USUARIOS SET usuario = ?, password = ?, email = ?, direccion = ?, telefono = ?, tipo = ?, permisos = ? WHERE id = ?";
+        String sql = "UPDATE USUARIOS SET nombre = ?, password = ?, email = ?, direccion = ?, telefono = ?, id_tipo_usuario = ? WHERE id_usuario = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, usuario.getUsuario());
@@ -27,13 +26,15 @@ public class ActualizarUsuario {
             ps.setString(3, usuario.getEmail());
             ps.setString(4, usuario.getDireccion());
             ps.setString(5, usuario.getTelefono());
-            ps.setString(6, usuario.getTipo());
-            ps.setString(7, usuario.getPermisos());
-            ps.setInt(8, usuario.getId_usuario());
+            ps.setInt(6, usuario.getindice_tipo_usuario());
+            ps.setInt(7, usuario.getId_usuario());
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al actualizar el usuario: " + e.getMessage());
             return false;
         }
+
     }
 }

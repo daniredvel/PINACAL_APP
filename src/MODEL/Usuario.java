@@ -6,12 +6,12 @@ public class Usuario {
     //Los usuarios de tipo 'Asociado' son los usuarios de las empresas asociadas a PINACAL
     //Los usuarios de tipo 'Empresa_no_asociada' son las empresas no asociadas
     //Los usuarios de tipo 'Usuario' son los personas particulares
-    private static final String [] tipos = {"ADMINISTRADOR", "EMPRESA_ASOCIADA", "EMPRESA_NO_ASOCIADA", "USUARIO"};
+    private static final String [] tipos = {"ADMINISTRADOR", "USUARIO", "EMPRESA_ASOCIADA", "EMPRESA_NO_ASOCIADA"};
 
     public static final int ADMINISTRADOR = 0;
-    public static final int EMPRESA_ASOCIADA = 1;
-    public static final int EMPRESA_NO_ASOCIADA = 2;
-    public static final int USUARIO = 3;
+    public static final int USUARIO = 1;
+    public static final int EMPRESA_ASOCIADA = 2;
+    public static final int EMPRESA_NO_ASOCIADA = 3;
 
 
     private int id_usuario;
@@ -22,6 +22,7 @@ public class Usuario {
     private String telefono;
     private String tipo;
     private String permisos;
+    private int indice_tipo_usuario;
     //"1" Permiso de usuario; Publicar y eliminar publicaciones propias
     //"2" Permiso de administrador; Eliminar usuarios y publicaciones de cualquier usuario
 
@@ -47,6 +48,7 @@ public class Usuario {
         this.password   =   password;
         this.email      =   email;
         this.direccion  =   direccion;
+        this.indice_tipo_usuario = indice_tipo_usuario;
         this.telefono   =   formatoTelefonoBD(telefono);
         this.tipo       =   indicarTipo(indice_tipo_usuario);
         this.permisos   =   permisos.toUpperCase();
@@ -67,6 +69,7 @@ public class Usuario {
         this.usuario    =   usuario;
         this.password   =   password;
         this.email      =   email;
+        this.indice_tipo_usuario = indice_tipo_usuario;
         this.telefono   =   formatoTelefonoBD(telefono);
         this.tipo       =   indicarTipo(indice_tipo_usuario);
         this.permisos   =   permisos.toUpperCase();
@@ -81,7 +84,7 @@ public class Usuario {
             String  email,
             String  direccion,
             String  telefono,
-            int     indice_tipo_usuario_tipo_usuario,
+            int     indice_tipo_usuario,
             String  permisos
 
     ){
@@ -90,7 +93,8 @@ public class Usuario {
         this.email      =   email;
         this.direccion  =   direccion;
         this.telefono   =   formatoTelefonoBD(telefono);
-        this.tipo       =   indicarTipo(indice_tipo_usuario_tipo_usuario);
+        this.indice_tipo_usuario = indice_tipo_usuario;
+        this.tipo       =   indicarTipo(indice_tipo_usuario);
         this.permisos   =   permisos.toUpperCase();
 
     }
@@ -101,7 +105,7 @@ public class Usuario {
             String  password,
             String  email,
             String  telefono,
-            int     indice_tipo_usuario_tipo_usuario,
+            int     indice_tipo_usuario,
             String  permisos
 
     ){
@@ -109,7 +113,8 @@ public class Usuario {
         this.password   =   password;
         this.email      =   email;
         this.telefono   =   formatoTelefonoBD(telefono);
-        this.tipo       =   indicarTipo(indice_tipo_usuario_tipo_usuario);
+        this.indice_tipo_usuario = indice_tipo_usuario;
+        this.tipo       =   indicarTipo(indice_tipo_usuario);
         this.permisos   =   permisos.toUpperCase();
 
     }
@@ -149,6 +154,12 @@ public class Usuario {
         return permisos;
     }
 
+    public int getindice_tipo_usuario() {
+        return indice_tipo_usuario;
+    }
+
+
+
     //SETTER
 
     public void setId_usuario(int id_usuario){
@@ -182,10 +193,10 @@ public class Usuario {
     public void setPermisos(String permisos) {
         this.permisos = permisos;
     }
-    //METODO QUE INDICA EL TIPO DE USUARIO A PARTIR DE UN indice_tipo_usuario_tipo_usuario
+    //METODO QUE INDICA EL TIPO DE USUARIO A PARTIR DE UN indice_tipo_usuario
 
-    private String indicarTipo(int indice_tipo_usuario_tipo_usuario){
-        return tipos[indice_tipo_usuario_tipo_usuario];
+    private String indicarTipo(int indice_tipo_usuario){
+        return tipos[indice_tipo_usuario];
     }
 
     public static String formatoDireccion(String calle, String numero, String localidad, String municipio, String provincia, String codigoPostal, String pais){
