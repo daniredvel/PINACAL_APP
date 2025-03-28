@@ -46,15 +46,15 @@ public class ActualizarUsuario {
             ps.setString(3, usuario.getEmail());
             ps.setString(4, usuario.getDireccion());
             ps.setString(5, usuario.getTelefono());
-            ps.setInt(6, usuario.getindice_tipo_usuario());
+            ps.setInt(6, usuario.getIndice_tipo_usuario());
             ps.setInt(7, usuario.getId_usuario());
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {
+            //TODO Correcto registro de debug con sout o log
             e.printStackTrace();
             System.out.println("Error al actualizar el usuario: " + e.getMessage());
             return false;
         }
-
     }
 }

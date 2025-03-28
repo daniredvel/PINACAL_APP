@@ -152,7 +152,7 @@ public class Registro_Empresa extends JFrame {
             //Si los campos están completos, se crea un usuario sin dirección y se pasa a la ventana de dirección
             if (validateFields()) {
                 // Crear un usuario sin dirección
-                Usuario usuario_sin_direccion = new Usuario(companyNameField.getText(), new String(companyPasswordField.getPassword()), companyEmailField.getText(), companyPhoneField.getText(), 10, "");
+                Usuario usuario_sin_direccion = new Usuario(companyNameField.getText(), new String(companyPasswordField.getPassword()), companyEmailField.getText(), companyPhoneField.getText(), Usuario.TEMPORAL, "");
                 // Cerrar la ventana actual
                 dispose();
                 // Abrir la de dirección

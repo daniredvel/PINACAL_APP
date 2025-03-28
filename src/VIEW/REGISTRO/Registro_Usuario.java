@@ -154,7 +154,7 @@ public class Registro_Usuario extends JFrame {
             // Comprueba si los campos son válidos
             if (validateFields()) {
                 // Crea un nuevo usuario con los datos introducidos
-                Usuario usuario = new Usuario(userNameField.getText(), new String(userPasswordField.getPassword()), userEmailField.getText(), userPhoneField.getText(), 10, "");
+                Usuario usuario = new Usuario(userNameField.getText(), new String(userPasswordField.getPassword()), userEmailField.getText(), userPhoneField.getText(), Usuario.TEMPORAL, "");
                 // Añade el usuario a la base de datos y muestra el mensaje correspondiente
                 String mensaje = AddUsuario.addUsuario(usuario);
                 JOptionPane.showMessageDialog(null, mensaje, "Registro Usuario", JOptionPane.INFORMATION_MESSAGE);

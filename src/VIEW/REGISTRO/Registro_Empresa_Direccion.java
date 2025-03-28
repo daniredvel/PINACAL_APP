@@ -147,7 +147,7 @@ public class Registro_Empresa_Direccion extends JFrame {
         registerButton.addActionListener(e -> {
             if (validateFields()) {
                 // Se crea un usuario con los datos introducidos indicando la dirección vacía
-                Usuario usuario = new Usuario(usuario_sin_direccion.getUsuario(), usuario_sin_direccion.getPassword(), usuario_sin_direccion.getEmail(), "", usuario_sin_direccion.getTelefono(), 10, "");
+                Usuario usuario = new Usuario(usuario_sin_direccion.getUsuario(), usuario_sin_direccion.getPassword(), usuario_sin_direccion.getEmail(), "", usuario_sin_direccion.getTelefono(), Usuario.TEMPORAL, "");
                 // Se le asigna la direccion con el formato correcto
                 usuario.setDireccion(Usuario.formatoDireccion(streetField.getText(), numberField.getText(), localityField.getText(), municipalityField.getText(), provinceField.getText(), postalCodeField.getText(), countryField.getText()));
                 //Se muestra un mensaje con el resultado del registro

@@ -1,20 +1,27 @@
-Eliminar publicaciones
+--General--
 
 Adminsitrar publicaciones
 
+
+--Vista de Publicaciones--
+
+Eliminar publicaciones
+
 Guardar publicaciones
 
-Añadir empresa asociada
+--Añadidos--
 
 Vista del perfil empresas
+
+--Estetico--
+
+Corregir la interfaz grafica
+
+--Contraseñas--
 
 Revisión de la codificación de la contraseña
 
 ¿Olvide mi contraseña?
-
-Corregir la interfaz grafica
-
-Comprobar el funcionamiento de añadir publicacion y de administracion
 
 
 Para cifrar la contraseña utilizando el algoritmo AES se utiliza una clave que puede ser de 128, 192 y 256 bits.

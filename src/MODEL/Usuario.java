@@ -6,12 +6,13 @@ public class Usuario {
     //Los usuarios de tipo 'Asociado' son los usuarios de las empresas asociadas a PINACAL
     //Los usuarios de tipo 'Empresa_no_asociada' son las empresas no asociadas
     //Los usuarios de tipo 'Usuario' son los personas particulares
-    private static final String [] tipos = {"ADMINISTRADOR", "USUARIO", "EMPRESA_ASOCIADA", "EMPRESA_NO_ASOCIADA"};
+    private static final String [] tipos = {"ADMINISTRADOR", "USUARIO", "EMPRESA_ASOCIADA", "EMPRESA_NO_ASOCIADA","TEMPORAL"};
 
     public static final int ADMINISTRADOR = 0;
     public static final int USUARIO = 1;
     public static final int EMPRESA_ASOCIADA = 2;
     public static final int EMPRESA_NO_ASOCIADA = 3;
+    public static final int TEMPORAL = 4;
 
 
     private int id_usuario;
@@ -154,7 +155,7 @@ public class Usuario {
         return permisos;
     }
 
-    public int getindice_tipo_usuario() {
+    public int getIndice_tipo_usuario() {
         return indice_tipo_usuario;
     }
 
@@ -192,6 +193,10 @@ public class Usuario {
 
     public void setPermisos(String permisos) {
         this.permisos = permisos;
+    }
+
+    public void setIndice_tipo_usuario(int indice_tipo_usuario) {
+        this.indice_tipo_usuario = indice_tipo_usuario;
     }
     //METODO QUE INDICA EL TIPO DE USUARIO A PARTIR DE UN indice_tipo_usuario
 

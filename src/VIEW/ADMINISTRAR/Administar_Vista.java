@@ -6,6 +6,7 @@ import CONTROLLER.CRUD.USER.EliminarUsuario;
 import CONTROLLER.CRUD.USER.LeerUsuario;
 import CONTROLLER.ControladorDatos;
 import MODEL.Publicacion;
+import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
 import VIEW.ADD.Add_Empresa;
 import VIEW.ERROR.Error_INICIAR_BD;
@@ -176,7 +177,13 @@ public class Administar_Vista extends JFrame {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         String[] columnNames = {"Usuario", "Email", "Dirección", "Teléfono", "Tipo", "Permisos", "Acciones"};
         tableModel = new DefaultTableModel(columnNames, 0);
-        table = new JTable(tableModel);
+        // Configurar la tabla para que no permita la edición de celdas
+        table = new JTable(tableModel) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Todas las celdas no son editables
+            }
+        };
         JScrollPane tableScrollPane = new JScrollPane(table);
         bottomPanel.add(tableScrollPane, BorderLayout.CENTER);
 
@@ -271,21 +278,34 @@ public class Administar_Vista extends JFrame {
     }
 
     private void cargarDatosUsuarios() {
+        // Limpiar el modelo de la tabla
+        tableModel.setRowCount(0);
+
+        // Obtener los nuevos datos de usuarios
         usuarios = ControladorDatos.obtenerUsuarios(conn);
+
+        // Agregar los nuevos datos al modelo de la tabla
         for (Usuario usuario : usuarios) {
             tableModel.addRow(new Object[]{
                     usuario.getUsuario(),
                     usuario.getEmail(),
                     usuario.getDireccion(),
                     usuario.getTelefono(),
-                    usuario.getindice_tipo_usuario(),
+                    usuario.getIndice_tipo_usuario(),
                     usuario.getPermisos()
             });
         }
     }
 
     private void modificarPermisos(Usuario usuario) {
-        String[] opciones = {"ADMINISTRADOR", "EMPRESA_ASOCIADA", "EMPRESA_NO_ASOCIADA", "USUARIO"};
+
+        final String[] opciones = new String[4];
+        opciones[Usuario.ADMINISTRADOR] = Usuario.getTipos(Usuario.ADMINISTRADOR);
+        opciones[Usuario.EMPRESA_ASOCIADA] = Usuario.getTipos(Usuario.EMPRESA_ASOCIADA);
+        opciones[Usuario.EMPRESA_NO_ASOCIADA] = Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA);
+        opciones[Usuario.USUARIO] = Usuario.getTipos(Usuario.USUARIO);
+
+
         String nuevoPermiso = (String) JOptionPane.showInputDialog(
                 this,
                 "Seleccione el nuevo permiso para el usuario: " + usuario.getUsuario(),
@@ -293,11 +313,38 @@ public class Administar_Vista extends JFrame {
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 opciones,
-                opciones[0]
+                usuario.getPermisos() // Mostrar el permiso actual como opción predeterminada
         );
-        if (nuevoPermiso != null) {
+        if (nuevoPermiso != null && !nuevoPermiso.equals(usuario.getPermisos())) {
             usuario.setPermisos(nuevoPermiso);
-            ActualizarUsuario.actualizarUsuario(usuario);
+            if (ActualizarUsuario.actualizarUsuario(usuario).equalsIgnoreCase(Mensajes.getMensaje(Mensajes.USUARIO_ACTUALIZADO))) {
+
+                /*
+
+                ¿Por qué el switch no funciona?
+
+                switch (nuevoPermiso) {
+                    case opciones[Usuario.ADMINISTRADOR] -> usuario.setIndice_tipo_usuario(Usuario.ADMINISTRADOR);
+                    case opciones[Usuario.EMPRESA_ASOCIADA] -> usuario.setIndice_tipo_usuario(Usuario.EMPRESA_ASOCIADA);
+                    case opciones[Usuario.EMPRESA_NO_ASOCIADA] -> usuario.setIndice_tipo_usuario(Usuario.EMPRESA_NO_ASOCIADA);
+                    case opciones[Usuario.USUARIO] -> usuario.setIndice_tipo_usuario(Usuario.USUARIO);
+                    default -> usuario.setIndice_tipo_usuario(usuario.getIndice_tipo_usuario());
+                }
+                 */
+
+                if (nuevoPermiso.equalsIgnoreCase(opciones[Usuario.ADMINISTRADOR])) usuario.setIndice_tipo_usuario(Usuario.ADMINISTRADOR);
+                else if (nuevoPermiso.equalsIgnoreCase(opciones[Usuario.EMPRESA_ASOCIADA])) usuario.setIndice_tipo_usuario(Usuario.EMPRESA_ASOCIADA);
+                else if (nuevoPermiso.equalsIgnoreCase(opciones[Usuario.EMPRESA_NO_ASOCIADA])) usuario.setIndice_tipo_usuario(Usuario.EMPRESA_NO_ASOCIADA);
+                else if (nuevoPermiso.equalsIgnoreCase(opciones[Usuario.USUARIO])) usuario.setIndice_tipo_usuario(Usuario.USUARIO);
+                else usuario.setIndice_tipo_usuario(usuario.getIndice_tipo_usuario());
+
+
+
+                JOptionPane.showMessageDialog(this, ActualizarUsuario.actualizarUsuario(usuario));
+
+            } else {
+                JOptionPane.showMessageDialog(this, Mensajes.getMensaje(Mensajes.ERROR_ACTUALIZAR_USUARIO));
+            }
             cargarDatosUsuarios();
         }
     }
