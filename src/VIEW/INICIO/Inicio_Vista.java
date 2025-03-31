@@ -92,7 +92,9 @@ public class Inicio_Vista extends JFrame {
             anadirButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
 
             gbc.gridx = 2;
-            topPanel.add(anadirButton, gbc);
+
+            //Los usuarios particulares no pueden añadir publicaciones
+            if (!usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.USUARIO)))  topPanel.add(anadirButton, gbc);
 
 
         if (usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.ADMINISTRADOR))) {

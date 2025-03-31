@@ -1,4 +1,4 @@
-package CONTROLLER.GUARDAR;
+package CONTROLLER.CRUD.PUBLICACION;
 
 import DB.UTIL.GestorConexion;
 import MODEL.UTIL.Mensajes;

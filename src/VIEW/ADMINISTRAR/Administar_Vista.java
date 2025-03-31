@@ -266,6 +266,9 @@ public class Administar_Vista extends JFrame {
         group.clearSelection();
     }
 
+    //ADMINISTRACIÓN DE PUBLICACIONES
+
+
     private void gestionarPublicacion() {
         Publicacion publicacion = publicaciones.get(currentIndex);
         if (denegadaButton.isSelected()) {
@@ -276,6 +279,9 @@ public class Administar_Vista extends JFrame {
             }
         }
     }
+
+    //ADMINISTRACIÓN DE USUARIOS
+
 
     private void cargarDatosUsuarios() {
         // Limpiar el modelo de la tabla
@@ -296,6 +302,7 @@ public class Administar_Vista extends JFrame {
             });
         }
     }
+
 
     private void modificarPermisos(Usuario usuario) {
 
