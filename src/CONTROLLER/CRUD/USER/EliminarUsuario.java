@@ -49,7 +49,7 @@ public class EliminarUsuario {
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, usuario.getId_usuario());
             int rowsAffected = ps.executeUpdate();
-            System.out.println("Rows affected: " + rowsAffected); // Debug statement
+            System.out.println("Rows affected: " + rowsAffected); // Debug
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "No se ha podido eliminar el usuario: {0}, {1}", new Object[]{e.getMessage(), e});
         }

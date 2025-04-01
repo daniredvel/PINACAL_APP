@@ -117,10 +117,10 @@ public class Inicio_Vista extends JFrame {
         JScrollPane scrollPane = getJScrollPane();
         add(scrollPane, BorderLayout.CENTER);
 
-        // Load and display publications
+        // Cargar publicaciones
         cargarPublicaciones();
 
-        // Add action listeners to buttons
+        // «Escuchadores» de los botones
         inicioButton.addActionListener(e -> {
             LOGGER.log(Level.INFO, "Inicio button clicked");
             dispose();

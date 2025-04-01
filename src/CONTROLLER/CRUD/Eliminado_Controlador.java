@@ -21,7 +21,7 @@ public class Eliminado_Controlador extends Eliminado {
         private static final Logger LOGGER = Logger.getLogger(Eliminado_Controlador.class.getName());
 
 
-    // Method to delete a user
+    // Metodo para eliminar usuarios
     public static String usuario_Eliminado(String mensaje, Usuario usuario) {
 
 
@@ -42,7 +42,7 @@ public class Eliminado_Controlador extends Eliminado {
         String mensaje_retorno = Mensajes.getMensaje(Mensajes.ERROR_ELIMINAR);
 
         try {
-            // Add the deleted user to the deleted users table
+            // Añadir usuario eliminado a la tabla de justificaciones
             Usuario_eliminado usuarioEliminado = new Usuario_eliminado(mensaje, usuario);
             String usuarioEliminadoSQL = "INSERT INTO Justificacion_eliminacion_usuario (mensaje, fecha, usuario_id) VALUES (?, ?, ?)";
             assert conn != null;
@@ -52,7 +52,7 @@ public class Eliminado_Controlador extends Eliminado {
                 pstmt.setInt(3, usuario.getId_usuario());
                 pstmt.executeUpdate();
             }
-            // Delete the user from the database
+            // Eliminar usuarios de la base de datos
             String deleteUserSQL = "DELETE FROM Usuarios WHERE id = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(deleteUserSQL)) {
                 pstmt.setInt(1, usuario.getId_usuario());
@@ -64,7 +64,7 @@ public class Eliminado_Controlador extends Eliminado {
         return mensaje_retorno;
     }
 
-    // Method to delete a publication
+    // Metodo para eliminar publicaciones
     public static String publicacion_Eliminada(String mensaje, Publicacion publicacion) {
 
         Connection conn = GestorConexion.getConexion();
@@ -83,7 +83,7 @@ public class Eliminado_Controlador extends Eliminado {
         String mensaje_retorno = Mensajes.getMensaje(Mensajes.ERROR_ELIMINAR);
 
         try  {
-            // Add the deleted publication to the deleted publications table
+            // Añadir publicación eliminada a la tabla de justificaciones
             Publicacion_eliminada publicacionEliminada = new Publicacion_eliminada(mensaje, publicacion);
             String insertPublicationEliminadaSQL = "INSERT INTO Justificaciones_eliminaciones_publicaciones (mensaje, fecha, publicacion_id) VALUES (?, ?, ?)";
             assert conn != null;
@@ -93,7 +93,7 @@ public class Eliminado_Controlador extends Eliminado {
                 pstmt.setInt(3, publicacion.getId_publicacion());
                 pstmt.executeUpdate();
             }
-            // Delete the publication from the database
+            // Elimir la publicación de la base de datos
             String deletePublicationSQL = "DELETE FROM Publicaciones WHERE id = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(deletePublicationSQL)) {
                 pstmt.setInt(1, publicacion.getId_publicacion());

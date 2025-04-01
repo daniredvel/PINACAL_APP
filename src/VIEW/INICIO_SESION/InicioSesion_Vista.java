@@ -24,21 +24,21 @@ public class InicioSesion_Vista extends JFrame {
     public InicioSesion_Vista(Connection conn) {
         // Propiedades del frame (Marco)
         setTitle("Inicio de Sesión");
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize the frame
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Ajustar la ventana al tamaño de la pantalla
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         //Icono
         setIconImage(Rutas.getIcono());
 
-        // Panel y layout
+        // Panel principal
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        panel.setBackground(new Color(255, 255, 255)); // Background color
+        panel.setBackground(new Color(255, 255, 255)); // Fondo
 
-        // Constraints del Layout
+        // Constraints para el layout
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(20, 20, 20, 20); // Increase padding
+        constraints.insets = new Insets(20, 20, 20, 20); // Paddinf
         constraints.anchor = GridBagConstraints.WEST;
 
         // Fuente de los elementos
@@ -57,7 +57,7 @@ public class InicioSesion_Vista extends JFrame {
         // Etiqueta y Campo de texto del usuario
         JLabel userLabel = new JLabel("Usuario:");
         userLabel.setFont(font);
-        userLabel.setForeground(new Color(0, 0, 0)); // Text color
+        userLabel.setForeground(new Color(0, 0, 0)); // Color del texto
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
@@ -71,7 +71,7 @@ public class InicioSesion_Vista extends JFrame {
         // Etiqueta y Campo de texto de la contraseña
         JLabel passLabel = new JLabel("Contraseña:");
         passLabel.setFont(font);
-        passLabel.setForeground(new Color(0, 0, 0)); // Text color
+        passLabel.setForeground(new Color(0, 0, 0)); // Color del texto
         constraints.gridx = 0;
         constraints.gridy = 2;
         panel.add(passLabel, constraints);
@@ -79,7 +79,7 @@ public class InicioSesion_Vista extends JFrame {
 
         passField = new JPasswordField(20);
         passField.setFont(font);
-        passField.setEchoChar('•'); // Set echo character to bullet point
+        passField.setEchoChar('•'); // Caracter para ocultar la contraseña
         constraints.gridx = 1;
         panel.add(passField, constraints);
 
@@ -94,8 +94,8 @@ public class InicioSesion_Vista extends JFrame {
         // Botón de inicio de sesión
         JButton loginButton = new JButton("Iniciar Sesión");
         loginButton.setFont(font);
-        loginButton.setBackground(new Color(174, 101, 7)); // Button background color
-        loginButton.setForeground(new Color(255, 255, 255)); // Button text color
+        loginButton.setBackground(new Color(174, 101, 7)); // Color del fondo del botón
+        loginButton.setForeground(new Color(255, 255, 255)); // Color del texto del botón
         constraints.gridx = 1;
         constraints.gridy = 4;
         constraints.anchor = GridBagConstraints.CENTER;
@@ -113,22 +113,21 @@ public class InicioSesion_Vista extends JFrame {
         panel.add(registerButton, constraints);
 
         // «Escuchador» del botón de inicio de sesión
-// En `InicioSesion_Vista.java`, dentro del `loginButton.addActionListener`
         loginButton.addActionListener(e -> {
             String username = userField.getText();
             String password = new String(passField.getPassword());
 
             try {
                 int result = comprobarPass(username, password);
-                System.out.println("comprobarPass result: " + result); // Registro debug
+                System.out.println("comprobarPass result: " + result); // Debug
                 switch (result) {
                     case 1:
                         usuario_actual = leerUsuarioPorNombre(username);
                         assert usuario_actual != null;
-                        System.out.println("Permisos de usuario: " + usuario_actual.getPermisos()); // Registro debug
-                        System.out.println("Usuario encontrado: " + usuario_actual); // Registro debug
+                        System.out.println("Permisos de usuario: " + usuario_actual.getPermisos()); // Debug
+                        System.out.println("Usuario encontrado: " + usuario_actual); // Debug
                         dispose();
-                        System.out.println("Creando Inicio_Vista..."); // Registro debug
+                        System.out.println("Creando Inicio_Vista..."); // Debug
 
                         if (usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.ADMINISTRADOR)) || usuario_actual.getTipo().equals(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA))){
                             Inicio_Empresa_Asociada_Vista inicioVista = new Inicio_Empresa_Asociada_Vista(usuario_actual, conn);
@@ -139,7 +138,7 @@ public class InicioSesion_Vista extends JFrame {
                             inicioVista.setVisible(true);
 
                         }
-                                System.out.println("Inicio_Vista creada y visible."); // Registro debug
+                                System.out.println("Inicio_Vista creada y visible."); // Debug
                                 break;
                                 case -1: case 0:
                                 messageLabel.setText("Contraseña o usuario incorrectos");

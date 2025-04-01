@@ -72,9 +72,9 @@ CREATE TABLE JUSTIFICACIONES_ELIMINACION_USUARIOS (
 -- INSERTAMOS LOS TIPOS DE USUARIOS
 INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (0, 'Administrador', 'eliminar_publicacion_ajena, eliminar_usuario');
 INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (1, 'Usuario', 'guardar_publicacion, ver_publicaciones');
-INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (2, 'Empresa_asociada', 'publicar, guardar_publicacion, ver_publicaciones, ver_publicaciones_guardadas, eliminar_publicacion_propia');
-INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (3, 'Empresa_no_asociada', 'guardar_publicacion, ver_publicaciones');
+INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (2, 'Empresa_asociada', 'publicar, guardar_publicacion, ver_publicaciones, ver_publicaciones_guardadas, eliminar_publicacion_propia, ver_todas_las_publicaciones');
+INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (3, 'Empresa_no_asociada', 'publicar, guardar_publicacion, ver_publicaciones, ver_publicaciones_guardadas, eliminar_publicacion_propia, ver_las_publicaciones_de_la_empresas_asociadas');
 
 -- USUARIO ADMINISTRADOR
 INSERT INTO USUARIOS (nombre, password, email, direccion, telefono, id_tipo_usuario)
-VALUES ('PINACAL-INSER', 'e69U@d;J@£-Ly10f{jyC', 'pinacal@inser.com', 'C/Jeronimo muñoz, Nº 7, Parque tecnologico, Boecillo, Valladolid, C.P.: 47151, España', '983546599', 2);
+VALUES ('PINACAL-INSER', 'e69U@d;J@£-Ly10f{jyC', 'pinacal@inser.com', 'C/Jeronimo muñoz, Nº 7, Parque tecnologico, Boecillo, Valladolid, C.P.: 47151, España', '983546599', 0);

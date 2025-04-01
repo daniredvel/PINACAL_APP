@@ -17,7 +17,7 @@ public class Personal_Usuario extends JFrame {
     public Personal_Usuario(Usuario usuario_actual, Connection conn) {
 
         setTitle("Personal Usuario");
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Set the window to full screen
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Ajustar la ventana al tamaño de la pantalla
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 

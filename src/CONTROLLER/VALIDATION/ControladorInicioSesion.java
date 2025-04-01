@@ -26,7 +26,6 @@ public class ControladorInicioSesion {
 
         //Comprobamos si el usuario existe
         if (resultSet.next()) {
-            //String passDesencriptada = CodificadorPassword.descodificar(resultSet.getString("password"));
             String passDesencriptada = resultSet.getString("password");
                 //Comprobamos si la contraseña es correcta
             if (password.equals(passDesencriptada)) {

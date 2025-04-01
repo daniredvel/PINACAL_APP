@@ -31,7 +31,7 @@ public class Registro_Usuario extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        panel.setBackground(new Color(211, 205, 192)); // Background color similar to Registro_Empresa
+        panel.setBackground(new Color(211, 205, 192));
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);

@@ -59,7 +59,7 @@ public class LeerUsuario {
                                     rs.getInt("id_tipo_usuario"),
                                     rs.getString("nombre_tipo")
                             );
-                            System.out.println("Usuario encontrado: " + usuario.getUsuario()); // Debug statement
+                            System.out.println("Usuario encontrado: " + usuario.getUsuario()); // Debug
                             return usuario;
                         } else {
                             // Si la direccion es nula usamos el constructor del usuario, sin direccion
@@ -72,12 +72,12 @@ public class LeerUsuario {
                                     rs.getInt("id_tipo_usuario"),
                                     rs.getString("nombre_tipo")
                             );
-                            System.out.println("Usuario encontrado: " + usuario.getUsuario()); // Debug statement
+                            System.out.println("Usuario encontrado: " + usuario.getUsuario()); // Debug
                             return usuario;
                         }
                     } else {
                         mensaje = Mensajes.getMensaje(Mensajes.USUARIO_NO_EXISTE);
-                        System.out.println("Usuario no encontrado: " + username); // Debug statement
+                        System.out.println("Usuario no encontrado: " + username); // Debug
                     }
                 }
             }

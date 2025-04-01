@@ -8,7 +8,7 @@ import java.awt.*;
 public class Error_INICIAR_BD extends JFrame {
 
     public Error_INICIAR_BD() {
-        // Set frame properties
+        // Propiedades de la ventana
         setTitle("Error de Conexión");
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,26 +17,26 @@ public class Error_INICIAR_BD extends JFrame {
         //Icono
         setIconImage(Rutas.getIcono());
 
-        // Create a panel to hold the components
+        // Panel principal
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.setBackground(new Color(255, 255, 255));
 
-        // Create a label for the error message
+        // Etiqueta de error
         JLabel errorMessage = new JLabel("No se puede acceder a la aplicación.", SwingConstants.CENTER);
         errorMessage.setFont(new Font("Arial", Font.BOLD, 16));
         errorMessage.setForeground(Color.RED);
 
-        // Create a label for the apology message
+        // Etiqueta de disculpas
         JLabel apologyMessage = new JLabel("Lo sentimos por los inconvenientes.", SwingConstants.CENTER);
         apologyMessage.setFont(new Font("Arial", Font.PLAIN, 14));
         apologyMessage.setForeground(Color.BLACK);
 
-        // Add the labels to the panel
+        // Añaddor etiquetas al panel
         panel.add(errorMessage, BorderLayout.CENTER);
         panel.add(apologyMessage, BorderLayout.SOUTH);
 
-        // Add the panel to the frame
+        // Añadir panel a la ventana
         add(panel);
     }
 }

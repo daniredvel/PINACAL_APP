@@ -15,8 +15,8 @@ public class Publicacion_Vista extends JPanel {
     public Publicacion_Vista(Publicacion publicacion, Usuario usuario_actual) {
         setLayout(new BorderLayout());
         setBackground(new Color(211, 205, 192));
-        setBorder(BorderFactory.createLineBorder(new Color(174, 101, 7), 2)); // Orange border
-        setPreferredSize(new Dimension(800, 300)); // Set preferred size
+        setBorder(BorderFactory.createLineBorder(new Color(174, 101, 7), 2)); // Borde naranja
+        setPreferredSize(new Dimension(800, 300));
 
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(new Color(211, 205, 192));
@@ -54,7 +54,7 @@ public class Publicacion_Vista extends JPanel {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         JLabel textViewFecha = new JLabel(dateFormat.format(publicacion.getFecha_publicacion()));
         textViewFecha.setFont(new Font("Arial", Font.BOLD, 20));
-        textViewFecha.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); // Add margin to the right
+        textViewFecha.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); // Margen a la derecha
 
         JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         datePanel.setBackground(new Color(211, 205, 192));

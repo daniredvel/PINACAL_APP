@@ -35,13 +35,13 @@ public class GestorConexion {
                     url + bd, usr, pass
             );
 
-            System.out.println("Conexión a la base de datos establecida correctamente."); // Debug statement
+            System.out.println("Conexión a la base de datos establecida correctamente."); // Debug
             return Mensajes.OK;
         } catch (ClassNotFoundException cnfe) {
-            System.err.println("Error: Driver no encontrado."); // Debug statement
+            System.err.println("Error: Driver no encontrado."); // Debug
             return Mensajes.FALLO_DRIVER;
         } catch (SQLException sqle) {
-            System.err.println("Error: No se pudo establecer la conexión a la base de datos."); // Debug statement
+            System.err.println("Error: No se pudo establecer la conexión a la base de datos."); // Debug
             return Mensajes.FALLO_CONEXION;
         }
     }
@@ -62,13 +62,13 @@ public class GestorConexion {
         try {
             if (conexion != null && !conexion.isClosed()) {
                 conexion.close();
-                System.out.println("Conexión a la base de datos cerrada correctamente."); // Debug statement
+                System.out.println("Conexión a la base de datos cerrada correctamente."); // Debug
                 return Mensajes.OK;
             } else {
                 return Mensajes.FALLO_CERRAR_CONEXION;
             }
         } catch (SQLException sqle) {
-            System.err.println("Error: No se pudo cerrar la conexión a la base de datos."); // Debug statement
+            System.err.println("Error: No se pudo cerrar la conexión a la base de datos."); // Debug
             return Mensajes.FALLO_CERRAR_CONEXION;
         }
     }

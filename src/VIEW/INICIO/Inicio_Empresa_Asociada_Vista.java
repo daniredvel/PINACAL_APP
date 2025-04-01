@@ -19,7 +19,7 @@ public class Inicio_Empresa_Asociada_Vista extends Inicio_Vista {
     @Override
     protected void cargarPublicaciones() {
         LOGGER.log(Level.INFO, "Cargando publicaciones");
-        listModel.clear(); // Clear the list before reloading
+        listModel.clear(); // Limpia el modelo de la lista antes de cargar las publicaciones
 
 
         List<Publicacion> publicaciones = ControladorDatos.obtenerPublicaciones(conn, true);
