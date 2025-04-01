@@ -77,4 +77,4 @@ INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (3, '
 
 -- USUARIO ADMINISTRADOR
 INSERT INTO USUARIOS (nombre, password, email, direccion, telefono, id_tipo_usuario)
-VALUES ('PINACAL-INSER', 'e69U@d;J@£-Ly10f{jyC', 'pinacal@inser.com', 'C/Jeronimo muñoz, Nº 7, Parque tecnologico, Boecillo, Valladolid, C.P.: 47151, España', '983546599', 0);
+VALUES ('adm', 'adm', 'adm@inser.com', 'ej direccion', '000000000', 0);
