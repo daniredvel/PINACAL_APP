@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat;
 public class Publicacion_Detalle_Vista extends JFrame {
     private boolean isOriginalIcon = true;
     private final JLabel messageLabel;
-    private final JPanel messagePanel;
     private final JButton saveButton;
     private final JPanel leftPanel;
 
@@ -82,7 +81,7 @@ public class Publicacion_Detalle_Vista extends JFrame {
         saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         leftPanel.add(saveButton);
 
-        messagePanel = new JPanel();
+        JPanel messagePanel = new JPanel();
         messagePanel.setBackground(new Color(174, 101, 7));
         messagePanel.setLayout(new BorderLayout());
         messagePanel.setVisible(false);
@@ -122,7 +121,9 @@ public class Publicacion_Detalle_Vista extends JFrame {
         return leftPanel;
     }
 
+    /*
     public void addSaveButtonListener(java.awt.event.ActionListener listener) {
         saveButton.addActionListener(listener);
     }
+     */
 }

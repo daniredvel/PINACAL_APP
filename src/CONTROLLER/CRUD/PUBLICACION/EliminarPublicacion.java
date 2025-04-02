@@ -1,6 +1,5 @@
 package CONTROLLER.CRUD.PUBLICACION;
 
-import CONTROLLER.ControladorDatos;
 import DB.UTIL.GestorConexion;
 import MODEL.Publicacion;
 import MODEL.UTIL.Mensajes;
@@ -10,7 +9,6 @@ import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

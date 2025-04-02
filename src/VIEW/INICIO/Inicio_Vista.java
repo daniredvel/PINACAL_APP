@@ -155,19 +155,7 @@ public class Inicio_Vista extends JFrame {
     }
 
     protected JScrollPane getJScrollPane() {
-        JList<Publicacion> publicacionesList = new JList<>(listModel);
-        publicacionesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
-            Publicacion_Vista publicacionVista = new Publicacion_Vista(publicacion);
-            if (isSelected) {
-                publicacionVista.setBackground(new Color(174, 101, 7));
-                publicacionVista.setForeground(Color.WHITE);
-            } else {
-                publicacionVista.setBackground(new Color(211, 205, 192));
-                publicacionVista.setForeground(Color.BLACK);
-            }
-            return publicacionVista;
-        });
+        JList<Publicacion> publicacionesList = getPublicacionJList();
 
         publicacionesList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -182,6 +170,23 @@ public class Inicio_Vista extends JFrame {
         });
 
         return new JScrollPane(publicacionesList);
+    }
+
+    private JList<Publicacion> getPublicacionJList() {
+        JList<Publicacion> publicacionesList = new JList<>(listModel);
+        publicacionesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
+            Publicacion_Vista publicacionVista = new Publicacion_Vista(publicacion);
+            if (isSelected) {
+                publicacionVista.setBackground(new Color(174, 101, 7));
+                publicacionVista.setForeground(Color.WHITE);
+            } else {
+                publicacionVista.setBackground(new Color(211, 205, 192));
+                publicacionVista.setForeground(Color.BLACK);
+            }
+            return publicacionVista;
+        });
+        return publicacionesList;
     }
 
     protected void cargarPublicaciones() {

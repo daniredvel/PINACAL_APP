@@ -122,19 +122,7 @@ public class Add_Empresa extends JFrame {
     }
 
     private JScrollPane getJScrollPane(Usuario usuario_actual) {
-        JList<Publicacion> publicacionesList = new JList<>(listModel);
-        publicacionesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
-            Publicacion_Vista publicacionVista = new Publicacion_Vista(publicacion);
-            if (isSelected) {
-                publicacionVista.setBackground(new Color(174, 101, 7));
-                publicacionVista.setForeground(Color.WHITE);
-            } else {
-                publicacionVista.setBackground(new Color(211, 205, 192));
-                publicacionVista.setForeground(Color.BLACK);
-            }
-            return publicacionVista;
-        });
+        JList<Publicacion> publicacionesList = getPublicacionJList();
 
         publicacionesList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -149,6 +137,23 @@ public class Add_Empresa extends JFrame {
         });
 
         return new JScrollPane(publicacionesList);
+    }
+
+    private JList<Publicacion> getPublicacionJList() {
+        JList<Publicacion> publicacionesList = new JList<>(listModel);
+        publicacionesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
+            Publicacion_Vista publicacionVista = new Publicacion_Vista(publicacion);
+            if (isSelected) {
+                publicacionVista.setBackground(new Color(174, 101, 7));
+                publicacionVista.setForeground(Color.WHITE);
+            } else {
+                publicacionVista.setBackground(new Color(211, 205, 192));
+                publicacionVista.setForeground(Color.BLACK);
+            }
+            return publicacionVista;
+        });
+        return publicacionesList;
     }
 
     private void cargarPublicaciones(Usuario usuario_actual) {

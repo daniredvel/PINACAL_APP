@@ -31,9 +31,8 @@ public class Administar_Vista extends JFrame {
     private final JTextField justificacionField;
     private final JRadioButton denegadaButton;
     private final ButtonGroup group;
-    private JTable table;
-    private DefaultTableModel tableModel;
-    private List<Usuario> usuarios;
+    private final JTable table;
+    private final DefaultTableModel tableModel;
     private static Usuario usuario_actual = null;
     public static Connection conn = null;
 
@@ -288,7 +287,7 @@ public class Administar_Vista extends JFrame {
         tableModel.setRowCount(0);
 
         // Obtener los nuevos datos de usuarios
-        usuarios = ControladorDatos.obtenerUsuarios(conn);
+        List<Usuario> usuarios = ControladorDatos.obtenerUsuarios(conn);
 
         // Agregar los nuevos datos al modelo de la tabla
         for (Usuario usuario : usuarios) {

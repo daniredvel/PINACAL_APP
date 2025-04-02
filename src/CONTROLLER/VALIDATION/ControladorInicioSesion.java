@@ -7,8 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class ControladorInicioSesion {
-    private static String password;
-    private static String usuario;
+
 
     public static int comprobarPass(String usuario, String password) throws Exception {
 

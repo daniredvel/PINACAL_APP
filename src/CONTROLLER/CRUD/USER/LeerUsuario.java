@@ -48,8 +48,9 @@ public class LeerUsuario {
                         String direccion = rs.getString("direccion");
 
                         // Si la direccion no es nula usamos el constructor de la empresa, con direccion
+                        Usuario usuario;// Debug
                         if (direccion != null) {
-                            Usuario usuario = new Usuario(
+                            usuario = new Usuario(
                                     rs.getInt("id_usuario"),
                                     rs.getString("nombre"),
                                     rs.getString("password"),
@@ -59,11 +60,9 @@ public class LeerUsuario {
                                     rs.getInt("id_tipo_usuario"),
                                     rs.getString("nombre_tipo")
                             );
-                            System.out.println("Usuario encontrado: " + usuario.getUsuario()); // Debug
-                            return usuario;
                         } else {
                             // Si la direccion es nula usamos el constructor del usuario, sin direccion
-                            Usuario usuario = new Usuario(
+                            usuario = new Usuario(
                                     rs.getInt("id_usuario"),
                                     rs.getString("nombre"),
                                     rs.getString("password"),
@@ -72,9 +71,9 @@ public class LeerUsuario {
                                     rs.getInt("id_tipo_usuario"),
                                     rs.getString("nombre_tipo")
                             );
-                            System.out.println("Usuario encontrado: " + usuario.getUsuario()); // Debug
-                            return usuario;
                         }
+                        System.out.println("Usuario encontrado: " + usuario.getUsuario()); // Debug
+                        return usuario;
                     } else {
                         mensaje = Mensajes.getMensaje(Mensajes.USUARIO_NO_EXISTE);
                         System.out.println("Usuario no encontrado: " + username); // Debug

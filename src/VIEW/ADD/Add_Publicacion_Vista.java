@@ -113,14 +113,12 @@ public class Add_Publicacion_Vista extends JDialog {
 
         if (AddPublicacion.crearPublicacion(publicacion)) {
             JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.PUBLICACION_ANADIDO));
-            dispose();
-            new Inicio_Vista(usuario_actual, conn).setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, Mensajes.getMensaje(Mensajes.ERROR_ANADIR_PUBLICACION));
             LOGGER.log(Level.SEVERE, "Error al crear la publicación: {0}");
-            dispose();
-            new Inicio_Vista(usuario_actual, conn).setVisible(true);
         }
+        dispose();
+        new Inicio_Vista(usuario_actual, conn).setVisible(true);
 
         LOGGER.log(Level.INFO, "Publicación creada: {0}", publicacion);
         dispose();

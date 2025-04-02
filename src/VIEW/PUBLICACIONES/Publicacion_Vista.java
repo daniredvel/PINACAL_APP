@@ -17,6 +17,25 @@ public class Publicacion_Vista extends JPanel {
         contentPanel.setBackground(new Color(211, 205, 192));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        JPanel leftPanel = getJPanel(publicacion);
+
+        contentPanel.add(leftPanel, BorderLayout.CENTER);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        JLabel textViewFecha = new JLabel(dateFormat.format(publicacion.getFecha_publicacion()));
+        textViewFecha.setFont(new Font("Arial", Font.BOLD, 20));
+        textViewFecha.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+
+        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        datePanel.setBackground(new Color(211, 205, 192));
+        datePanel.add(textViewFecha);
+
+        contentPanel.add(datePanel, BorderLayout.EAST);
+
+        add(contentPanel, BorderLayout.CENTER);
+    }
+
+    private static JPanel getJPanel(Publicacion publicacion) {
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setBackground(new Color(211, 205, 192));
@@ -36,20 +55,6 @@ public class Publicacion_Vista extends JPanel {
         textViewUsuario.setFont(new Font("Arial", Font.PLAIN, 20));
         textViewUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
         leftPanel.add(textViewUsuario);
-
-        contentPanel.add(leftPanel, BorderLayout.CENTER);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        JLabel textViewFecha = new JLabel(dateFormat.format(publicacion.getFecha_publicacion()));
-        textViewFecha.setFont(new Font("Arial", Font.BOLD, 20));
-        textViewFecha.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
-
-        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        datePanel.setBackground(new Color(211, 205, 192));
-        datePanel.add(textViewFecha);
-
-        contentPanel.add(datePanel, BorderLayout.EAST);
-
-        add(contentPanel, BorderLayout.CENTER);
+        return leftPanel;
     }
 }

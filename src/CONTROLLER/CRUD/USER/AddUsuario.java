@@ -63,8 +63,8 @@ public class AddUsuario {
 
         try  {
             PreparedStatement ps;
+            assert conn != null;
             if (usuario.getDireccion() != null) {
-                assert conn != null;
                 ps = conn.prepareStatement(sqlDireccion);
                 ps.setString(1, usuario.getUsuario());
                 ps.setString(2, usuario.getPassword());
@@ -73,7 +73,6 @@ public class AddUsuario {
                 ps.setString(5, usuario.getTelefono());
                 ps.setString(6, usuario.getPermisos());
             } else {
-                assert conn != null;
                 ps = conn.prepareStatement(sqlSinDireccion);
                 ps.setString(1, usuario.getUsuario());
                 ps.setString(2, usuario.getPassword());

@@ -1,6 +1,5 @@
 package CONTROLLER.CRUD.PUBLICACION;
 
-import CONTROLLER.ControladorDatos;
 import DB.UTIL.GestorConexion;
 import MODEL.Publicacion;
 import MODEL.UTIL.Mensajes;
@@ -17,7 +16,7 @@ import java.util.logging.Logger;
 import static DB.UTIL.CrearConn.conn;
 
 public class AddPublicacion {
-    private static final Logger LOGGER = Logger.getLogger(ControladorDatos.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AddPublicacion.class.getName());
 
     public static boolean crearPublicacion(Publicacion publicacion) {
 
