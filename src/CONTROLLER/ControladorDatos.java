@@ -4,7 +4,6 @@ import MODEL.Publicacion;
 import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
 import VIEW.ERROR.Error_INICIAR_BD;
-import VIEW.INICIO.Inicio_Vista;
 
 import javax.swing.*;
 import java.sql.*;
