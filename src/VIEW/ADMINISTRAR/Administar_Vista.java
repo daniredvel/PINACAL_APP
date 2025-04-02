@@ -55,7 +55,7 @@ public class Administar_Vista extends JFrame {
         publicaciones = ControladorDatos.obtenerPublicaciones(conexion, true);
 
         // Icono
-        setIconImage(Rutas.getIcono());
+        setIconImage(Rutas.getImage(Rutas.ICONO));
 
         setTitle("Administrar Publicaciones y Usuarios");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -90,15 +90,15 @@ public class Administar_Vista extends JFrame {
         anadirButton.setFont(buttonFont);
         anadirButton.setBackground(new Color(174, 101, 7));
         anadirButton.setForeground(Color.WHITE);
-        anadirButton.setPreferredSize(new Dimension(150, 50));
-        anadirButton.setMargin(new Insets(10, 20, 10, 20));
+        anadirButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
+        anadirButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
 
         JButton adminButton = new JButton("Administrador");
         adminButton.setFont(buttonFont);
         adminButton.setBackground(new Color(174, 101, 7));
         adminButton.setForeground(Color.WHITE);
-        adminButton.setPreferredSize(new Dimension(150, 50));
-        adminButton.setMargin(new Insets(10, 20, 10, 20));
+        adminButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
+        adminButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);

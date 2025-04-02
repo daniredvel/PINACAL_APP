@@ -15,14 +15,13 @@ public class Personal_Usuario extends JFrame {
     private final JTextField telefonoField;
 
     public Personal_Usuario(Usuario usuario_actual, Connection conn) {
-
         setTitle("Personal Usuario");
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Ajustar la ventana al tamaño de la pantalla
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Icono
-        setIconImage(Rutas.getIcono());
+        setIconImage(Rutas.getImage(Rutas.ICONO));
 
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(211, 205, 192));
@@ -31,35 +30,35 @@ public class Personal_Usuario extends JFrame {
         panelSuperior.setLayout(new GridBagLayout());
         panelSuperior.setBackground(new Color(211, 205, 192));
 
-        Font fuenteButton = new Font("Arial", Font.PLAIN, 14);
+        Font fuenteButton = new Font("Arial", Font.PLAIN, 18);
 
         JButton inicioButton = new JButton("Inicio");
         inicioButton.setFont(fuenteButton);
         inicioButton.setBackground(new Color(174, 101, 7));
         inicioButton.setForeground(Color.WHITE);
-        inicioButton.setPreferredSize(new Dimension(120, 40));
-        inicioButton.setMargin(new Insets(5, 10, 5, 10));
+        inicioButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
+        inicioButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
 
         JButton personalButton = new JButton("Personal");
         personalButton.setFont(fuenteButton);
         personalButton.setBackground(new Color(174, 101, 7));
         personalButton.setForeground(Color.WHITE);
-        personalButton.setPreferredSize(new Dimension(120, 40));
-        personalButton.setMargin(new Insets(5, 10, 5, 10));
+        personalButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
+        personalButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
 
         JButton modificarButton = new JButton("Modificar");
         modificarButton.setFont(fuenteButton);
         modificarButton.setBackground(new Color(174, 101, 7));
         modificarButton.setForeground(Color.WHITE);
-        modificarButton.setPreferredSize(new Dimension(120, 40));
-        modificarButton.setMargin(new Insets(5, 10, 5, 10));
+        modificarButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
+        modificarButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
 
         JButton aceptarButton = new JButton("Aceptar");
         aceptarButton.setFont(fuenteButton);
         aceptarButton.setBackground(new Color(174, 101, 7));
         aceptarButton.setForeground(Color.WHITE);
-        aceptarButton.setPreferredSize(new Dimension(120, 40));
-        aceptarButton.setMargin(new Insets(5, 10, 5, 10));
+        aceptarButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
+        aceptarButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
         aceptarButton.setEnabled(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -93,34 +92,42 @@ public class Personal_Usuario extends JFrame {
         gbc.anchor = GridBagConstraints.WEST;
         userPanel.add(nombreLabel, gbc);
 
-        nombreField = new JTextField(usuario_actual.getUsuario(), 20);
+        nombreField = new JTextField(usuario_actual.getUsuario());
         nombreField.setFont(new Font("Arial", Font.PLAIN, 14));
         nombreField.setEnabled(false);
+        nombreField.setColumns(usuario_actual.getUsuario().length());
         gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         userPanel.add(nombreField, gbc);
 
         JLabel direccionLabel = new JLabel("Dirección:");
         direccionLabel.setFont(fuenteLabel);
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
         userPanel.add(direccionLabel, gbc);
 
-        direccionField = new JTextField(usuario_actual.getDireccion(), 20);
+        direccionField = new JTextField(usuario_actual.getDireccion());
         direccionField.setFont(new Font("Arial", Font.PLAIN, 14));
         direccionField.setEnabled(false);
+        direccionField.setColumns(usuario_actual.getDireccion().length());
         gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         userPanel.add(direccionField, gbc);
 
         JLabel telefonoLabel = new JLabel("Teléfono:");
         telefonoLabel.setFont(fuenteLabel);
         gbc.gridx = 0;
         gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
         userPanel.add(telefonoLabel, gbc);
 
-        telefonoField = new JTextField(usuario_actual.getTelefono(), 20);
+        telefonoField = new JTextField(usuario_actual.getTelefono());
         telefonoField.setFont(new Font("Arial", Font.PLAIN, 14));
         telefonoField.setEnabled(false);
+        telefonoField.setColumns(usuario_actual.getTelefono().length());
         gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         userPanel.add(telefonoField, gbc);
 
         add(userPanel, BorderLayout.CENTER);
@@ -140,23 +147,21 @@ public class Personal_Usuario extends JFrame {
             telefonoField.setEnabled(true);
             aceptarButton.setEnabled(true);
             modificarButton.setEnabled(false);
-
         });
 
         aceptarButton.addActionListener(e -> {
+            usuario_actual.setUsuario(nombreField.getText());
+            usuario_actual.setDireccion(direccionField.getText());
+            usuario_actual.setTelefono(telefonoField.getText());
 
-                usuario_actual.setUsuario(nombreField.getText());
-                usuario_actual.setDireccion(direccionField.getText());
-                usuario_actual.setTelefono(telefonoField.getText());
+            String resultado = ActualizarUsuario.actualizarUsuario(usuario_actual);
+            JOptionPane.showMessageDialog(null, resultado);
 
-                String resultado = ActualizarUsuario.actualizarUsuario(usuario_actual);
-                JOptionPane.showMessageDialog(null, resultado);
-
-                nombreField.setEnabled(false);
-                direccionField.setEnabled(false);
-                telefonoField.setEnabled(false);
-                aceptarButton.setEnabled(false);
-
+            nombreField.setEnabled(false);
+            direccionField.setEnabled(false);
+            telefonoField.setEnabled(false);
+            aceptarButton.setEnabled(false);
             modificarButton.setEnabled(true);
         });
-    }}
+    }
+}

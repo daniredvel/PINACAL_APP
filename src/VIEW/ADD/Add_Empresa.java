@@ -6,7 +6,8 @@ import MODEL.Usuario;
 import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.PERSONAL.Personal_Empresa;
-import VIEW.PUBLICACIONES.Publicacion_Propia_Vista;
+import VIEW.PUBLICACIONES.Publicacion_Vista;
+import VIEW.PUBLICACIONES.Publicacion_Propia_Detalle_Vista;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
@@ -35,7 +36,7 @@ public class Add_Empresa extends JFrame {
         }
 
         // Icono
-        setIconImage(Rutas.getIcono());
+        setIconImage(Rutas.getImage(Rutas.ICONO));
 
         setTitle("Publicaciones del Usuario");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -43,7 +44,7 @@ public class Add_Empresa extends JFrame {
         setLocationRelativeTo(null);
 
         setLayout(new BorderLayout());
-        getContentPane().setBackground(new Color(211, 205, 192));
+        getContentPane().setBackground(new Color(211, 205, 192)); // Color de fondo de las publicaciones
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new GridBagLayout());
@@ -69,8 +70,8 @@ public class Add_Empresa extends JFrame {
         anadirButton.setFont(buttonFont);
         anadirButton.setBackground(new Color(174, 101, 7));
         anadirButton.setForeground(Color.WHITE);
-        anadirButton.setPreferredSize(new Dimension(150, 50));
-        anadirButton.setMargin(new Insets(10, 20, 10, 20));
+        anadirButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
+        anadirButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
 
         JButton nuevaPublicacionButton = new JButton("Nueva Publicación");
         nuevaPublicacionButton.setFont(buttonFont);
@@ -97,7 +98,7 @@ public class Add_Empresa extends JFrame {
         add(topPanel, BorderLayout.NORTH);
 
         listModel = new DefaultListModel<>();
-        JScrollPane scrollPane = getJScrollPane();
+        JScrollPane scrollPane = getJScrollPane(usuario_actual);
         add(scrollPane, BorderLayout.CENTER);
 
         cargarPublicaciones(usuario_actual);
@@ -120,15 +121,31 @@ public class Add_Empresa extends JFrame {
         });
     }
 
-    private JScrollPane getJScrollPane() {
+    private JScrollPane getJScrollPane(Usuario usuario_actual) {
         JList<Publicacion> publicacionesList = new JList<>(listModel);
+        publicacionesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
-            Publicacion_Propia_Vista publicacionVista = new Publicacion_Propia_Vista(publicacion);
+            Publicacion_Vista publicacionVista = new Publicacion_Vista(publicacion);
             if (isSelected) {
                 publicacionVista.setBackground(new Color(174, 101, 7));
                 publicacionVista.setForeground(Color.WHITE);
+            } else {
+                publicacionVista.setBackground(new Color(211, 205, 192));
+                publicacionVista.setForeground(Color.BLACK);
             }
             return publicacionVista;
+        });
+
+        publicacionesList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    Publicacion selectedPublicacion = publicacionesList.getSelectedValue();
+                    if (selectedPublicacion != null) {
+                        Publicacion_Propia_Detalle_Vista detalleVista = new Publicacion_Propia_Detalle_Vista(selectedPublicacion);
+                        detalleVista.setVisible(true);
+                    }
+                }
+            }
         });
 
         return new JScrollPane(publicacionesList);

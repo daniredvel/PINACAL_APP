@@ -5,10 +5,18 @@ import java.awt.*;
 import java.util.Objects;
 
 public class Rutas {
-    //Icono
-    private static final Image icono = new ImageIcon(Objects.requireNonNull(Rutas.class.getResource("/VIEW/RES/icon.png"))).getImage();
+    // Iconos
+    public static final int ICONO = 0;
+    public static final int GUARDAR = 1;
+    public static final int GUARDAR_RELLENO = 2;
 
-    public static Image getIcono(){
-        return icono;
+    private static final String[] RUTAS = {
+            "/VIEW/RES/icon.png",
+            "/VIEW/RES/guardar.png",
+            "/VIEW/RES/guardarrrelleno.png"
+    };
+
+    public static Image getImage(int codigo) {
+        return new ImageIcon(Objects.requireNonNull(Rutas.class.getResource(RUTAS[codigo]))).getImage();
     }
 }

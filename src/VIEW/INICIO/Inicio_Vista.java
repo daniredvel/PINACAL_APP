@@ -9,11 +9,13 @@ import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.PERSONAL.Personal_Empresa;
 import VIEW.PERSONAL.Personal_Usuario;
 import VIEW.PUBLICACIONES.Publicacion_Vista;
-import VIEW.REGISTRO.Registro_Empresa;
+import VIEW.PUBLICACIONES.Publicacion_Detalle_Vista;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.util.List;
 import java.util.logging.Level;
@@ -44,7 +46,7 @@ public class Inicio_Vista extends JFrame {
         }
 
         // Icono
-        setIconImage(Rutas.getIcono());
+        setIconImage(Rutas.getImage(Rutas.ICONO));
 
         setTitle("Inicio Vista");
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Adjust the window to the screen
@@ -85,29 +87,27 @@ public class Inicio_Vista extends JFrame {
         topPanel.add(personalButton, gbc);
 
         JButton anadirButton = new JButton("Mis Publicaciones");
-            anadirButton.setFont(buttonFont);
-            anadirButton.setBackground(new Color(174, 101, 7));
-            anadirButton.setForeground(Color.WHITE);
-            anadirButton.setPreferredSize(new Dimension(150, 50)); // Set button size
-            anadirButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
+        anadirButton.setFont(buttonFont);
+        anadirButton.setBackground(new Color(174, 101, 7));
+        anadirButton.setForeground(Color.WHITE);
+        anadirButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
+        anadirButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
 
-            gbc.gridx = 2;
+        gbc.gridx = 2;
 
-            //Los usuarios particulares no pueden añadir publicaciones
-            if (!usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.USUARIO)))  topPanel.add(anadirButton, gbc);
-
+        //Los usuarios particulares no pueden añadir publicaciones
+        if (!usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.USUARIO)))  topPanel.add(anadirButton, gbc);
 
         if (usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
             adminButton = new JButton("Administrador");
             adminButton.setFont(buttonFont);
             adminButton.setBackground(new Color(174, 101, 7));
             adminButton.setForeground(Color.WHITE);
-            adminButton.setPreferredSize(new Dimension(150, 50)); // Set button size
-            adminButton.setMargin(new Insets(10, 20, 10, 20)); // Set padding
+            adminButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
+            adminButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
 
             gbc.gridx = 3;
             topPanel.add(adminButton, gbc);
-
         }
 
         add(topPanel, BorderLayout.NORTH);
@@ -156,13 +156,29 @@ public class Inicio_Vista extends JFrame {
 
     protected JScrollPane getJScrollPane() {
         JList<Publicacion> publicacionesList = new JList<>(listModel);
+        publicacionesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
-            Publicacion_Vista publicacionVista = new Publicacion_Vista(publicacion, usuario_actual);
+            Publicacion_Vista publicacionVista = new Publicacion_Vista(publicacion);
             if (isSelected) {
                 publicacionVista.setBackground(new Color(174, 101, 7));
                 publicacionVista.setForeground(Color.WHITE);
+            } else {
+                publicacionVista.setBackground(new Color(211, 205, 192));
+                publicacionVista.setForeground(Color.BLACK);
             }
             return publicacionVista;
+        });
+
+        publicacionesList.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    Publicacion selectedPublicacion = publicacionesList.getSelectedValue();
+                    if (selectedPublicacion != null) {
+                        Publicacion_Detalle_Vista detalleVista = new Publicacion_Detalle_Vista(selectedPublicacion);
+                        detalleVista.setVisible(true);
+                    }
+                }
+            }
         });
 
         return new JScrollPane(publicacionesList);
@@ -180,4 +196,7 @@ public class Inicio_Vista extends JFrame {
         LOGGER.log(Level.INFO, "Publicaciones cargadas: {0}", listModel.size());
     }
 
+    public static Usuario getUsuario_actual() {
+        return usuario_actual;
+    }
 }

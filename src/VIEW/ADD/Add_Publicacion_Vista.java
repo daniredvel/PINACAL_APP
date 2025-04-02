@@ -28,7 +28,7 @@ public class Add_Publicacion_Vista extends JDialog {
         this.usuario_actual = usuario_actual;
 
         // Icono
-        setIconImage(Rutas.getIcono());
+        setIconImage(Rutas.getImage(Rutas.ICONO));
 
         setSize(600, 400);
         setLocationRelativeTo(owner);

@@ -7,9 +7,7 @@ import VIEW.INICIO_SESION.InicioSesion_Vista;
 
 import javax.swing.*;
 import java.sql.Connection;
-import java.sql.SQLException;
 
-import static DB.UTIL.CrearConn.conn;
 import static DB.UTIL.CrearConn.crearConexion;
 
 public class Main {

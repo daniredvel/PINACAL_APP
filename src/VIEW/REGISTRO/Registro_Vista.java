@@ -1,6 +1,5 @@
 package VIEW.REGISTRO;
 
-import MODEL.Usuario;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
@@ -17,7 +16,7 @@ public class Registro_Vista extends JFrame {
         setLocationRelativeTo(null);
 
         //Icono
-        setIconImage(Rutas.getIcono());
+        setIconImage(Rutas.getImage(Rutas.ICONO));
 
         // Crear Panel y Layout
         JPanel panel = new JPanel();

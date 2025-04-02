@@ -15,7 +15,7 @@ public class Error_INICIAR_BD extends JFrame {
         setLocationRelativeTo(null);
 
         //Icono
-        setIconImage(Rutas.getIcono());
+        setIconImage(Rutas.getImage(Rutas.ICONO));
 
         // Panel principal
         JPanel panel = new JPanel();

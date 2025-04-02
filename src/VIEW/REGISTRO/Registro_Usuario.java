@@ -27,7 +27,7 @@ public class Registro_Usuario extends JFrame {
         setLocationRelativeTo(null);
 
         //Icono
-        setIconImage(Rutas.getIcono());
+        setIconImage(Rutas.getImage(Rutas.ICONO));
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());

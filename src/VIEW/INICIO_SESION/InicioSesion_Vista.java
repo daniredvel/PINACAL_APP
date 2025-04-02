@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.sql.Connection;
-import java.util.Objects;
 
 import MODEL.Usuario;
 import VIEW.INICIO.Inicio_Empresa_Asociada_Vista;
@@ -29,7 +28,7 @@ public class InicioSesion_Vista extends JFrame {
         setLocationRelativeTo(null);
 
         //Icono
-        setIconImage(Rutas.getIcono());
+        setIconImage(Rutas.getImage(Rutas.ICONO));
 
         // Panel principal
         JPanel panel = new JPanel();
