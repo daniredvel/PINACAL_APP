@@ -1,5 +1,7 @@
 --General--
 
+Patrón de diseño Singleton para instanciar el usuario que utiliza el programa, que inicia sesión.
+
 Adminsitrar publicaciones
 
 --Vista de Publicaciones--
@@ -23,6 +25,8 @@ Revisión de la codificación de la contraseña
 ¿Olvide mi contraseña?
 
 
+
+¿Algoritmo para encriptar? AES, SHA-1
 Para cifrar la contraseña utilizando el algoritmo AES se utiliza una clave que puede ser de 128, 192 y 256 bits.
 Para descifrar la contraseña se utiliza la misma clave que se utilizo para cifrarla.
 ¿La clave se puede generar mediante numeros aleatorios y almacenarla en un fichero cifrado con una clave común incluida en el programa?
