@@ -37,7 +37,7 @@ public class InicioSesion_Vista extends JFrame {
 
         // Constraints para el layout
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(20, 20, 20, 20); // Paddinf
+        constraints.insets = new Insets(20, 20, 20, 20); // Padding
         constraints.anchor = GridBagConstraints.WEST;
 
         // Fuente de los elementos

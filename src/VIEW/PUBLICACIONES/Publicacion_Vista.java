@@ -32,7 +32,28 @@ public class Publicacion_Vista extends JPanel {
 
         contentPanel.add(datePanel, BorderLayout.EAST);
 
+        // Crear la etiqueta con el mensaje
+        JPanel labelPanel = getJPanel();
+
+        // Añadir el panel de la etiqueta al contentPanel en la parte inferior
+        contentPanel.add(labelPanel, BorderLayout.SOUTH);
+
+
+
         add(contentPanel, BorderLayout.CENTER);
+    }
+
+    private static JPanel getJPanel() {
+        JLabel doubleClickLabel = new JLabel("Doble click para ver la publicación completa");
+        doubleClickLabel.setFont(new Font("Arial", Font.ITALIC, 14));
+        doubleClickLabel.setForeground(new Color(174, 101, 7));
+        doubleClickLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Crear un panel para la etiqueta y añadirla
+        JPanel labelPanel = new JPanel(new BorderLayout());
+        labelPanel.setBackground(new Color(211, 205, 192));
+        labelPanel.add(doubleClickLabel, BorderLayout.CENTER);
+        return labelPanel;
     }
 
     private static JPanel getJPanel(Publicacion publicacion) {

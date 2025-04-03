@@ -1,12 +1,8 @@
 --General--
 
-Patrón de diseño Singleton para instanciar el usuario que utiliza el programa, que inicia sesión.
-
 Adminsitrar publicaciones
 
---Vista de Publicaciones--
-
-Guardar publicaciones
+Validación de los datos modificados en personal
 
 --Añadidos--
 
