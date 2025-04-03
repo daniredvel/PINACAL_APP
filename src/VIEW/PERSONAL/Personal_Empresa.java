@@ -321,7 +321,21 @@ public class Personal_Empresa extends JFrame {
     // METODO que muestra el diálogo de contraseña
     private boolean showPasswordDialog() {
         JPasswordField passwordField = new JPasswordField();
-        int option = JOptionPane.showConfirmDialog(this, passwordField, "Introduce la contraseña de administrador", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        JCheckBox showPasswordCheckBox = new JCheckBox("Mostrar contraseña");
+
+        showPasswordCheckBox.addActionListener(e -> {
+            if (showPasswordCheckBox.isSelected()) {
+                passwordField.setEchoChar((char) 0);
+            } else {
+                passwordField.setEchoChar('•');
+            }
+        });
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(passwordField, BorderLayout.CENTER);
+        panel.add(showPasswordCheckBox, BorderLayout.SOUTH);
+
+        int option = JOptionPane.showConfirmDialog(this, panel, "Introduce la contraseña de administrador", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (option == JOptionPane.OK_OPTION) {
             String password = new String(passwordField.getPassword());
             try {
