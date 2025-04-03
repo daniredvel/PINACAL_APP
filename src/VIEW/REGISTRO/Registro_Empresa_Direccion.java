@@ -10,7 +10,7 @@ import java.sql.Connection;
 
 import static CONTROLLER.CRUD.USER.AddUsuario.addEmpresa;
 
-public class Registro_Empresa_Direccion extends JFrame {
+public class Registro_Empresa_Direccion extends JDialog {
     private final JTextField streetField;
     private final JTextField numberField;
     private final JTextField localityField;
@@ -20,13 +20,13 @@ public class Registro_Empresa_Direccion extends JFrame {
     private final JTextField countryField;
     private final JLabel messageLabel;
 
-    public Registro_Empresa_Direccion(Usuario usuario_sin_direccion, Connection conn) {
-        setTitle("Registro Dirección Empresa");
+    public Registro_Empresa_Direccion(JFrame parent, Usuario usuario_sin_direccion, Connection conn) {
+        super(parent, "Registro Dirección Empresa", true); // Hacer que el diálogo sea modal
         setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(parent);
 
-        //Icono
+        // Icono
         setIconImage(Rutas.getImage(Rutas.ICONO));
 
         JPanel panel = new JPanel();
@@ -147,11 +147,11 @@ public class Registro_Empresa_Direccion extends JFrame {
         registerButton.addActionListener(e -> {
             if (validateFields()) {
                 // Se crea un usuario con los datos introducidos indicando la dirección vacía
-                Usuario usuario = new Usuario(usuario_sin_direccion.getUsuario(), usuario_sin_direccion.getPassword(), usuario_sin_direccion.getEmail(), "", usuario_sin_direccion.getTelefono(), Usuario.TEMPORAL, "");
+
                 // Se le asigna la direccion con el formato correcto
-                usuario.setDireccion(Usuario.formatoDireccion(streetField.getText(), numberField.getText(), localityField.getText(), municipalityField.getText(), provinceField.getText(), postalCodeField.getText(), countryField.getText()));
+                usuario_sin_direccion.setDireccion(Usuario.formatoDireccion(streetField.getText(), numberField.getText(), localityField.getText(), municipalityField.getText(), provinceField.getText(), postalCodeField.getText(), countryField.getText()));
                 //Se muestra un mensaje con el resultado del registro
-                String mensaje = addEmpresa(usuario);
+                String mensaje = addEmpresa(usuario_sin_direccion);
                 JOptionPane.showMessageDialog(null, mensaje, "Registro Empresa", JOptionPane.INFORMATION_MESSAGE);
                 //Se cierra la ventana y se abre la de inicio de sesión
                 dispose();

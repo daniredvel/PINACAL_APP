@@ -152,10 +152,8 @@ public class InicioSesion_Vista extends JFrame {
         });
         // «Escuchador» del botón de registro
         registerButton.addActionListener(e -> {
-            // Cierra la ventana de inicio de sesión
-            dispose();
-            // Abre la ventana de registro
-            new Registro_Vista(conn).setVisible(true);
+            // Abre la ventana de registro como un diálogo modal
+            new Registro_Vista(this, conn).setVisible(true);
         });
 
         // «Escuchador» del checkbox para mostrar la contraseña

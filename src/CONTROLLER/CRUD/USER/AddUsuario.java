@@ -15,9 +15,10 @@ import java.util.logging.Logger;
 import static DB.UTIL.CrearConn.conn;
 
 public class AddUsuario {
-    //Indicamos los tipos y permisos de usuario
+    private static final Logger LOGGER = Logger.getLogger(AddUsuario.class.getName());
 
     public static String addEmpresa(Usuario empresa) {
+        LOGGER.log(Level.INFO, "Añadiendo empresa: {0}", empresa.getUsuario());
 
         empresa.setTipo(Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA));
         empresa.setPermisos("1");
@@ -26,6 +27,7 @@ public class AddUsuario {
     }
 
     public static String addUsuario(Usuario usuario) {
+        LOGGER.log(Level.INFO, "Añadiendo usuario: {0}", usuario.getUsuario());
 
         usuario.setTipo(Usuario.getTipos(Usuario.USUARIO));
         usuario.setPermisos("1");
@@ -34,55 +36,56 @@ public class AddUsuario {
     }
 
     private static String responder(boolean usuario) {
-        if(usuario) return Mensajes.getMensaje(Mensajes.USUARIO_ANADIDO);
-        else return Mensajes.getMensaje(Mensajes.ERROR_ANADIR_USUARIO);
+        if (usuario) {
+            LOGGER.log(Level.INFO, "Usuario añadido correctamente");
+            return Mensajes.getMensaje(Mensajes.USUARIO_ANADIDO);
+        } else {
+            LOGGER.log(Level.SEVERE, "Error al añadir usuario");
+            return Mensajes.getMensaje(Mensajes.ERROR_ANADIR_USUARIO);
+        }
     }
 
     private static boolean insertUsuario(Usuario usuario) {
-       final Logger LOGGER = Logger.getLogger(AddUsuario.class.getName());
-
+        LOGGER.log(Level.INFO, "Insertando usuario en la base de datos: {0}", usuario.getUsuario());
 
         Connection conn = GestorConexion.getConexion();
 
-        // Si la conexión es nula, se crea una nueva
-        if (conn == null) conn = conn();
+        if (conn == null) {
+            conn = conn();
+        }
 
-        // Nos aseguramos de que la conexión no sea nula
-        // Si la conexión es nula, se muestra la ventana de error de la aplicación
         if (conn == null) {
             LOGGER.log(Level.SEVERE, Mensajes.getMensaje(Mensajes.FALLO_CONEXION));
             SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
+            return false;
         }
 
-
-        //SQL con dirección para las empresas
         String sqlDireccion = "INSERT INTO USUARIOS (nombre, password, email, direccion, telefono, id_tipo_usuario) VALUES (?, ?, ?, ?, ?, ?)";
-
-        //SQL sin dirección para los usuarios
         String sqlSinDireccion = "INSERT INTO USUARIOS (nombre, password, email, telefono, id_tipo_usuario) VALUES (?, ?, ?, ?, ?)";
 
-        try  {
+        try {
             PreparedStatement ps;
-            assert conn != null;
             if (usuario.getDireccion() != null) {
                 ps = conn.prepareStatement(sqlDireccion);
                 ps.setString(1, usuario.getUsuario());
                 ps.setString(2, usuario.getPassword());
                 ps.setString(3, usuario.getEmail());
                 ps.setString(4, usuario.getDireccion());
-                ps.setString(5, usuario.getTelefono());
+                ps.setString(5, Usuario.formatoTelefonoBD(usuario.getTelefono()));
                 ps.setString(6, usuario.getPermisos());
             } else {
                 ps = conn.prepareStatement(sqlSinDireccion);
                 ps.setString(1, usuario.getUsuario());
                 ps.setString(2, usuario.getPassword());
                 ps.setString(3, usuario.getEmail());
-                ps.setString(4, usuario.getTelefono());
+                ps.setString(4, Usuario.formatoTelefonoBD(usuario.getTelefono()));
                 ps.setString(5, usuario.getPermisos());
             }
             ps.executeUpdate();
+            LOGGER.log(Level.INFO, "Usuario insertado correctamente en la base de datos");
             return true;
         } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error al insertar usuario en la base de datos", e);
             return false;
         }
     }

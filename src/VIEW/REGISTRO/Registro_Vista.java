@@ -6,16 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
 
-//Ventana basica de registro, donde se escoge si es usuario o empresa
-public class Registro_Vista extends JFrame {
-    public Registro_Vista(Connection conn) {
-        // Set frame properties
-        setTitle("REGISTRO");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+public class Registro_Vista extends JDialog {
+    public Registro_Vista(JFrame parent, Connection conn) {
+        super(parent, "REGISTRO", true); // Hacer que el diálogo sea modal
+        setSize(600, 400); // Establecer tamaño de la ventana
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(parent);
 
-        //Icono
+        // Icono
         setIconImage(Rutas.getImage(Rutas.ICONO));
 
         // Crear Panel y Layout
@@ -61,17 +59,13 @@ public class Registro_Vista extends JFrame {
 
         // «Escuchadores» de los botones
         empresaButton.addActionListener(e -> {
-
-            //Cierra la ventana actual y abre la de registro de empresa
             dispose();
-            new Registro_Empresa(conn).setVisible(true);
+            new Registro_Empresa(parent, conn).setVisible(true);
         });
 
         usuarioButton.addActionListener(e -> {
-
-            //Cierra la ventana actual y abre la de registro de usuario
             dispose();
-            new Registro_Usuario(conn).setVisible(true);
+            new Registro_Usuario(parent, conn).setVisible(true);
         });
 
         // Añade el panel al marco

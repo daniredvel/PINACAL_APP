@@ -11,7 +11,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.sql.Connection;
 
-public class Registro_Usuario extends JFrame {
+public class Registro_Usuario extends JDialog {
     private final JTextField userNameField;
     private final JTextField userEmailField;
     private final JTextField userPhoneField;
@@ -20,13 +20,13 @@ public class Registro_Usuario extends JFrame {
     private final JProgressBar passwordStrengthBar;
     private final JCheckBox showPasswordCheckBox;
 
-    public Registro_Usuario(Connection conn) {
-        setTitle("Registro Usuario");
+    public Registro_Usuario(JFrame parent, Connection conn) {
+        super(parent, "Registro Usuario", true); // Hacer que el diálogo sea modal
         setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(parent);
 
-        //Icono
+        // Icono
         setIconImage(Rutas.getImage(Rutas.ICONO));
 
         JPanel panel = new JPanel();
@@ -154,7 +154,7 @@ public class Registro_Usuario extends JFrame {
             // Comprueba si los campos son válidos
             if (validateFields()) {
                 // Crea un nuevo usuario con los datos introducidos
-                Usuario usuario = new Usuario(userNameField.getText(), new String(userPasswordField.getPassword()), userEmailField.getText(), userPhoneField.getText(), Usuario.TEMPORAL, "");
+                Usuario usuario = new Usuario(userNameField.getText(), new String(userPasswordField.getPassword()), userEmailField.getText(), Usuario.formatoTelefonoBD(userPhoneField.getText()), Usuario.TEMPORAL, "");
                 // Añade el usuario a la base de datos y muestra el mensaje correspondiente
                 String mensaje = AddUsuario.addUsuario(usuario);
                 JOptionPane.showMessageDialog(null, mensaje, "Registro Usuario", JOptionPane.INFORMATION_MESSAGE);
@@ -165,7 +165,7 @@ public class Registro_Usuario extends JFrame {
             }
         });
 
-        // Añade el panel al JFrame
+        // Añade el panel al JDialog
         add(panel);
     }
 
@@ -187,7 +187,7 @@ public class Registro_Usuario extends JFrame {
             messageLabel.setText("El teléfono es obligatorio");
             return false;
         }
-        if (!userPhoneField.getText().matches("\\d{9}")) {
+        if (!Usuario.formatoTelefonoBD(userPhoneField.getText()).matches("\\d{9}")) {
             messageLabel.setText("El teléfono debe contener exactamente 9 números");
             return false;
         }

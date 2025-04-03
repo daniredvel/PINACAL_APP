@@ -184,7 +184,7 @@ public class Usuario {
     }
 
     public void setTelefono(String telefono){
-        this.telefono = telefono;
+        this.telefono = formatoTelefono(telefono);
     }
 
     public void setTipo(String tipo){
@@ -214,11 +214,16 @@ public class Usuario {
     public static String getTipos(int codigo){
         return tipos[codigo];
     }
-    public static String formatoTelefono(String telefono){
-        return telefono.substring(0,3) + " " + telefono.substring(3,6) + " " + telefono.substring(6,9);
+    public static String formatoTelefono(String telefono) {
+        // Eliminar todos los caracteres no numéricos
+        String soloNumeros = telefono.replaceAll("\\D+", "");
+        // Formatear el número en el formato '000 000 000'
+        return soloNumeros.replaceAll("(\\d{3})(\\d{3})(\\d{3})", "$1 $2 $3");
     }
-    public static String formatoTelefonoBD(String telefono){
-        return telefono.replaceAll("\\s+", "");
+
+    public static String formatoTelefonoBD(String telefono) {
+        // Eliminar todos los caracteres no numéricos
+        return telefono.replaceAll("\\D+", "");
     }
     
 }

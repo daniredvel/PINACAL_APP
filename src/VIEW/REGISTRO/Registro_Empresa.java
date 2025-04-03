@@ -9,7 +9,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.sql.Connection;
 
-public class Registro_Empresa extends JFrame {
+public class Registro_Empresa extends JDialog {
     private final JTextField companyNameField;
     private final JTextField companyEmailField;
     private final JTextField companyPhoneField;
@@ -18,13 +18,13 @@ public class Registro_Empresa extends JFrame {
     private final JProgressBar passwordStrengthBar;
     private final JCheckBox showPasswordCheckBox;
 
-    public Registro_Empresa(Connection conn) {
-        setTitle("Registro Empresa");
+    public Registro_Empresa(JFrame parent, Connection conn) {
+        super(parent, "Registro Empresa", true); // Hacer que el diálogo sea modal
         setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(parent);
 
-        //Icono
+        // Icono
         setIconImage(Rutas.getImage(Rutas.ICONO));
 
         JPanel panel = new JPanel();
@@ -37,7 +37,7 @@ public class Registro_Empresa extends JFrame {
 
         Font font = new Font("Arial", Font.PLAIN, 18);
 
-        // Etiqueta y campo de texto del Nombre de la Empresa
+        // Etiqueta y campo de texto para el nombre de la empresa
         JLabel companyNameLabel = new JLabel("Nombre de la Empresa:");
         companyNameLabel.setFont(font);
         constraints.gridx = 0;
@@ -49,7 +49,7 @@ public class Registro_Empresa extends JFrame {
         constraints.gridx = 1;
         panel.add(companyNameField, constraints);
 
-        // Etiqueta y campo de texto del Correo electrónico de la Empresa
+        // Etiqueta y campo de texto para el correo electrónico de la empresa
         JLabel companyEmailLabel = new JLabel("Correo Electrónico:");
         companyEmailLabel.setFont(font);
         constraints.gridx = 0;
@@ -61,7 +61,7 @@ public class Registro_Empresa extends JFrame {
         constraints.gridx = 1;
         panel.add(companyEmailField, constraints);
 
-        // Etiqueta y campo de texto del teléfono de la Empresa
+        // Etiqueta y campo de texto para el teléfono de la empresa
         JLabel companyPhoneLabel = new JLabel("Teléfono:");
         companyPhoneLabel.setFont(font);
         constraints.gridx = 0;
@@ -73,7 +73,7 @@ public class Registro_Empresa extends JFrame {
         constraints.gridx = 1;
         panel.add(companyPhoneField, constraints);
 
-        // Etiqueta y campo de texto del contraseña de la Empresa
+        // Etiqueta y campo de texto para la contraseña de la empresa
         JLabel companyPasswordLabel = new JLabel("Contraseña:");
         companyPasswordLabel.setFont(font);
         constraints.gridx = 0;
@@ -127,17 +127,17 @@ public class Registro_Empresa extends JFrame {
             }
         });
 
-        // Botón de Siguiente, para pasar a la ventana de la dirección de la empresa
-        JButton registerButton = new JButton("Siguiente");
+        // Botón de registro
+        JButton registerButton = new JButton("Registrar");
         registerButton.setFont(font);
-        registerButton.setBackground(new Color(174, 101, 7));
-        registerButton.setForeground(new Color(255, 255, 255));
+        registerButton.setBackground(new Color(174, 101, 7)); // Button background color
+        registerButton.setForeground(new Color(255, 255, 255)); // Button text color
         constraints.gridx = 1;
         constraints.gridy = 6;
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(registerButton, constraints);
 
-        // Añadir etiqueta de mensaje
+        // Etiqueta para mostrar mensajes
         messageLabel = new JLabel("");
         messageLabel.setFont(font);
         messageLabel.setForeground(Color.RED);
@@ -147,24 +147,23 @@ public class Registro_Empresa extends JFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(messageLabel, constraints);
 
-        // «Escuchador» del botón de Siguiente
+        // «Escuchador» del botón de registro
         registerButton.addActionListener(e -> {
-            //Si los campos están completos, se crea un usuario sin dirección y se pasa a la ventana de dirección
+            // Comprueba si los campos son válidos
             if (validateFields()) {
-                // Crear un usuario sin dirección
-                Usuario usuario_sin_direccion = new Usuario(companyNameField.getText(), new String(companyPasswordField.getPassword()), companyEmailField.getText(), companyPhoneField.getText(), Usuario.TEMPORAL, "");
-                // Cerrar la ventana actual
+                // Crea un nuevo usuario con los datos introducidos
+                Usuario usuario = new Usuario(companyNameField.getText(), new String(companyPasswordField.getPassword()), companyEmailField.getText(), Usuario.formatoTelefonoBD(companyPhoneField.getText()), Usuario.TEMPORAL, "");
+                // Cierra la ventana actual y abre la de inicio de sesión
                 dispose();
-                // Abrir la de dirección
-                new Registro_Empresa_Direccion(usuario_sin_direccion, conn).setVisible(true);
+                new Registro_Empresa_Direccion(parent, usuario, conn).setVisible(true);
             }
         });
 
-        //Añadir el panel al JFrame
+        // Añade el panel al JDialog
         add(panel);
     }
 
-    //Validación
+    // METODO que valida los campos del formulario
     private boolean validateFields() {
         if (companyNameField.getText().isEmpty()) {
             messageLabel.setText("El nombre de la empresa es obligatorio");
@@ -182,8 +181,8 @@ public class Registro_Empresa extends JFrame {
             messageLabel.setText("El teléfono es obligatorio");
             return false;
         }
-        if (!companyPhoneField.getText().matches("\\d{9}")) {
-            messageLabel.setText("Indica un télefono válido");
+        if (! Usuario.formatoTelefonoBD(companyPhoneField.getText()).matches("\\d{9}")) {
+            messageLabel.setText("El teléfono debe contener exactamente 9 números");
             return false;
         }
         if (companyPasswordField.getPassword().length == 0) {

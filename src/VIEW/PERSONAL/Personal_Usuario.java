@@ -20,8 +20,6 @@ import java.util.logging.Logger;
 
 public class Personal_Usuario extends JFrame {
     private final JTextField nombreField;
-    private final JTextField direccionField;
-    private final JTextField telefonoField;
     private static Usuario usuario_actual;
     private static Connection conn;
     protected final DefaultListModel<Publicacion> listModel;
@@ -118,20 +116,22 @@ public class Personal_Usuario extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         userPanel.add(nombreField, gbc);
 
-        JLabel direccionLabel = new JLabel("Dirección:");
-        direccionLabel.setFont(fuenteLabel);
+
+        JLabel emailLabel = new JLabel("Email:");
+        emailLabel.setFont(fuenteLabel);
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
-        userPanel.add(direccionLabel, gbc);
+        userPanel.add(emailLabel, gbc);
 
-        direccionField = new JTextField(usuario_actual.getDireccion());
-        direccionField.setFont(new Font("Arial", Font.PLAIN, 14));
-        direccionField.setEnabled(false);
-        direccionField.setColumns(usuario_actual.getDireccion().length());
+        JTextField emailField = new JTextField(usuario_actual.getEmail());
+        emailField.setFont(new Font("Arial", Font.PLAIN, 14));
+        emailField.setEnabled(false);
+        emailField.setColumns(usuario_actual.getEmail().length());
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        userPanel.add(direccionField, gbc);
+        userPanel.add(emailField, gbc);
+
 
         JLabel telefonoLabel = new JLabel("Teléfono:");
         telefonoLabel.setFont(fuenteLabel);
@@ -140,10 +140,12 @@ public class Personal_Usuario extends JFrame {
         gbc.anchor = GridBagConstraints.WEST;
         userPanel.add(telefonoLabel, gbc);
 
-        telefonoField = new JTextField(usuario_actual.getTelefono());
+        String telefono = Usuario.formatoTelefono(usuario_actual.getTelefono());
+
+        JTextField telefonoField = new JTextField(telefono);
         telefonoField.setFont(new Font("Arial", Font.PLAIN, 14));
         telefonoField.setEnabled(false);
-        telefonoField.setColumns(usuario_actual.getTelefono().length());
+        telefonoField.setColumns(telefono.length());
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         userPanel.add(telefonoField, gbc);
@@ -171,23 +173,17 @@ public class Personal_Usuario extends JFrame {
         modificarButton.setEnabled(true);
         modificarButton.addActionListener(e -> {
             nombreField.setEnabled(true);
-            direccionField.setEnabled(true);
-            telefonoField.setEnabled(true);
             aceptarButton.setEnabled(true);
             modificarButton.setEnabled(false);
         });
 
         aceptarButton.addActionListener(e -> {
             usuario_actual.setUsuario(nombreField.getText());
-            usuario_actual.setDireccion(direccionField.getText());
-            usuario_actual.setTelefono(telefonoField.getText());
 
             String resultado = ActualizarUsuario.actualizarUsuario(usuario_actual);
             JOptionPane.showMessageDialog(null, resultado);
 
             nombreField.setEnabled(false);
-            direccionField.setEnabled(false);
-            telefonoField.setEnabled(false);
             aceptarButton.setEnabled(false);
             modificarButton.setEnabled(true);
         });
