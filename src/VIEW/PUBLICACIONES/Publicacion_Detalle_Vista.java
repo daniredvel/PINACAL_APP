@@ -2,20 +2,26 @@ package VIEW.PUBLICACIONES;
 
 import CONTROLLER.CRUD.PUBLICACION.GuardarPublicacion;
 import MODEL.Publicacion;
-import VIEW.INICIO.Inicio_Vista;
+import MODEL.UTIL.Mensajes;
+import MODEL.Usuario;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Publicacion_Detalle_Vista extends JFrame {
     private boolean isOriginalIcon = true;
-    private final JLabel messageLabel;
     private final JButton saveButton;
     private final JPanel leftPanel;
+    private static final Logger LOGGER = Logger.getLogger(Publicacion_Detalle_Vista.class.getName());
 
-    public Publicacion_Detalle_Vista(Publicacion publicacion) {
+    public Publicacion_Detalle_Vista(Publicacion publicacion, Usuario usuario_actual, Connection conexion) {
+
+        //VISTA
         setTitle("Detalle de Publicación");
         setSize(800, 300);
         setLocationRelativeTo(null);
@@ -66,6 +72,8 @@ public class Publicacion_Detalle_Vista extends JFrame {
 
         contentPanel.add(datePanel, BorderLayout.EAST);
 
+        //ICONOS DE GUARDADO
+
         ImageIcon originalIcon = new ImageIcon(Rutas.getImage(Rutas.GUARDAR));
         Image originalImage = originalIcon.getImage();
         Image scaledImage = originalImage.getScaledInstance(32, 32, Image.SCALE_SMOOTH);
@@ -76,41 +84,30 @@ public class Publicacion_Detalle_Vista extends JFrame {
         Image newScaledImage = newImage.getScaledInstance(32, 32, Image.SCALE_SMOOTH);
         ImageIcon newScaledIcon = new ImageIcon(newScaledImage);
 
+        //BOTÓN DE GUARDADO
         saveButton = new JButton(scaledIcon);
         saveButton.setBackground(null);
         saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         leftPanel.add(saveButton);
 
-        JPanel messagePanel = new JPanel();
-        messagePanel.setBackground(new Color(174, 101, 7));
-        messagePanel.setLayout(new BorderLayout());
-        messagePanel.setVisible(false);
-        leftPanel.add(messagePanel);
 
-        messageLabel = new JLabel("", SwingConstants.CENTER);
-        messageLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        messageLabel.setForeground(Color.WHITE);
-        messageLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        messagePanel.add(messageLabel, BorderLayout.CENTER);
-
+        //ACCIÓN DEL BOTÓN DE GUARDADO
         saveButton.addActionListener(e -> {
 
             if (isOriginalIcon) {
                 saveButton.setIcon(scaledIcon);
-                System.out.println("Publicación retirada");
-                GuardarPublicacion.retirarGuardadoPublicacion(publicacion, Inicio_Vista.getUsuario_actual());
+                System.out.printf("Publicación retirada: %s, autor: %s%n", publicacion.getTitulo(), publicacion.getUsuario());
+                LOGGER.log(Level.INFO, Mensajes.getMensaje(Mensajes.PUBLICACION_RETIRADA));
+                System.out.println(GuardarPublicacion.retirarGuardadoPublicacion(publicacion, usuario_actual, conexion));
             } else {
                 saveButton.setIcon(newScaledIcon);
-                System.out.println("Publicación guardada");
-                GuardarPublicacion.guardarPublicacion(publicacion, Inicio_Vista.getUsuario_actual());
+                LOGGER.log(Level.INFO, Mensajes.getMensaje(Mensajes.PUBLICACION_GUARDADA));
+                System.out.printf("Publicación guardada: %s, autor: %s%n", publicacion.getTitulo(), publicacion.getUsuario());
+                System.out.println(GuardarPublicacion.guardarPublicacion(publicacion, usuario_actual, conexion));
 
             }
             isOriginalIcon = !isOriginalIcon;
 
-
-            Timer timer = new Timer(3000, event -> messageLabel.setVisible(false));
-            timer.setRepeats(false);
-            timer.start();
         });
 
 
@@ -121,9 +118,5 @@ public class Publicacion_Detalle_Vista extends JFrame {
         return leftPanel;
     }
 
-    /*
-    public void addSaveButtonListener(java.awt.event.ActionListener listener) {
-        saveButton.addActionListener(listener);
-    }
-     */
+
 }

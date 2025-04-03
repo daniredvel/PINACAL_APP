@@ -1,20 +1,35 @@
 package VIEW.PERSONAL;
 
 import CONTROLLER.CRUD.USER.ActualizarUsuario;
+import CONTROLLER.ControladorDatos;
+import MODEL.Publicacion;
 import MODEL.Usuario;
 import VIEW.INICIO.Inicio_Vista;
+import VIEW.PUBLICACIONES.Publicacion_Detalle_Vista;
+import VIEW.PUBLICACIONES.Publicacion_Vista;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Personal_Usuario extends JFrame {
     private final JTextField nombreField;
     private final JTextField direccionField;
     private final JTextField telefonoField;
+    private static Usuario usuario_actual;
+    private static Connection conn;
+    protected final DefaultListModel<Publicacion> listModel;
+    public static final Logger LOGGER = Logger.getLogger(Inicio_Vista.class.getName());
 
     public Personal_Usuario(Usuario usuario_actual, Connection conn) {
+        Personal_Usuario.conn = conn;
+        Personal_Usuario.usuario_actual = usuario_actual;
         setTitle("Personal Usuario");
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Ajustar la ventana al tamaño de la pantalla
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,12 +38,15 @@ public class Personal_Usuario extends JFrame {
         // Icono
         setIconImage(Rutas.getImage(Rutas.ICONO));
 
+        // Color de fondo
+        Color backgroundColor = new Color(211, 205, 192);
+        getContentPane().setBackground(backgroundColor);
+
         setLayout(new BorderLayout());
-        getContentPane().setBackground(new Color(211, 205, 192));
 
         JPanel panelSuperior = new JPanel();
         panelSuperior.setLayout(new GridBagLayout());
-        panelSuperior.setBackground(new Color(211, 205, 192));
+        panelSuperior.setBackground(backgroundColor);
 
         Font fuenteButton = new Font("Arial", Font.PLAIN, 18);
 
@@ -80,7 +98,7 @@ public class Personal_Usuario extends JFrame {
 
         JPanel userPanel = new JPanel();
         userPanel.setLayout(new GridBagLayout());
-        userPanel.setBackground(new Color(211, 205, 192));
+        userPanel.setBackground(backgroundColor);
         userPanel.setBorder(BorderFactory.createTitledBorder("Datos del Usuario"));
 
         Font fuenteLabel = new Font("Arial", Font.PLAIN, 14);
@@ -130,7 +148,17 @@ public class Personal_Usuario extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         userPanel.add(telefonoField, gbc);
 
-        add(userPanel, BorderLayout.CENTER);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBackground(backgroundColor);
+        mainPanel.add(userPanel, BorderLayout.NORTH);
+
+        // Lista de publicaciones en la parte inferior
+        listModel = new DefaultListModel<>();
+        JScrollPane scrollPane = getJScrollPane();
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        add(mainPanel, BorderLayout.CENTER);
 
         inicioButton.addActionListener(e -> {
             dispose();
@@ -163,5 +191,59 @@ public class Personal_Usuario extends JFrame {
             aceptarButton.setEnabled(false);
             modificarButton.setEnabled(true);
         });
+
+        // Cargar publicaciones
+        cargarPublicaciones();
     }
+
+    // PUBLICACIONES GUARDADAS
+
+    protected JScrollPane getJScrollPane() {
+        JList<Publicacion> publicacionesList = getPublicacionJList();
+        publicacionesList.setBackground(new Color(211, 205, 192));
+
+        publicacionesList.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    Publicacion selectedPublicacion = publicacionesList.getSelectedValue();
+                    if (selectedPublicacion != null) {
+                        Publicacion_Detalle_Vista detalleVista = new Publicacion_Detalle_Vista(selectedPublicacion, usuario_actual, conn);
+                        detalleVista.setVisible(true);
+                    }
+                }
+            }
+        });
+
+        return new JScrollPane(publicacionesList);
+    }
+
+    private JList<Publicacion> getPublicacionJList() {
+        JList<Publicacion> publicacionesList = new JList<>(listModel);
+        publicacionesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
+            Publicacion_Vista publicacionVista = new Publicacion_Vista(publicacion);
+            if (isSelected) {
+                publicacionVista.setBackground(new Color(174, 101, 7));
+                publicacionVista.setForeground(Color.WHITE);
+            } else {
+                publicacionVista.setBackground(new Color(211, 205, 192));
+                publicacionVista.setForeground(Color.BLACK);
+            }
+            return publicacionVista;
+        });
+        return publicacionesList;
+    }
+
+    protected void cargarPublicaciones() {
+        LOGGER.log(Level.INFO, "Cargando publicaciones");
+        listModel.clear(); // Limpiar la lista antes de recargar
+
+        List<Publicacion> publicaciones = ControladorDatos.obtenerPublicacionesGuardadas(conn, usuario_actual);
+
+        for (Publicacion publicacion : publicaciones) {
+            listModel.addElement(publicacion);
+        }
+        LOGGER.log(Level.INFO, "Publicaciones cargadas: {0}", listModel.size());
+    }
+
 }

@@ -129,7 +129,7 @@ public class Add_Empresa extends JFrame {
                 if (evt.getClickCount() == 2) {
                     Publicacion selectedPublicacion = publicacionesList.getSelectedValue();
                     if (selectedPublicacion != null) {
-                        Publicacion_Propia_Detalle_Vista detalleVista = new Publicacion_Propia_Detalle_Vista(selectedPublicacion);
+                        Publicacion_Propia_Detalle_Vista detalleVista = new Publicacion_Propia_Detalle_Vista(selectedPublicacion, usuario_actual, conn);
                         detalleVista.setVisible(true);
                     }
                 }
@@ -141,6 +141,8 @@ public class Add_Empresa extends JFrame {
 
     private JList<Publicacion> getPublicacionJList() {
         JList<Publicacion> publicacionesList = new JList<>(listModel);
+        publicacionesList.setBackground(new Color(211, 205, 192));
+
         publicacionesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
             Publicacion_Vista publicacionVista = new Publicacion_Vista(publicacion);

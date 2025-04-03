@@ -2,17 +2,20 @@ package VIEW.PUBLICACIONES;
 
 import CONTROLLER.CRUD.PUBLICACION.EliminarPublicacion;
 import MODEL.Publicacion;
-import VIEW.RES.Rutas;
+import MODEL.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
 
 public class Publicacion_Propia_Detalle_Vista extends Publicacion_Detalle_Vista {
-    public Publicacion_Propia_Detalle_Vista(Publicacion publicacion) {
-        super(publicacion);
+    public Publicacion_Propia_Detalle_Vista(Publicacion publicacion, Usuario usuario_actual, Connection conexion) {
+        super(publicacion, usuario_actual, conexion);
 
-        setIconImage(Rutas.getImage(Rutas.ICONO));
+        //setIconImage(Rutas.getImage(Rutas.ICONO));
         setTitle(publicacion.getTitulo());
+
+        //BOTÓN DE ELIMINAR
 
         JButton eliminarBoton = new JButton("Eliminar");
         eliminarBoton.setBackground(new Color(174, 101, 7));

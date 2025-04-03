@@ -162,7 +162,7 @@ public class Inicio_Vista extends JFrame {
                 if (e.getClickCount() == 2) {
                     Publicacion selectedPublicacion = publicacionesList.getSelectedValue();
                     if (selectedPublicacion != null) {
-                        Publicacion_Detalle_Vista detalleVista = new Publicacion_Detalle_Vista(selectedPublicacion);
+                        Publicacion_Detalle_Vista detalleVista = new Publicacion_Detalle_Vista(selectedPublicacion, usuario_actual, conn);
                         detalleVista.setVisible(true);
                     }
                 }
@@ -201,7 +201,4 @@ public class Inicio_Vista extends JFrame {
         LOGGER.log(Level.INFO, "Publicaciones cargadas: {0}", listModel.size());
     }
 
-    public static Usuario getUsuario_actual() {
-        return usuario_actual;
-    }
 }

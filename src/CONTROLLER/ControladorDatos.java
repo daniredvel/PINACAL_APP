@@ -187,4 +187,51 @@ public class ControladorDatos {
 
         return usuarios;
     }
+
+    public static List<Publicacion> obtenerPublicacionesGuardadas(Connection conexion, Usuario usuario) {
+        Connection conn = conexion;
+
+        // Si la conexión es nula, se crea una nueva
+        if (conn == null) conn = conn();
+
+        // Nos aseguramos de que la conexión no sea nula
+        // Si la conexión es nula, se muestra la ventana de error de la aplicación
+        if (conn == null) {
+            LOGGER.log(Level.SEVERE, Mensajes.getMensaje(Mensajes.FALLO_CONEXION));
+            SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
+        }
+
+        List<Publicacion> publicaciones = new ArrayList<>();
+        String sql = "SELECT p.*, u.nombre AS usuario FROM PUBLICACIONES_GUARDADAS pg " +
+                "JOIN PUBLICACIONES p ON pg.id_publicacion = p.id_publicacion " +
+                "JOIN USUARIOS u ON p.id_usuario = u.id_usuario " +
+                "WHERE pg.id_usuario = ? ORDER BY pg.fecha_guardado DESC";
+
+        try {
+            assert conn != null;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, usuario.getId_usuario());
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        Publicacion publicacion = new Publicacion(
+                                rs.getInt("id_publicacion"),
+                                rs.getString("titulo"),
+                                rs.getString("descripcion"),
+                                rs.getTimestamp("fecha"),
+                                rs.getString("tipo"),
+                                rs.getInt("id_usuario"),
+                                rs.getString("usuario")
+                        );
+                        publicaciones.add(publicacion);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.INFO, Mensajes.getMensaje(Mensajes.ERROR_CARGAR_PUBLICACIONES) + "{0}, {1}", new Object[]{e.getMessage(), e});
+            // Reabrir la conexión si se cierra debido a un error
+        }
+
+        return publicaciones;
+    }
 }
