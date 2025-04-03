@@ -11,7 +11,7 @@ import MODEL.Usuario;
 import VIEW.ADD.Add_Empresa;
 import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.INICIO.Inicio_Vista;
-import VIEW.PERSONAL.Personal_Usuario;
+import VIEW.PERSONAL.Personal_Empresa;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
@@ -227,7 +227,7 @@ public class Administar_Vista extends JFrame {
         });
         personalButton.addActionListener(e -> {
             dispose();
-            new Personal_Usuario(usuario_actual, conn).setVisible(true);
+            new Personal_Empresa(usuario_actual, conn).setVisible(true);
         });
         anadirButton.addActionListener(e -> {
             dispose();

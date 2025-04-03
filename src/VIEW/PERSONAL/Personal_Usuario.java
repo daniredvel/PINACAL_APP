@@ -20,6 +20,9 @@ import java.util.logging.Logger;
 
 public class Personal_Usuario extends JFrame {
     private final JTextField nombreField;
+    private final JTextField emailField;
+    private final JTextField telefonoField;
+    private final JLabel messageLabel;
     private static Usuario usuario_actual;
     private static Connection conn;
     protected final DefaultListModel<Publicacion> listModel;
@@ -77,6 +80,14 @@ public class Personal_Usuario extends JFrame {
         aceptarButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
         aceptarButton.setEnabled(false);
 
+        JButton cancelarButton = new JButton("Cancelar");
+        cancelarButton.setFont(fuenteButton);
+        cancelarButton.setBackground(new Color(174, 101, 7));
+        cancelarButton.setForeground(Color.WHITE);
+        cancelarButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
+        cancelarButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
+        cancelarButton.setEnabled(false);
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.gridx = 0;
@@ -91,6 +102,9 @@ public class Personal_Usuario extends JFrame {
 
         gbc.gridx = 3;
         panelSuperior.add(aceptarButton, gbc);
+
+        gbc.gridx = 4;
+        panelSuperior.add(cancelarButton, gbc);
 
         add(panelSuperior, BorderLayout.NORTH);
 
@@ -116,7 +130,6 @@ public class Personal_Usuario extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         userPanel.add(nombreField, gbc);
 
-
         JLabel emailLabel = new JLabel("Email:");
         emailLabel.setFont(fuenteLabel);
         gbc.gridx = 0;
@@ -124,14 +137,13 @@ public class Personal_Usuario extends JFrame {
         gbc.anchor = GridBagConstraints.WEST;
         userPanel.add(emailLabel, gbc);
 
-        JTextField emailField = new JTextField(usuario_actual.getEmail());
+        emailField = new JTextField(usuario_actual.getEmail());
         emailField.setFont(new Font("Arial", Font.PLAIN, 14));
         emailField.setEnabled(false);
         emailField.setColumns(usuario_actual.getEmail().length());
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         userPanel.add(emailField, gbc);
-
 
         JLabel telefonoLabel = new JLabel("Teléfono:");
         telefonoLabel.setFont(fuenteLabel);
@@ -142,13 +154,23 @@ public class Personal_Usuario extends JFrame {
 
         String telefono = Usuario.formatoTelefono(usuario_actual.getTelefono());
 
-        JTextField telefonoField = new JTextField(telefono);
+        telefonoField = new JTextField(telefono);
         telefonoField.setFont(new Font("Arial", Font.PLAIN, 14));
         telefonoField.setEnabled(false);
         telefonoField.setColumns(telefono.length());
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         userPanel.add(telefonoField, gbc);
+
+        // Añadir etiqueta para mostrar mensajes de error
+        messageLabel = new JLabel("");
+        messageLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        messageLabel.setForeground(Color.RED);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        userPanel.add(messageLabel, gbc);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
@@ -173,19 +195,42 @@ public class Personal_Usuario extends JFrame {
         modificarButton.setEnabled(true);
         modificarButton.addActionListener(e -> {
             nombreField.setEnabled(true);
+            emailField.setEnabled(true);
+            telefonoField.setEnabled(true);
             aceptarButton.setEnabled(true);
+            cancelarButton.setEnabled(true);
             modificarButton.setEnabled(false);
         });
 
         aceptarButton.addActionListener(e -> {
-            usuario_actual.setUsuario(nombreField.getText());
+            if (validateFields()) {
+                usuario_actual.setUsuario(nombreField.getText());
+                usuario_actual.setEmail(emailField.getText());
+                usuario_actual.setTelefono(Usuario.formatoTelefonoBD(telefonoField.getText()));
 
-            String resultado = ActualizarUsuario.actualizarUsuario(usuario_actual);
-            JOptionPane.showMessageDialog(null, resultado);
+                String resultado = ActualizarUsuario.actualizarUsuario(usuario_actual);
+                JOptionPane.showMessageDialog(null, resultado);
 
+                nombreField.setEnabled(false);
+                emailField.setEnabled(false);
+                telefonoField.setEnabled(false);
+                aceptarButton.setEnabled(false);
+                cancelarButton.setEnabled(false);
+                modificarButton.setEnabled(true);
+            }
+        });
+
+        cancelarButton.addActionListener(e -> {
+            nombreField.setText(usuario_actual.getUsuario());
+            emailField.setText(usuario_actual.getEmail());
+            telefonoField.setText(Usuario.formatoTelefono(usuario_actual.getTelefono()));
             nombreField.setEnabled(false);
+            emailField.setEnabled(false);
+            telefonoField.setEnabled(false);
             aceptarButton.setEnabled(false);
+            cancelarButton.setEnabled(false);
             modificarButton.setEnabled(true);
+            messageLabel.setText("");
         });
 
         // Cargar publicaciones
@@ -196,7 +241,7 @@ public class Personal_Usuario extends JFrame {
 
     protected JScrollPane getJScrollPane() {
         JList<Publicacion> publicacionesList = getPublicacionJList();
-        publicacionesList.setBackground(new Color(211, 205, 192));
+        publicacionesList.setBackground(new Color(211, 205, 192)); // Establecer el color de fondo de la lista
 
         publicacionesList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -241,5 +286,31 @@ public class Personal_Usuario extends JFrame {
         }
         LOGGER.log(Level.INFO, "Publicaciones cargadas: {0}", listModel.size());
     }
+
+    // METODO que valida los campos del formulario
+    private boolean validateFields() {
+        if (nombreField.getText().isEmpty()) {
+            messageLabel.setText("El nombre es obligatorio");
+            return false;
+        }
+        if (emailField.getText().isEmpty()) {
+            messageLabel.setText("El email es obligatorio");
+            return false;
+        }
+        if (!emailField.getText().matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+            messageLabel.setText("Indica un email válido");
+            return false;
+        }
+        if (telefonoField.getText().isEmpty()) {
+            messageLabel.setText("El teléfono es obligatorio");
+            return false;
+        }
+        if (!telefonoField.getText().matches("^\\d{3} \\d{3} \\d{3}$")) {
+            messageLabel.setText("Indica un teléfono válido en el formato '000 000 000'");
+            return false;
+        }
+        return true;
+    }
+
 
 }

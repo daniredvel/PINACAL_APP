@@ -2,6 +2,7 @@ package VIEW.PERSONAL;
 
 import CONTROLLER.CRUD.USER.ActualizarUsuario;
 import CONTROLLER.ControladorDatos;
+import CONTROLLER.VALIDATION.ControladorInicioSesion;
 import MODEL.Publicacion;
 import MODEL.Usuario;
 import VIEW.INICIO.Inicio_Vista;
@@ -21,6 +22,7 @@ import java.util.logging.Logger;
 public class Personal_Empresa extends JFrame {
     private final JTextField nombreField;
     private final JTextField direccionField;
+    private final JLabel messageLabel;
     private static Usuario usuario_actual;
     private static Connection conn;
     protected final DefaultListModel<Publicacion> listModel;
@@ -78,6 +80,14 @@ public class Personal_Empresa extends JFrame {
         aceptarButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
         aceptarButton.setEnabled(false);
 
+        JButton cancelarButton = new JButton("Cancelar");
+        cancelarButton.setFont(fuenteButton);
+        cancelarButton.setBackground(new Color(174, 101, 7));
+        cancelarButton.setForeground(Color.WHITE);
+        cancelarButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
+        cancelarButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
+        cancelarButton.setEnabled(false);
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.gridx = 0;
@@ -92,6 +102,9 @@ public class Personal_Empresa extends JFrame {
 
         gbc.gridx = 3;
         panelSuperior.add(aceptarButton, gbc);
+
+        gbc.gridx = 4;
+        panelSuperior.add(cancelarButton, gbc);
 
         add(panelSuperior, BorderLayout.NORTH);
 
@@ -164,6 +177,16 @@ public class Personal_Empresa extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         userPanel.add(telefonoField, gbc);
 
+        // Añadir etiqueta para mostrar mensajes de error
+        messageLabel = new JLabel("");
+        messageLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        messageLabel.setForeground(Color.RED);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        userPanel.add(messageLabel, gbc);
+
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBackground(backgroundColor);
@@ -186,23 +209,47 @@ public class Personal_Empresa extends JFrame {
         });
         modificarButton.setEnabled(true);
         modificarButton.addActionListener(e -> {
-            nombreField.setEnabled(true);
-            direccionField.setEnabled(true);
-            aceptarButton.setEnabled(true);
-            modificarButton.setEnabled(false);
+            boolean admin = usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.ADMINISTRADOR));
+            if (admin && showPasswordDialog()) {
+                nombreField.setEnabled(true);
+                direccionField.setEnabled(true);
+                aceptarButton.setEnabled(true);
+                cancelarButton.setEnabled(true);
+                modificarButton.setEnabled(false);
+            } else if (!admin) {
+                nombreField.setEnabled(true);
+                direccionField.setEnabled(true);
+                aceptarButton.setEnabled(true);
+                cancelarButton.setEnabled(true);
+                modificarButton.setEnabled(false);
+            }
         });
 
         aceptarButton.addActionListener(e -> {
-            usuario_actual.setUsuario(nombreField.getText());
-            usuario_actual.setDireccion(direccionField.getText());
+            if (validateFields()) {
+                usuario_actual.setUsuario(nombreField.getText());
+                usuario_actual.setDireccion(direccionField.getText());
 
-            String resultado = ActualizarUsuario.actualizarUsuario(usuario_actual);
-            JOptionPane.showMessageDialog(null, resultado);
+                String resultado = ActualizarUsuario.actualizarUsuario(usuario_actual);
+                JOptionPane.showMessageDialog(null, resultado);
 
+                nombreField.setEnabled(false);
+                direccionField.setEnabled(false);
+                aceptarButton.setEnabled(false);
+                cancelarButton.setEnabled(false);
+                modificarButton.setEnabled(true);
+            }
+        });
+
+        cancelarButton.addActionListener(e -> {
+            nombreField.setText(usuario_actual.getUsuario());
+            direccionField.setText(usuario_actual.getDireccion());
             nombreField.setEnabled(false);
             direccionField.setEnabled(false);
             aceptarButton.setEnabled(false);
+            cancelarButton.setEnabled(false);
             modificarButton.setEnabled(true);
+            messageLabel.setText("");
         });
 
         // Cargar publicaciones
@@ -259,4 +306,32 @@ public class Personal_Empresa extends JFrame {
         LOGGER.log(Level.INFO, "Publicaciones cargadas: {0}", listModel.size());
     }
 
+    // METODO que valida los campos del formulario
+    private boolean validateFields() {
+        if (nombreField.getText().isEmpty()) {
+            messageLabel.setText("El nombre es obligatorio");
+            return false;
+        }
+        if (direccionField.getText().isEmpty()) {
+            messageLabel.setText("La dirección es obligatoria");
+            return false;
+        }
+        return true;
+    }
+    // METODO que muestra el diálogo de contraseña
+    private boolean showPasswordDialog() {
+        JPasswordField passwordField = new JPasswordField();
+        int option = JOptionPane.showConfirmDialog(this, passwordField, "Introduce la contraseña de administrador", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (option == JOptionPane.OK_OPTION) {
+            String password = new String(passwordField.getPassword());
+            try {
+                int result = ControladorInicioSesion.comprobarPass(usuario_actual.getUsuario(), password);
+                return result == 1;
+            } catch (Exception e) {
+                System.out.println("Error al comprobar la contraseña: " + e.getMessage());
+                return false;
+            }
+        }
+        return false;
+    }
 }

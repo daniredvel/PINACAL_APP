@@ -130,9 +130,9 @@ public class Inicio_Vista extends JFrame {
             LOGGER.log(Level.INFO, "Personal button clicked");
             dispose();
             System.out.println(usuario_actual.getTipo());
-            if (usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA)) || usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA))) {
+            if (usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.EMPRESA_ASOCIADA)) || usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA)) || usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
                 new Personal_Empresa(usuario_actual, conn).setVisible(true);
-            } else if (usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.USUARIO)) || usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.ADMINISTRADOR))) {
+            } else if (usuario_actual.getTipo().equalsIgnoreCase(Usuario.getTipos(Usuario.USUARIO))) {
                 new Personal_Usuario(usuario_actual, conn).setVisible(true);
             } else {
                 new Inicio_Vista(usuario_actual, conn).setVisible(true);
