@@ -31,6 +31,7 @@ public class Mensajes {
     public static final int ERROR_ELIMINAR = 20;
     public static final int ERROR_CARGAR_USUARIOS = 21;
     public static final int ERROR_CARGAR_PUBLICACIONES = 22;
+    public static final int ERROR_AL_CIFRAR = 23;
 
 
 
@@ -62,7 +63,8 @@ public class Mensajes {
             "No se pudo eliminar de guardados",
             "Error al eliminar",
             "Error al cargar los usuarios: ",
-            "Error al cargar las publicaciones: "
+            "Error al cargar las publicaciones: ",
+            "Error al cifrar la contraseña"
 
     };
 

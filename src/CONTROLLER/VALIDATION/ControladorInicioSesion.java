@@ -1,5 +1,6 @@
 package CONTROLLER.VALIDATION;
 
+import CONTROLLER.ENCRIPTACION.ControladorEncriptacion;
 import DB.UTIL.GestorConexion;
 
 import java.sql.Connection;
@@ -9,7 +10,7 @@ import java.sql.ResultSet;
 public class ControladorInicioSesion {
 
 
-    public static int comprobarPass(String usuario, String password) throws Exception {
+    public static int comprobarPass(String usuario, String pass) throws Exception {
 
         Connection conn = GestorConexion.getConexion();
 
@@ -25,9 +26,9 @@ public class ControladorInicioSesion {
 
         //Comprobamos si el usuario existe
         if (resultSet.next()) {
-            String passDesencriptada = resultSet.getString("password");
+            String passDB = resultSet.getString("password");
                 //Comprobamos si la contraseña es correcta
-            if (password.equals(passDesencriptada)) {
+            if (ControladorEncriptacion.comprobar(pass, passDB)) {
                 return 1;
             } else {
                 return -1;

@@ -1,6 +1,7 @@
 package VIEW.REGISTRO;
 
 import CONTROLLER.CRUD.USER.AddUsuario;
+import CONTROLLER.ENCRIPTACION.ControladorEncriptacion;
 import MODEL.Usuario;
 import VIEW.INICIO_SESION.InicioSesion_Vista;
 import VIEW.RES.Rutas;
@@ -154,7 +155,7 @@ public class Registro_Usuario extends JDialog {
             // Comprueba si los campos son válidos
             if (validateFields()) {
                 // Crea un nuevo usuario con los datos introducidos
-                Usuario usuario = new Usuario(userNameField.getText(), new String(userPasswordField.getPassword()), userEmailField.getText(), Usuario.formatoTelefonoBD(userPhoneField.getText()), Usuario.TEMPORAL, "");
+                Usuario usuario = new Usuario(userNameField.getText(), ControladorEncriptacion.encriptar(new String(userPasswordField.getPassword())), userEmailField.getText(), Usuario.formatoTelefonoBD(userPhoneField.getText()), Usuario.TEMPORAL, "");
                 // Añade el usuario a la base de datos y muestra el mensaje correspondiente
                 String mensaje = AddUsuario.addUsuario(usuario);
                 JOptionPane.showMessageDialog(null, mensaje, "Registro Usuario", JOptionPane.INFORMATION_MESSAGE);

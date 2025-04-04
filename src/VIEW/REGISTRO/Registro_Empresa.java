@@ -1,5 +1,6 @@
 package VIEW.REGISTRO;
 
+import CONTROLLER.ENCRIPTACION.ControladorEncriptacion;
 import MODEL.Usuario;
 import VIEW.RES.Rutas;
 
@@ -152,7 +153,7 @@ public class Registro_Empresa extends JDialog {
             // Comprueba si los campos son válidos
             if (validateFields()) {
                 // Crea un nuevo usuario con los datos introducidos
-                Usuario usuario = new Usuario(companyNameField.getText(), new String(companyPasswordField.getPassword()), companyEmailField.getText(), Usuario.formatoTelefonoBD(companyPhoneField.getText()), Usuario.TEMPORAL, "");
+                Usuario usuario = new Usuario(companyNameField.getText(), ControladorEncriptacion.encriptar(new String(companyPasswordField.getPassword())), companyEmailField.getText(), Usuario.formatoTelefonoBD(companyPhoneField.getText()), Usuario.TEMPORAL, "");
                 // Cierra la ventana actual y abre la de inicio de sesión
                 dispose();
                 new Registro_Empresa_Direccion(parent, usuario, conn).setVisible(true);

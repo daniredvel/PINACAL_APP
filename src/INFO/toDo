@@ -1,8 +1,6 @@
 --General--
 
-Adminsitrar publicaciones
-
-Validación de los datos modificados en personal
+!!!Adminsitrar publicaciones
 
 --Añadidos--
 
@@ -16,16 +14,14 @@ Corregir la interfaz grafica
 
 --Contraseñas--
 
-Revisión de la codificación de la contraseña
+!!!Revisión de la codificación de la contraseña
 
 ¿Olvide mi contraseña?
 
 
 
-¿Algoritmo para encriptar? AES, SHA-1
-Para cifrar la contraseña utilizando el algoritmo AES se utiliza una clave que puede ser de 128, 192 y 256 bits.
-Para descifrar la contraseña se utiliza la misma clave que se utilizo para cifrarla.
-¿La clave se puede generar mediante numeros aleatorios y almacenarla en un fichero cifrado con una clave común incluida en el programa?
+¿Algoritmo para encriptar? SHA-2 o SHA-3
+Algoritmo HASH
 
 
 
