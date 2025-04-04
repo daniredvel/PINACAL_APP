@@ -17,10 +17,14 @@ public class ControladorEncriptacion {
 
     public static String encriptar(String clave) {
         try {
+            // Se utiliza el algoritmo SHA-256 para encriptar la clave
             MessageDigest algoritmo = MessageDigest.getInstance("SHA-256");
+            // Se convierte la clave a bytes y se actualiza el algoritmo
             algoritmo.reset();
             algoritmo.update(clave.getBytes(StandardCharsets.UTF_8));
+            // Se calcula la clave
             byte[] resumen = algoritmo.digest();
+            // Covertimos la clave a un número entero y se formatea a hexadecimal
             return String.format("%064x", new BigInteger(1, resumen));
         } catch (Exception ex) {
             System.out.println(Mensajes.getMensaje(Mensajes.ERROR_AL_CIFRAR));
