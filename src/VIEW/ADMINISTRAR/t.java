@@ -13,6 +13,7 @@ import VIEW.ADD.Add_Empresa;
 import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.PERSONAL.Personal_Empresa;
+import VIEW.PUBLICACIONES.Publicacion_Detalle_Vista;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
@@ -29,7 +30,7 @@ public class Administar_Vista extends JFrame {
     private List<Publicacion> publicaciones;
     private int currentIndex = 0;
     private final JTextArea publicacionArea;
-    private final JTextField justificacionField;
+    private final JTextField justificacionField = new JTextField(20);
     private final JRadioButton denegadaButton;
     private final ButtonGroup group;
     private final JTable table;
@@ -55,13 +56,16 @@ public class Administar_Vista extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        setLayout(new GridBagLayout());
         getContentPane().setBackground(new Color(211, 205, 192));
 
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new GridBagLayout());
-        topPanel.setBackground(new Color(211, 205, 192));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Márgenes más pequeños
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Primera fila: Botones de navegación
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        topPanel.setBackground(new Color(211, 205, 192));
         Font buttonFont = new Font("Arial", Font.PLAIN, 18);
 
         JButton inicioButton = new JButton("Inicio");
@@ -82,18 +86,16 @@ public class Administar_Vista extends JFrame {
         anadirButton.setFont(buttonFont);
         anadirButton.setBackground(new Color(174, 101, 7));
         anadirButton.setForeground(Color.WHITE);
+        anadirButton.setPreferredSize(new Dimension(150, 50));
         anadirButton.setMargin(new Insets(10, 20, 10, 20));
-        anadirButton.setPreferredSize(null);
 
         JButton adminButton = new JButton("Administrador");
         adminButton.setFont(buttonFont);
         adminButton.setBackground(new Color(174, 101, 7));
         adminButton.setForeground(Color.WHITE);
+        adminButton.setPreferredSize(new Dimension(150, 50));
         adminButton.setMargin(new Insets(10, 20, 10, 20));
-        adminButton.setPreferredSize(null);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0;
         gbc.gridy = 0;
         topPanel.add(inicioButton, gbc);
@@ -107,21 +109,23 @@ public class Administar_Vista extends JFrame {
         gbc.gridx = 3;
         topPanel.add(adminButton, gbc);
 
-        add(topPanel, BorderLayout.NORTH);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 4;
+        add(topPanel, gbc);
 
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new GridBagLayout());
-        centerPanel.setBackground(new Color(211, 205, 192));
-
+        // Segunda fila: Detalles de la publicación
         publicacionArea = new JTextArea(10, 50);
         publicacionArea.setFont(new Font("Arial", Font.PLAIN, 18));
         publicacionArea.setEditable(false);
         publicacionArea.setPreferredSize(new Dimension(600, 200));
+        gbc.gridy = 1;
+        gbc.gridwidth = 4;
+        add(publicacionArea, gbc);
 
-        justificacionField = new JTextField(50);
-        justificacionField.setFont(new Font("Arial", Font.PLAIN, 18));
-        justificacionField.setEnabled(false);
-        justificacionField.setPreferredSize(new Dimension(600, 50));
+        // Tercera fila: Botones de aceptada y denegada
+        JPanel radioPanel = new JPanel(new GridLayout(1, 2, 5, 5));
+        radioPanel.setBackground(new Color(211, 205, 192));
 
         JRadioButton aceptadaButton = new JRadioButton("Aceptada");
         aceptadaButton.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -138,31 +142,20 @@ public class Administar_Vista extends JFrame {
         aceptadaButton.addActionListener(e -> justificacionField.setEnabled(false));
         denegadaButton.addActionListener(e -> justificacionField.setEnabled(true));
 
-        justificacionField.setText("Escribe la justificación aquí...");
-        justificacionField.setForeground(Color.GRAY);
+        radioPanel.add(aceptadaButton);
+        radioPanel.add(denegadaButton);
 
-        justificacionField.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                if (justificacionField.getText().equals("Escribe la justificación aquí...")) {
-                    justificacionField.setText("");
-                    justificacionField.setForeground(Color.BLACK);
-                }
-            }
+        gbc.gridy = 2;
+        gbc.gridwidth = 4;
+        add(radioPanel, gbc);
 
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                if (justificacionField.getText().isEmpty()) {
-                    justificacionField.setText("Escribe la justificación aquí...");
-                    justificacionField.setForeground(Color.GRAY);
-                }
-            }
-        });
-
+        // Cuarta fila: Botón de siguiente
         JButton siguienteButton = new JButton("Siguiente");
         siguienteButton.setFont(new Font("Arial", Font.PLAIN, 18));
         siguienteButton.setBackground(new Color(174, 101, 7));
         siguienteButton.setForeground(Color.WHITE);
+        siguienteButton.setPreferredSize(new Dimension(150, 50));
+        siguienteButton.setMargin(new Insets(10, 20, 10, 20));
         siguienteButton.addActionListener(e -> {
             gestionarPublicacion();
             currentIndex++;
@@ -178,6 +171,8 @@ public class Administar_Vista extends JFrame {
         anteriorButton.setFont(new Font("Arial", Font.PLAIN, 18));
         anteriorButton.setBackground(new Color(174, 101, 7));
         anteriorButton.setForeground(Color.WHITE);
+        anteriorButton.setPreferredSize(new Dimension(150, 50));
+        anteriorButton.setMargin(new Insets(10, 20, 10, 20));
         anteriorButton.addActionListener(e -> {
             if (currentIndex > 0) {
                 currentIndex--;
@@ -187,27 +182,14 @@ public class Administar_Vista extends JFrame {
             }
         });
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        centerPanel.add(publicacionArea, gbc);
-
-        gbc.gridy = 1;
-        centerPanel.add(justificacionField, gbc);
-
-        gbc.gridy = 2;
-        centerPanel.add(aceptadaButton, gbc);
-
         gbc.gridy = 3;
-        centerPanel.add(denegadaButton, gbc);
+        gbc.gridwidth = 2;
+        add(anteriorButton, gbc);
 
-        gbc.gridy = 4;
-        centerPanel.add(anteriorButton, gbc);
+        gbc.gridx = 2;
+        add(siguienteButton, gbc);
 
-        gbc.gridy = 5;
-        centerPanel.add(siguienteButton, gbc);
-
-        add(centerPanel, BorderLayout.CENTER);
-
+        // Quinta fila: Administración de usuarios
         JPanel bottomPanel = new JPanel(new BorderLayout());
         String[] columnNames = {"Usuario", "Email", "Dirección", "Teléfono", "Tipo", "Permisos", "Acciones"};
         tableModel = new DefaultTableModel(columnNames, 0);
@@ -227,7 +209,10 @@ public class Administar_Vista extends JFrame {
         buttonPanel.add(eliminarUsuarioButton);
         bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        add(bottomPanel, BorderLayout.SOUTH);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 4;
+        add(bottomPanel, gbc);
 
         cargarDatosUsuarios();
 
@@ -360,4 +345,5 @@ public class Administar_Vista extends JFrame {
         }
     }
 }
-*/
+
+ */

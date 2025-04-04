@@ -1,3 +1,4 @@
+
 package VIEW.ADMINISTRAR;
 
 import CONTROLLER.CRUD.PUBLICACION.EliminarPublicacion;
@@ -12,6 +13,7 @@ import VIEW.ADD.Add_Empresa;
 import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.PERSONAL.Personal_Empresa;
+import VIEW.PUBLICACIONES.Publicacion_Detalle_Vista;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
@@ -25,10 +27,10 @@ import java.util.logging.Level;
 import static VIEW.INICIO.Inicio_Vista.LOGGER;
 
 public class Administar_Vista extends JFrame {
-    private final List<Publicacion> publicaciones;
+    private List<Publicacion> publicaciones;
     private int currentIndex = 0;
     private final JTextArea publicacionArea;
-    private final JTextField justificacionField;
+    private final JTextField justificacionField = new JTextField(20);
     private final JRadioButton denegadaButton;
     private final ButtonGroup group;
     private final JTable table;
@@ -42,8 +44,6 @@ public class Administar_Vista extends JFrame {
         LOGGER.log(Level.INFO, "Iniciando vista de administrar");
         Administar_Vista.conn = conexion;
 
-        // Nos aseguramos de que la conexión no sea nula
-        // Si la conexión es nula, se muestra la ventana de error de la aplicación
         if (conn == null) {
             LOGGER.log(Level.SEVERE, "Conexión nula");
             SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
@@ -51,24 +51,21 @@ public class Administar_Vista extends JFrame {
 
         assert conn != null;
 
-        publicaciones = ControladorDatos.obtenerPublicaciones(conexion, true);
-
-        // Icono
         setIconImage(Rutas.getImage(Rutas.ICONO));
-
         setTitle("Administrar Publicaciones y Usuarios");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        setLayout(new BorderLayout());
+        setLayout(new GridBagLayout());
         getContentPane().setBackground(new Color(211, 205, 192));
 
-        // Panel superior con botones
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new GridBagLayout());
-        topPanel.setBackground(new Color(211, 205, 192));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Márgenes más pequeños
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Primera fila: Botones de navegación
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        topPanel.setBackground(new Color(211, 205, 192));
         Font buttonFont = new Font("Arial", Font.PLAIN, 18);
 
         JButton inicioButton = new JButton("Inicio");
@@ -89,18 +86,16 @@ public class Administar_Vista extends JFrame {
         anadirButton.setFont(buttonFont);
         anadirButton.setBackground(new Color(174, 101, 7));
         anadirButton.setForeground(Color.WHITE);
-        anadirButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
-        anadirButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
+        anadirButton.setPreferredSize(new Dimension(150, 50));
+        anadirButton.setMargin(new Insets(10, 20, 10, 20));
 
         JButton adminButton = new JButton("Administrador");
         adminButton.setFont(buttonFont);
         adminButton.setBackground(new Color(174, 101, 7));
         adminButton.setForeground(Color.WHITE);
-        adminButton.setMargin(new Insets(10, 20, 10, 20)); // Ajusta el margen para que se adapte al texto
-        adminButton.setPreferredSize(null); // Permite que el tamaño se ajuste automáticamente
+        adminButton.setPreferredSize(new Dimension(150, 50));
+        adminButton.setMargin(new Insets(10, 20, 10, 20));
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0;
         gbc.gridy = 0;
         topPanel.add(inicioButton, gbc);
@@ -114,21 +109,23 @@ public class Administar_Vista extends JFrame {
         gbc.gridx = 3;
         topPanel.add(adminButton, gbc);
 
-        add(topPanel, BorderLayout.NORTH);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 4;
+        add(topPanel, gbc);
 
-        // Panel central con la publicación y los controles
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new GridBagLayout());
-        centerPanel.setBackground(new Color(211, 205, 192));
-
+        // Segunda fila: Detalles de la publicación
         publicacionArea = new JTextArea(10, 50);
         publicacionArea.setFont(new Font("Arial", Font.PLAIN, 18));
         publicacionArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(publicacionArea);
+        publicacionArea.setPreferredSize(new Dimension(600, 200));
+        gbc.gridy = 1;
+        gbc.gridwidth = 4;
+        add(publicacionArea, gbc);
 
-        justificacionField = new JTextField(50);
-        justificacionField.setFont(new Font("Arial", Font.PLAIN, 18));
-        justificacionField.setEnabled(false);
+        // Tercera fila: Botones de aceptada y denegada
+        JPanel radioPanel = new JPanel(new GridLayout(1, 2, 5, 5));
+        radioPanel.setBackground(new Color(211, 205, 192));
 
         JRadioButton aceptadaButton = new JRadioButton("Aceptada");
         aceptadaButton.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -145,42 +142,61 @@ public class Administar_Vista extends JFrame {
         aceptadaButton.addActionListener(e -> justificacionField.setEnabled(false));
         denegadaButton.addActionListener(e -> justificacionField.setEnabled(true));
 
-        JButton siguienteButton = getJButton();
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        centerPanel.add(scrollPane, gbc);
-
-        gbc.gridy = 1;
-        centerPanel.add(justificacionField, gbc);
+        radioPanel.add(aceptadaButton);
+        radioPanel.add(denegadaButton);
 
         gbc.gridy = 2;
-        centerPanel.add(aceptadaButton, gbc);
+        gbc.gridwidth = 4;
+        add(radioPanel, gbc);
+
+        // Cuarta fila: Botón de siguiente
+        JButton siguienteButton = new JButton("Siguiente");
+        siguienteButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        siguienteButton.setBackground(new Color(174, 101, 7));
+        siguienteButton.setForeground(Color.WHITE);
+        siguienteButton.setPreferredSize(new Dimension(150, 50));
+        siguienteButton.setMargin(new Insets(10, 20, 10, 20));
+        siguienteButton.addActionListener(e -> {
+            gestionarPublicacion();
+            currentIndex++;
+            if (currentIndex < publicaciones.size()) {
+                mostrarPublicacion();
+            } else {
+                JOptionPane.showMessageDialog(this, "No hay más publicaciones.");
+                dispose();
+            }
+        });
+
+        JButton anteriorButton = new JButton("Anterior");
+        anteriorButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        anteriorButton.setBackground(new Color(174, 101, 7));
+        anteriorButton.setForeground(Color.WHITE);
+        anteriorButton.setPreferredSize(new Dimension(150, 50));
+        anteriorButton.setMargin(new Insets(10, 20, 10, 20));
+        anteriorButton.addActionListener(e -> {
+            if (currentIndex > 0) {
+                currentIndex--;
+                mostrarPublicacion();
+            } else {
+                JOptionPane.showMessageDialog(this, "No hay publicaciones anteriores.");
+            }
+        });
 
         gbc.gridy = 3;
-        centerPanel.add(denegadaButton, gbc);
+        gbc.gridwidth = 2;
+        add(anteriorButton, gbc);
 
-        gbc.gridy = 4;
-        centerPanel.add(siguienteButton, gbc);
+        gbc.gridx = 2;
+        add(siguienteButton, gbc);
 
-        add(centerPanel, BorderLayout.CENTER);
-
-        if (!publicaciones.isEmpty()) {
-            mostrarPublicacion();
-        } else {
-            JOptionPane.showMessageDialog(null, "No hay publicaciones para revisar.");
-            dispose();
-        }
-
-        // Panel inferior con la tabla de usuarios y botones
+        // Quinta fila: Administración de usuarios
         JPanel bottomPanel = new JPanel(new BorderLayout());
         String[] columnNames = {"Usuario", "Email", "Dirección", "Teléfono", "Tipo", "Permisos", "Acciones"};
         tableModel = new DefaultTableModel(columnNames, 0);
-        // Configurar la tabla para que no permita la edición de celdas
         table = new JTable(tableModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Todas las celdas no son editables
+                return false;
             }
         };
         JScrollPane tableScrollPane = new JScrollPane(table);
@@ -193,12 +209,13 @@ public class Administar_Vista extends JFrame {
         buttonPanel.add(eliminarUsuarioButton);
         bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        add(bottomPanel, BorderLayout.SOUTH);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 4;
+        add(bottomPanel, gbc);
 
-        // Cargar datos de usuarios
         cargarDatosUsuarios();
 
-        // Acción para modificar permisos
         modificarPermisosButton.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
@@ -209,7 +226,6 @@ public class Administar_Vista extends JFrame {
             }
         });
 
-        // Acción para eliminar usuario
         eliminarUsuarioButton.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
@@ -220,7 +236,6 @@ public class Administar_Vista extends JFrame {
             }
         });
 
-        // Add action listeners to navigation buttons
         inicioButton.addActionListener(e -> {
             dispose();
             new Inicio_Vista(usuario_actual, conn).setVisible(true);
@@ -237,59 +252,46 @@ public class Administar_Vista extends JFrame {
             dispose();
             new Administar_Vista(usuario_actual, conn).setVisible(true);
         });
+
+        cargarPublicaciones();
     }
 
-    private JButton getJButton() {
-        JButton siguienteButton = new JButton("Siguiente");
-        siguienteButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        siguienteButton.setBackground(new Color(174, 101, 7));
-        siguienteButton.setForeground(Color.WHITE);
-
-        siguienteButton.addActionListener(e -> {
-            gestionarPublicacion();
-            currentIndex++;
-            if (currentIndex < publicaciones.size()) {
-                mostrarPublicacion();
-            } else {
-                JOptionPane.showMessageDialog(null, "No hay más publicaciones.");
-                dispose();
-            }
-        });
-        return siguienteButton;
+    private void cargarPublicaciones() {
+        publicaciones = ControladorDatos.obtenerPublicaciones(conn, true);
+        if (!publicaciones.isEmpty()) {
+            mostrarPublicacion();
+        } else {
+            JOptionPane.showMessageDialog(this, "No hay publicaciones para administrar.");
+        }
     }
 
     private void mostrarPublicacion() {
         Publicacion publicacion = publicaciones.get(currentIndex);
-        publicacionArea.setText(publicacion.getDescripcion());
+        publicacionArea.setText(
+                        "Título:" + publicacion.getTitulo() +
+                        "\nTipo:" + publicacion.getTipo() +
+                        "\nUsuario:" + publicacion.getUsuario() +
+                        "\n\nDescripción:" + publicacion.getDescripcion() +
+                        "\n\n\nFecha de publicación:" + publicacion.getFecha_publicacion()
+        );
         justificacionField.setText("");
         group.clearSelection();
     }
-
-    //ADMINISTRACIÓN DE PUBLICACIONES
-
 
     private void gestionarPublicacion() {
         Publicacion publicacion = publicaciones.get(currentIndex);
         if (denegadaButton.isSelected()) {
             if (EliminarPublicacion.eliminarPublicacion(publicacion)) {
-                JOptionPane.showMessageDialog(null, "Publicación denegada y eliminada.");
+                JOptionPane.showMessageDialog(this, "Publicación denegada y eliminada.");
             } else {
-                JOptionPane.showMessageDialog(null, "Error al eliminar la publicación.");
+                JOptionPane.showMessageDialog(this, "Error al eliminar la publicación.");
             }
         }
     }
 
-    //ADMINISTRACIÓN DE USUARIOS
-
-
     private void cargarDatosUsuarios() {
-        // Limpiar el modelo de la tabla
         tableModel.setRowCount(0);
-
-        // Obtener los nuevos datos de usuarios
         List<Usuario> usuarios = ControladorDatos.obtenerUsuarios(conn);
-
-        // Agregar los nuevos datos al modelo de la tabla
         for (Usuario usuario : usuarios) {
             tableModel.addRow(new Object[]{
                     usuario.getUsuario(),
@@ -302,15 +304,12 @@ public class Administar_Vista extends JFrame {
         }
     }
 
-
     private void modificarPermisos(Usuario usuario) {
-
         final String[] opciones = new String[4];
         opciones[Usuario.ADMINISTRADOR] = Usuario.getTipos(Usuario.ADMINISTRADOR);
         opciones[Usuario.EMPRESA_ASOCIADA] = Usuario.getTipos(Usuario.EMPRESA_ASOCIADA);
         opciones[Usuario.EMPRESA_NO_ASOCIADA] = Usuario.getTipos(Usuario.EMPRESA_NO_ASOCIADA);
         opciones[Usuario.USUARIO] = Usuario.getTipos(Usuario.USUARIO);
-
 
         String nuevoPermiso = (String) JOptionPane.showInputDialog(
                 this,
@@ -319,35 +318,18 @@ public class Administar_Vista extends JFrame {
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 opciones,
-                usuario.getPermisos() // Mostrar el permiso actual como opción predeterminada
+                usuario.getPermisos()
         );
         if (nuevoPermiso != null && !nuevoPermiso.equals(usuario.getPermisos())) {
             usuario.setPermisos(nuevoPermiso);
             if (ActualizarUsuario.actualizarUsuario(usuario).equalsIgnoreCase(Mensajes.getMensaje(Mensajes.USUARIO_ACTUALIZADO))) {
-
-                /*
-
-                ¿Por qué el switch no funciona?
-
-                switch (nuevoPermiso) {
-                    case opciones[Usuario.ADMINISTRADOR] -> usuario.setIndice_tipo_usuario(Usuario.ADMINISTRADOR);
-                    case opciones[Usuario.EMPRESA_ASOCIADA] -> usuario.setIndice_tipo_usuario(Usuario.EMPRESA_ASOCIADA);
-                    case opciones[Usuario.EMPRESA_NO_ASOCIADA] -> usuario.setIndice_tipo_usuario(Usuario.EMPRESA_NO_ASOCIADA);
-                    case opciones[Usuario.USUARIO] -> usuario.setIndice_tipo_usuario(Usuario.USUARIO);
-                    default -> usuario.setIndice_tipo_usuario(usuario.getIndice_tipo_usuario());
-                }
-                 */
-
                 if (nuevoPermiso.equalsIgnoreCase(opciones[Usuario.ADMINISTRADOR])) usuario.setIndice_tipo_usuario(Usuario.ADMINISTRADOR);
                 else if (nuevoPermiso.equalsIgnoreCase(opciones[Usuario.EMPRESA_ASOCIADA])) usuario.setIndice_tipo_usuario(Usuario.EMPRESA_ASOCIADA);
                 else if (nuevoPermiso.equalsIgnoreCase(opciones[Usuario.EMPRESA_NO_ASOCIADA])) usuario.setIndice_tipo_usuario(Usuario.EMPRESA_NO_ASOCIADA);
                 else if (nuevoPermiso.equalsIgnoreCase(opciones[Usuario.USUARIO])) usuario.setIndice_tipo_usuario(Usuario.USUARIO);
                 else usuario.setIndice_tipo_usuario(usuario.getIndice_tipo_usuario());
 
-
-
                 JOptionPane.showMessageDialog(this, ActualizarUsuario.actualizarUsuario(usuario));
-
             } else {
                 JOptionPane.showMessageDialog(this, Mensajes.getMensaje(Mensajes.ERROR_ACTUALIZAR_USUARIO));
             }
@@ -368,5 +350,6 @@ public class Administar_Vista extends JFrame {
             cargarDatosUsuarios();
         }
     }
-
 }
+
+ 
