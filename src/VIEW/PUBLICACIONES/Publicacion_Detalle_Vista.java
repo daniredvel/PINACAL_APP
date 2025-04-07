@@ -6,6 +6,7 @@ import DB.UTIL.GestorConexion;
 import MODEL.Publicacion;
 import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
+import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.PERFILES.Perfil_Usuario_Vista;
 import VIEW.RES.Rutas;
 
@@ -66,17 +67,9 @@ public class Publicacion_Detalle_Vista extends JFrame {
                 Connection conn = GestorConexion.getConexion();
                 Usuario autor = ControladorDatos.obtenerUsuarioPorNombre(conn, publicacion.getUsuario());
                 if (autor != null) {
-                    JDialog perfilDialog = new JDialog();
-                    perfilDialog.setTitle("Perfil de Usuario");
-                    perfilDialog.setModal(true);
-                    perfilDialog.setSize(1000, 800);
-                    perfilDialog.setLocationRelativeTo(null);
 
-                    // Crear un panel con el contenido del perfil del usuario
-                    JPanel perfilPanel = new Perfil_Usuario_Vista(conn, autor, ControladorDatos.obtenerPublicaciones(conn, autor));
-                    perfilDialog.add(perfilPanel);
+                    SwingUtilities.invokeLater(() -> new Perfil_Usuario_Vista(conn, autor, usuario_actual).setVisible(true));
 
-                    perfilDialog.setVisible(true);
                 } else {
                     LOGGER.log(Level.SEVERE, "No se pudo encontrar el autor: " + publicacion.getUsuario());
                 }

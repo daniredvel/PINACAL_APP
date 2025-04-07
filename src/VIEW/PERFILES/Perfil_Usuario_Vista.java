@@ -2,23 +2,41 @@ package VIEW.PERFILES;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.util.List;
 import MODEL.Publicacion;
 import MODEL.Usuario;
+import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.PUBLICACIONES.Publicacion_Vista;
+import VIEW.PUBLICACIONES.Publicacion_Detalle_Vista;
+import CONTROLLER.ControladorDatos;
+import VIEW.RES.Rutas;
 
-public class Perfil_Usuario_Vista extends JPanel {
+public class Perfil_Usuario_Vista extends JFrame {
     private Usuario usuario;
-    private List<Publicacion> publicaciones;
+    private DefaultListModel<Publicacion> listModel;
+    private Connection conn;
+    private Usuario usuario_actual;
 
-    public Perfil_Usuario_Vista(Connection conn, Usuario usuario, List<Publicacion> publicaciones) {
+    public Perfil_Usuario_Vista(Connection conn, Usuario usuario, Usuario usuario_actual) {
+        this.conn = conn;
         this.usuario = usuario;
-        this.publicaciones = publicaciones;
-        initUI(conn);
+        this.usuario_actual = usuario_actual;
+        this.listModel = new DefaultListModel<>();
+        setSize(1000, 800);
+        setTitle("Perfil de " + usuario.getUsuario());
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        List<Publicacion> publicaciones = ControladorDatos.obtenerPublicaciones(conn, usuario);
+        for (Publicacion publicacion : publicaciones) {
+            listModel.addElement(publicacion);
+        }
+        initUI();
     }
 
-    private void initUI(Connection conn) {
+    private void initUI() {
         setLayout(new BorderLayout());
         setBackground(new Color(211, 205, 192));
 
@@ -53,15 +71,41 @@ public class Perfil_Usuario_Vista extends JPanel {
 
         add(infoPanel, BorderLayout.NORTH);
 
-        JPanel publicacionesPanel = new JPanel();
-        publicacionesPanel.setLayout(new BoxLayout(publicacionesPanel, BoxLayout.Y_AXIS));
-        publicacionesPanel.setBackground(new Color(211, 205, 192));
+        add(getJScrollPane(), BorderLayout.CENTER);
+    }
 
-        for (Publicacion publicacion : publicaciones) {
+    protected JScrollPane getJScrollPane() {
+        JList<Publicacion> publicacionesList = getPublicacionJList();
+
+        publicacionesList.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    Publicacion selectedPublicacion = publicacionesList.getSelectedValue();
+                    if (selectedPublicacion != null) {
+                        SwingUtilities.invokeLater(() -> new Publicacion_Detalle_Vista(selectedPublicacion, usuario_actual, conn).setVisible(true));
+
+                    }
+                }
+            }
+        });
+
+        return new JScrollPane(publicacionesList);
+    }
+
+    private JList<Publicacion> getPublicacionJList() {
+        JList<Publicacion> publicacionesList = new JList<>(listModel);
+        publicacionesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        publicacionesList.setCellRenderer((list, publicacion, index, isSelected, cellHasFocus) -> {
             Publicacion_Vista publicacionVista = new Publicacion_Vista(publicacion);
-            publicacionesPanel.add(publicacionVista);
-        }
-
-        add(new JScrollPane(publicacionesPanel), BorderLayout.CENTER);
+            if (isSelected) {
+                publicacionVista.setBackground(new Color(174, 101, 7));
+                publicacionVista.setForeground(Color.WHITE);
+            } else {
+                publicacionVista.setBackground(new Color(211, 205, 192));
+                publicacionVista.setForeground(Color.BLACK);
+            }
+            return publicacionVista;
+        });
+        return publicacionesList;
     }
 }
