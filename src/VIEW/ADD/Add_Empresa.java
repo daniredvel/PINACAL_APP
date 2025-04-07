@@ -129,7 +129,7 @@ public class Add_Empresa extends JFrame {
                 if (evt.getClickCount() == 2) {
                     Publicacion selectedPublicacion = publicacionesList.getSelectedValue();
                     if (selectedPublicacion != null) {
-                        Publicacion_Propia_Detalle_Vista detalleVista = new Publicacion_Propia_Detalle_Vista(selectedPublicacion, usuario_actual, conn);
+                        Publicacion_Propia_Detalle_Vista detalleVista = new Publicacion_Propia_Detalle_Vista(Add_Empresa.this, selectedPublicacion, usuario_actual, conn);
                         detalleVista.setVisible(true);
                     }
                 }

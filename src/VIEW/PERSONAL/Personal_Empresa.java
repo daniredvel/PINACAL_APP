@@ -267,7 +267,7 @@ public class Personal_Empresa extends JFrame {
                 if (e.getClickCount() == 2) {
                     Publicacion selectedPublicacion = publicacionesList.getSelectedValue();
                     if (selectedPublicacion != null) {
-                        Publicacion_Detalle_Vista detalleVista = new Publicacion_Detalle_Vista(selectedPublicacion, usuario_actual, conn);
+                        Publicacion_Detalle_Vista detalleVista = new Publicacion_Detalle_Vista(Personal_Empresa.this, selectedPublicacion, usuario_actual, conn);
                         detalleVista.setVisible(true);
                     }
                 }

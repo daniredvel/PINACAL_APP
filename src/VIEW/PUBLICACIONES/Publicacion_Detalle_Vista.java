@@ -6,7 +6,6 @@ import DB.UTIL.GestorConexion;
 import MODEL.Publicacion;
 import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
-import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.PERFILES.Perfil_Usuario_Vista;
 import VIEW.RES.Rutas;
 
@@ -19,19 +18,24 @@ import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Publicacion_Detalle_Vista extends JFrame {
-    private boolean isOriginalIcon = true;
+public class Publicacion_Detalle_Vista extends JDialog {
+    private static boolean isOriginalIcon = true;
     private final JButton saveButton;
     private final JPanel leftPanel;
     private static final Logger LOGGER = Logger.getLogger(Publicacion_Detalle_Vista.class.getName());
+    private static Window owner;
+    private static Usuario usuario_actual;
+    private static Connection conn;
 
-    public Publicacion_Detalle_Vista(Publicacion publicacion, Usuario usuario_actual, Connection conexion) {
+    public Publicacion_Detalle_Vista(Window owner, Publicacion publicacion, Usuario usuario_actual, Connection conexion) {
+        super(owner, "Detalle de Publicación", ModalityType.APPLICATION_MODAL);
+        Publicacion_Detalle_Vista.owner = owner;
+        Publicacion_Detalle_Vista.usuario_actual = usuario_actual;
+        Publicacion_Detalle_Vista.conn = conexion;
 
-        //VISTA
-        setTitle("Detalle de Publicación");
         setSize(800, 300);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(owner);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         setIconImage(Rutas.getImage(Rutas.ICONO));
         setTitle(publicacion.getTitulo());
@@ -61,15 +65,14 @@ public class Publicacion_Detalle_Vista extends JFrame {
         leftPanel.add(textViewUsuario);
 
         textViewUsuario.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         textViewUsuario.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Connection conn = GestorConexion.getConexion();
                 Usuario autor = ControladorDatos.obtenerUsuarioPorNombre(conn, publicacion.getUsuario());
                 if (autor != null) {
-
-                    SwingUtilities.invokeLater(() -> new Perfil_Usuario_Vista(conn, autor, usuario_actual).setVisible(true));
-
+                    abrirPerfil(autor);
                 } else {
                     LOGGER.log(Level.SEVERE, "No se pudo encontrar el autor: " + publicacion.getUsuario());
                 }
@@ -94,8 +97,6 @@ public class Publicacion_Detalle_Vista extends JFrame {
 
         contentPanel.add(datePanel, BorderLayout.EAST);
 
-        //ICONOS DE GUARDADO
-
         ImageIcon originalIcon = new ImageIcon(Rutas.getImage(Rutas.GUARDAR));
         Image originalImage = originalIcon.getImage();
         Image scaledImage = originalImage.getScaledInstance(32, 32, Image.SCALE_SMOOTH);
@@ -106,16 +107,12 @@ public class Publicacion_Detalle_Vista extends JFrame {
         Image newScaledImage = newImage.getScaledInstance(32, 32, Image.SCALE_SMOOTH);
         ImageIcon newScaledIcon = new ImageIcon(newScaledImage);
 
-        //BOTÓN DE GUARDADO
         saveButton = new JButton(scaledIcon);
         saveButton.setBackground(null);
         saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         leftPanel.add(saveButton);
 
-
-        //ACCIÓN DEL BOTÓN DE GUARDADO
         saveButton.addActionListener(e -> {
-
             if (isOriginalIcon) {
                 saveButton.setIcon(scaledIcon);
                 System.out.printf("Publicación retirada: %s, autor: %s%n", publicacion.getTitulo(), publicacion.getUsuario());
@@ -126,17 +123,23 @@ public class Publicacion_Detalle_Vista extends JFrame {
                 LOGGER.log(Level.INFO, Mensajes.getMensaje(Mensajes.PUBLICACION_GUARDADA));
                 System.out.printf("Publicación guardada: %s, autor: %s%n", publicacion.getTitulo(), publicacion.getUsuario());
                 System.out.println(GuardarPublicacion.guardarPublicacion(publicacion, usuario_actual, conexion));
-
             }
             isOriginalIcon = !isOriginalIcon;
-
         });
-
 
         add(contentPanel);
     }
 
     public JPanel getLeftPanel() {
         return leftPanel;
+    }
+
+    private void abrirPerfil(Usuario autor) {
+        // Cerrar la ventana de inicio y la ventana actual
+        owner.dispose();
+        this.dispose();
+
+        // Abrir la ventana del perfil
+        SwingUtilities.invokeLater(() -> new Perfil_Usuario_Vista(conn, autor, usuario_actual).setVisible(true));
     }
 }
