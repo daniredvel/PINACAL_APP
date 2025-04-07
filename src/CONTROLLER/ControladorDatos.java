@@ -234,4 +234,63 @@ public class ControladorDatos {
 
         return publicaciones;
     }
+    public static Usuario obtenerUsuarioPorNombre(Connection conexion, String nombreUsuario) {
+        Connection conn = conexion;
+
+        // Si la conexión es nula, se crea una nueva
+        if (conn == null) conn = conn();
+
+        // Nos aseguramos de que la conexión no sea nula
+        // Si la conexión es nula, se muestra la ventana de error de la aplicación
+        if (conn == null) {
+            LOGGER.log(Level.SEVERE, Mensajes.getMensaje(Mensajes.FALLO_CONEXION));
+            SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
+        }
+
+        Usuario usuario = null;
+        String sql = "SELECT u.*, t.nombre_tipo FROM USUARIOS u JOIN TIPOS_USUARIOS t ON u.id_tipo_usuario = t.id_tipo_usuario WHERE u.nombre = ?";
+
+        try {
+            assert conn != null;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, nombreUsuario);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        // Consultamos la dirección
+                        String direccion = rs.getString("direccion");
+
+                        // Si la direccion no es nula usamos el constructor de la empresa, con direccion
+                        if (direccion != null) {
+                            usuario = new Usuario(
+                                    rs.getInt("id_usuario"),
+                                    rs.getString("nombre"),
+                                    rs.getString("password"),
+                                    rs.getString("email"),
+                                    direccion,
+                                    rs.getString("telefono"),
+                                    rs.getInt("id_tipo_usuario"),
+                                    rs.getString("nombre_tipo")
+                            );
+                        } else {
+                            // Si la direccion es nula usamos el constructor del usuario, sin direccion
+                            usuario = new Usuario(
+                                    rs.getInt("id_usuario"),
+                                    rs.getString("nombre"),
+                                    rs.getString("password"),
+                                    rs.getString("email"),
+                                    rs.getString("telefono"),
+                                    rs.getInt("id_tipo_usuario"),
+                                    rs.getString("nombre_tipo")
+                            );
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, Mensajes.getMensaje(Mensajes.ERROR_CARGAR_USUARIO) + " {0}", e.getMessage());
+        }
+
+        return usuario;
+    }
 }

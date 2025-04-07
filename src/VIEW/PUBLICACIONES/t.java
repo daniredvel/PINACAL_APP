@@ -1,3 +1,5 @@
+/*
+
 package VIEW.PUBLICACIONES;
 
 import CONTROLLER.CRUD.PUBLICACION.GuardarPublicacion;
@@ -69,13 +71,9 @@ public class Publicacion_Detalle_Vista extends JFrame {
                     JDialog perfilDialog = new JDialog();
                     perfilDialog.setTitle("Perfil de Usuario");
                     perfilDialog.setModal(true);
-                    perfilDialog.setSize(1000, 800);
+                    perfilDialog.setSize(800, 600);
                     perfilDialog.setLocationRelativeTo(null);
-
-                    // Crear un panel con el contenido del perfil del usuario
-                    JPanel perfilPanel = new Perfil_Usuario_Vista(conn, autor, ControladorDatos.obtenerPublicaciones(conn, autor));
-                    perfilDialog.add(perfilPanel);
-
+                    perfilDialog.add(new Perfil_Usuario_Vista(conn, autor, ControladorDatos.obtenerPublicaciones(conn, autor)));
                     perfilDialog.setVisible(true);
                 } else {
                     LOGGER.log(Level.SEVERE, "No se pudo encontrar el autor: " + publicacion.getUsuario());
@@ -146,4 +144,8 @@ public class Publicacion_Detalle_Vista extends JFrame {
     public JPanel getLeftPanel() {
         return leftPanel;
     }
+
+
 }
+
+*/
