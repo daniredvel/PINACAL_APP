@@ -8,26 +8,28 @@ import java.sql.Connection;
 import java.util.List;
 import MODEL.Publicacion;
 import MODEL.Usuario;
-import VIEW.ERROR.Error_INICIAR_BD;
+import VIEW.INICIO.Inicio_Vista;
 import VIEW.PUBLICACIONES.Publicacion_Vista;
 import VIEW.PUBLICACIONES.Publicacion_Detalle_Vista;
 import CONTROLLER.ControladorDatos;
 import VIEW.RES.Rutas;
 
 public class Perfil_Usuario_Vista extends JFrame {
-    private Usuario usuario;
-    private DefaultListModel<Publicacion> listModel;
-    private Connection conn;
-    private Usuario usuario_actual;
+    private final Usuario usuario; //Usuario cuyo perfil se esta viendo
+    private final DefaultListModel<Publicacion> listModel; //Modelo de la lista de publicaciones
+    private final Connection conn; //Conexion a la base de datos
+    private final Usuario usuario_actual; //Usuario que ha iniciado sesion
 
     public Perfil_Usuario_Vista(Connection conn, Usuario usuario, Usuario usuario_actual) {
         this.conn = conn;
         this.usuario = usuario;
         this.usuario_actual = usuario_actual;
         this.listModel = new DefaultListModel<>();
-        setSize(1000, 800);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Ocupa toda la pantalla
         setTitle("Perfil de " + usuario.getUsuario());
         setLocationRelativeTo(null);
+        // Icono
+        setIconImage(Rutas.getImage(Rutas.ICONO));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         List<Publicacion> publicaciones = ControladorDatos.obtenerPublicaciones(conn, usuario);
         for (Publicacion publicacion : publicaciones) {
@@ -69,10 +71,22 @@ public class Perfil_Usuario_Vista extends JFrame {
         gbc.gridy = 3;
         infoPanel.add(emailLabel, gbc);
 
-        add(infoPanel, BorderLayout.NORTH);
+        JButton inicioButton = new JButton("Inicio");
+        inicioButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        inicioButton.setBackground(new Color(174, 101, 7));
+        inicioButton.setForeground(Color.WHITE);
+        inicioButton.addActionListener(e -> {
+            dispose();
+            // Cerrar la ventana actual y abrir la ventana de inicio
+            SwingUtilities.invokeLater(() -> new Inicio_Vista(usuario_actual, conn).setVisible(true));
+        });
+        gbc.gridy = 4;
+        infoPanel.add(inicioButton, gbc);
 
+        add(infoPanel, BorderLayout.NORTH);
         add(getJScrollPane(), BorderLayout.CENTER);
     }
+
 
     protected JScrollPane getJScrollPane() {
         JList<Publicacion> publicacionesList = getPublicacionJList();
@@ -82,8 +96,8 @@ public class Perfil_Usuario_Vista extends JFrame {
                 if (e.getClickCount() == 2) {
                     Publicacion selectedPublicacion = publicacionesList.getSelectedValue();
                     if (selectedPublicacion != null) {
-                        SwingUtilities.invokeLater(() -> new Publicacion_Detalle_Vista(selectedPublicacion, usuario_actual, conn).setVisible(true));
-
+                        Publicacion_Detalle_Vista detalleVista = new Publicacion_Detalle_Vista(Perfil_Usuario_Vista.this, selectedPublicacion, usuario_actual, conn);
+                        detalleVista.setVisible(true);
                     }
                 }
             }
