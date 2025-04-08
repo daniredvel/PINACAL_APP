@@ -90,6 +90,7 @@ public class Perfil_Usuario_Vista extends JFrame {
 
     protected JScrollPane getJScrollPane() {
         JList<Publicacion> publicacionesList = getPublicacionJList();
+        publicacionesList.setBackground(new Color(211, 205, 192));
 
         publicacionesList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
