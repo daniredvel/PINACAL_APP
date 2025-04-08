@@ -13,7 +13,6 @@ import VIEW.ADD.Add_Empresa;
 import VIEW.ERROR.Error_INICIAR_BD;
 import VIEW.INICIO.Inicio_Vista;
 import VIEW.PERSONAL.Personal_Empresa;
-import VIEW.PUBLICACIONES.Publicacion_Detalle_Vista;
 import VIEW.RES.Rutas;
 
 import javax.swing.*;
@@ -35,11 +34,9 @@ public class Administar_Vista extends JFrame {
     private final ButtonGroup group;
     private final JTable table;
     private final DefaultTableModel tableModel;
-    private static Usuario usuario_actual = null;
     public static Connection conn = null;
 
     public Administar_Vista(Usuario usuario_actual, Connection conexion) {
-        Administar_Vista.usuario_actual = usuario_actual;
 
         LOGGER.log(Level.INFO, "Iniciando vista de administrar");
         Administar_Vista.conn = conexion;
@@ -322,6 +319,14 @@ public class Administar_Vista extends JFrame {
         );
         if (nuevoPermiso != null && !nuevoPermiso.equals(usuario.getPermisos())) {
             usuario.setPermisos(nuevoPermiso);
+
+            // Si el nuevo permiso es EMPRESA_ASOCIADA, EMPRESA_NO_ASOCIADA o ADMINISTRADOR, se añade la dirección ""
+            if (nuevoPermiso.equalsIgnoreCase(opciones[Usuario.ADMINISTRADOR]) ||
+                    nuevoPermiso.equalsIgnoreCase(opciones[Usuario.EMPRESA_ASOCIADA]) ||
+                    nuevoPermiso.equalsIgnoreCase(opciones[Usuario.EMPRESA_NO_ASOCIADA])) {
+                usuario.setDireccion("");
+            }
+
             if (ActualizarUsuario.actualizarUsuario(usuario).equalsIgnoreCase(Mensajes.getMensaje(Mensajes.USUARIO_ACTUALIZADO))) {
                 if (nuevoPermiso.equalsIgnoreCase(opciones[Usuario.ADMINISTRADOR])) usuario.setIndice_tipo_usuario(Usuario.ADMINISTRADOR);
                 else if (nuevoPermiso.equalsIgnoreCase(opciones[Usuario.EMPRESA_ASOCIADA])) usuario.setIndice_tipo_usuario(Usuario.EMPRESA_ASOCIADA);
@@ -336,7 +341,6 @@ public class Administar_Vista extends JFrame {
             cargarDatosUsuarios();
         }
     }
-
     private void eliminarUsuario(Usuario usuario) {
         int response = JOptionPane.showConfirmDialog(
                 this,
