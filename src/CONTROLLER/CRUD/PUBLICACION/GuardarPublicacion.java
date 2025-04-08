@@ -82,5 +82,33 @@ public class GuardarPublicacion {
             return Mensajes.getMensaje(Mensajes.ERROR_RETIRAR_PUBLICACION);
         }
     }
+    public static boolean estaGuardada(Publicacion publicacion, Usuario usuario, Connection conexion) {
+        Connection conn = conexion;
+
+        // Si la conexión es nula, se crea una nueva
+        if (conn == null) conn = conn();
+
+        // Validar que la conexión no sea nula
+        if (conn == null) {
+            LOGGER.log(Level.SEVERE, Mensajes.getMensaje(Mensajes.FALLO_CONEXION));
+            SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
+            return false;
+        }
+
+        // Consulta SQL para verificar si la publicación está guardada
+        String sql = "SELECT COUNT(*) FROM PUBLICACIONES_GUARDADAS WHERE id_publicacion = ? AND id_usuario = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, publicacion.getId_publicacion());
+            ps.setInt(2, usuario.getId_usuario());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Devuelve true si la publicación está guardada
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, Mensajes.getMensaje(Mensajes.FALLO_CONSULTA) + " ERROR: " + e.getMessage());
+        }
+        return false;
+    }
 
 }
