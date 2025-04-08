@@ -8,6 +8,7 @@ import VIEW.INICIO.Inicio_Vista;
 import VIEW.PUBLICACIONES.Publicacion_Detalle_Vista;
 import VIEW.PUBLICACIONES.Publicacion_Vista;
 import VIEW.RES.Rutas;
+import VIEW.UTIL.Cambiar_Pass_Vista;
 
 import javax.swing.*;
 import java.awt.*;
@@ -162,15 +163,30 @@ public class Personal_Usuario extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         userPanel.add(telefonoField, gbc);
 
+        JLabel cambiarContrasenaLabel = new JLabel("<html><u>Cambiar contraseña</u></html>");
+        cambiarContrasenaLabel.setForeground(Color.BLUE);
+        cambiarContrasenaLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        cambiarContrasenaLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Cambiar_Pass_Vista dialog = new Cambiar_Pass_Vista(Personal_Usuario.this, usuario_actual, conn);
+                dialog.setVisible(true);
+            }
+        });
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        userPanel.add(cambiarContrasenaLabel, gbc);
+
         // Añadir etiqueta para mostrar mensajes de error
         messageLabel = new JLabel("");
         messageLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         messageLabel.setForeground(Color.RED);
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         userPanel.add(messageLabel, gbc);
+
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
@@ -181,6 +197,7 @@ public class Personal_Usuario extends JFrame {
         listModel = new DefaultListModel<>();
         JScrollPane scrollPane = getJScrollPane();
         mainPanel.add(scrollPane, BorderLayout.CENTER);
+
 
         add(mainPanel, BorderLayout.CENTER);
 

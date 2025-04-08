@@ -1,5 +1,6 @@
 package CONTROLLER;
 
+import CONTROLLER.ENCRIPTACION.ControladorEncriptacion;
 import MODEL.Publicacion;
 import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
@@ -292,5 +293,21 @@ public class ControladorDatos {
         }
 
         return usuario;
+    }
+    public static boolean cambiarPass(Usuario usuario, String nuevaContrasena, Connection conn) {
+        String sql = "UPDATE usuarios SET password = ? WHERE nombre = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            // Encriptar la nueva contraseña
+            String contrasenaEncriptada = ControladorEncriptacion.encriptar(nuevaContrasena);
+            ps.setString(1, contrasenaEncriptada);
+            ps.setString(2, usuario.getUsuario());
+
+            // Ejecutar la actualización
+            int filasActualizadas = ps.executeUpdate();
+            return filasActualizadas > 0; // Devuelve true si se actualizó al menos una fila
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false; // Devuelve false si ocurre un error
+        }
     }
 }
