@@ -1,6 +1,7 @@
 package CONTROLLER;
 
 import CONTROLLER.ENCRIPTACION.ControladorEncriptacion;
+import MODEL.Mensaje;
 import MODEL.Publicacion;
 import MODEL.UTIL.Mensajes;
 import MODEL.Usuario;
@@ -309,5 +310,61 @@ public class ControladorDatos {
             System.out.println(e.getMessage());
             return false; // Devuelve false si ocurre un error
         }
+    }
+    public static List<Mensaje> obtenerMensajes(Connection conexion, Usuario usuario) {
+        Connection conn = conexion;
+
+        // Si la conexión es nula, se crea una nueva
+        if (conn == null) conn = conn();
+
+        // Nos aseguramos de que la conexión no sea nula
+        if (conn == null) {
+            LOGGER.log(Level.SEVERE, Mensajes.getMensaje(Mensajes.FALLO_CONEXION));
+            SwingUtilities.invokeLater(() -> new Error_INICIAR_BD().setVisible(true));
+        }
+
+        List<Mensaje> mensajes = new ArrayList<>();
+        String sql = "SELECT m.id_mensajes, m.id_usuario_de, m.id_usuario_para, m.asunto, m.contenido, m.fecha, m.leido, " +
+                "u_de.nombre AS nombre_emisor, u_para.nombre AS nombre_receptor " +
+                "FROM MENSAJES m " +
+                "JOIN USUARIOS u_de ON m.id_usuario_de = u_de.id_usuario " +
+                "JOIN USUARIOS u_para ON m.id_usuario_para = u_para.id_usuario " +
+                "WHERE m.id_usuario_para = ? " +
+                "ORDER BY m.fecha DESC";
+
+        try {
+            assert conn != null;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, usuario.getId_usuario());
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        // Obtener los nombres de los usuarios
+                        String nombreEmisor = rs.getString("nombre_emisor");
+                        String nombreReceptor = rs.getString("nombre_receptor");
+
+                        // Obtener los objetos Usuario a partir de los nombres
+                        Usuario usuarioEmisor = obtenerUsuarioPorNombre(conn, nombreEmisor);
+                        Usuario usuarioReceptor = obtenerUsuarioPorNombre(conn, nombreReceptor);
+
+                        // Crear el objeto Mensaje
+                        Mensaje mensaje = new Mensaje(
+                                rs.getInt("id_mensajes"),
+                                rs.getString("asunto"),
+                                rs.getString("contenido"),
+                                usuarioEmisor,
+                                usuarioReceptor,
+                                rs.getTimestamp("fecha"),
+                                rs.getBoolean("leido")
+                        );
+                        mensajes.add(mensaje);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, Mensajes.getMensaje(Mensajes.ERROR_CARGAR_MENSAJES) + " {0}", e.getMessage());
+        }
+
+        return mensajes;
     }
 }

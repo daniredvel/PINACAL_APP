@@ -1,5 +1,6 @@
 package VIEW.PUBLICACIONES;
 
+import CONTROLLER.CRUD.PUBLICACION.EliminarPublicacion;
 import CONTROLLER.CRUD.PUBLICACION.GuardarPublicacion;
 import CONTROLLER.ControladorDatos;
 import DB.UTIL.GestorConexion;
@@ -138,6 +139,36 @@ public class Publicacion_Propia_Detalle_Vista extends JDialog {
                 System.out.println(GuardarPublicacion.guardarPublicacion(publicacion, usuario_actual, conexion));
             }
             isOriginalIcon = !isOriginalIcon;
+        });
+        // Botón de eliminar
+        JButton deleteButton = new JButton("Eliminar");
+        deleteButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        deleteButton.setBackground(new Color(220, 70, 90));
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        leftPanel.add(deleteButton);
+
+// Acción del botón de eliminar
+        deleteButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Estás seguro de que deseas eliminar esta publicación?",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                boolean eliminado = EliminarPublicacion.eliminarPublicacion(publicacion, usuario_actual); // Método para eliminar
+                if (eliminado) {
+                    LOGGER.log(Level.INFO, "Publicación eliminada: " + publicacion.getTitulo());
+                    JOptionPane.showMessageDialog(this, "Publicación eliminada correctamente.", "Eliminación exitosa", JOptionPane.INFORMATION_MESSAGE);
+                    dispose(); // Cerrar la ventana actual
+                } else {
+                    LOGGER.log(Level.SEVERE, "Error al eliminar la publicación: " + publicacion.getTitulo());
+                    JOptionPane.showMessageDialog(this, "Error al eliminar la publicación.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         });
 
         add(contentPanel);

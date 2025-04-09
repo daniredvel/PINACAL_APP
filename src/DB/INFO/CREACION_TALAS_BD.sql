@@ -9,8 +9,7 @@
 -- USUARIOS: Tabla que almacena los datos de los usuarios de la aplicación
 -- PUBLICACIONES: Tabla que almacena los datos de las publicaciones de los usuarios
 -- PUBLICACIONES_GUARDADAS: Tabla que almacena los datos de las publicaciones guardadas por los usuarios
--- JUSTIFICACIONES_ELIMINACION_PUBLICACIONES: Tabla que almacena las justificaciones de eliminación de publicaciones
--- JUSTIFICACIONES_ELIMINACION_USUARIOS: Tabla que almacena las justificaciones de eliminación de usuarios
+-- MENSAJES: Tabla que almacena los mensajes enviados por los administradores a los usuarios
 
 CREATE TABLE TIPOS_USUARIOS (
     id_tipo_usuario INT PRIMARY KEY, -- ID como clave primaria, permisos de admin = 2, usuario = 1
@@ -21,7 +20,7 @@ CREATE TABLE TIPOS_USUARIOS (
 CREATE TABLE USUARIOS (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT, -- ID como clave primaria
     nombre VARCHAR(50) NOT NULL UNIQUE, -- Nombre de usuario para inicio de sesión
-    password VARCHAR(50) NOT NULL, -- Contraseña
+    password VARCHAR(500) NOT NULL, -- Contraseña
     email VARCHAR(50) NOT NULL UNIQUE, -- Email para el registro
     direccion VARCHAR(250), -- Dirección del usuario
     telefono VARCHAR(15) NOT NULL UNIQUE, -- Teléfono del usuario
@@ -39,6 +38,18 @@ CREATE TABLE PUBLICACIONES (
     FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario) ON DELETE CASCADE -- Clave foránea de la tabla USUARIOS
 );
 
+CREATE TABLE MENSAJES (
+    id_mensajes INT PRIMARY KEY AUTO_INCREMENT ,
+    id_usuario_de INT NOT NULL,  -- ID del usuario que envía el mensaje, administrador
+    id_usuario_para INT NOT NULL,  -- ID del usuario que recibe el mensaje
+    asunto VARCHAR(255) NOT NULL, -- Asunto del mensaje
+    contenido TEXT NOT NULL, -- Contenido del mensaje o Justificación de la eliminación de la publicación
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, -- Fecha y hora de envío del mensaje
+    leido BOOLEAN DEFAULT FALSE, -- Indica si el mensaje ha sido leído o no
+    FOREIGN KEY (id_usuario_de) REFERENCES USUARIOS(id_usuario) ON DELETE CASCADE, -- ID del usuario que envia el mensaje
+    FOREIGN KEY (id_usuario_para) REFERENCES USUARIOS(id_usuario) ON DELETE CASCADE -- ID del usuario que recibe el mensaje
+);
+
 CREATE TABLE PUBLICACIONES_GUARDADAS (
     id_publicacion_guardada INT PRIMARY KEY AUTO_INCREMENT, -- ID como clave primaria
     fecha_guardado TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, -- Fecha de guardado, para organizar las publicaciones guardadas
@@ -48,26 +59,6 @@ CREATE TABLE PUBLICACIONES_GUARDADAS (
     FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario) ON DELETE CASCADE -- Clave foránea de la tabla USUARIOS
 );
 
--- LOS DATOS DE ESTAS TABLAS DEBERAN ELIMINARSE AUTOMATICAMENTE PASADO CIERTO TIEMPO
-CREATE TABLE JUSTIFICACIONES_ELIMINACION_PUBLICACIONES (
-    id_justificacion INT PRIMARY KEY AUTO_INCREMENT, -- ID como clave primaria
-    id_publicacion INT NOT NULL, -- ID de la publicación eliminada
-    id_admin INT NOT NULL, -- ID del administrador que realizó la eliminación
-    justificacion VARCHAR(255) NOT NULL, -- Mensaje de justificación
-    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha y hora de la eliminación
-    FOREIGN KEY (id_publicacion) REFERENCES PUBLICACIONES(id_publicacion) ON DELETE CASCADE, -- Clave foránea de la tabla PUBLICACIONES
-    FOREIGN KEY (id_admin) REFERENCES USUARIOS(id_usuario) -- Clave foránea de la tabla USUARIOS
-);
-
-CREATE TABLE JUSTIFICACIONES_ELIMINACION_USUARIOS (
-    id_justificacion INT PRIMARY KEY AUTO_INCREMENT, -- ID como clave primaria
-    id_usuario_eliminado INT NOT NULL, -- ID del usuario eliminado
-    id_admin INT NOT NULL, -- ID del administrador que realizó la eliminación
-    justificacion VARCHAR(255) NOT NULL, -- Mensaje de justificación
-    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha y hora de la eliminación
-    FOREIGN KEY (id_usuario_eliminado) REFERENCES USUARIOS(id_usuario) ON DELETE CASCADE, -- Clave foránea de la tabla USUARIOS
-    FOREIGN KEY (id_admin) REFERENCES USUARIOS(id_usuario) -- Clave foránea de la tabla USUARIOS
-);
 
 -- INSERTAMOS LOS TIPOS DE USUARIOS
 INSERT INTO TIPOS_USUARIOS (id_tipo_usuario, nombre_tipo, permisos) VALUES (0, 'Administrador', 'eliminar_publicacion_ajena, eliminar_usuario');
