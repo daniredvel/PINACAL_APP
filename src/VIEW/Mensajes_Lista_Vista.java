@@ -65,6 +65,7 @@ public class Mensajes_Lista_Vista extends JFrame {
 
         // Lista de mensajes en la parte inferior
         listModel = new DefaultListModel<>();
+        setBackground(new Color(211, 205, 192));
         JScrollPane scrollPane = getJScrollPane();
         add(scrollPane, BorderLayout.CENTER);
 
@@ -80,6 +81,7 @@ public class Mensajes_Lista_Vista extends JFrame {
     }
 
     protected JScrollPane getJScrollPane() {
+        setBackground(new Color(211, 205, 192));
         JList<Mensaje> mensajesList = getMensajesJList();
 
         mensajesList.addMouseListener(new MouseAdapter() {
@@ -88,6 +90,8 @@ public class Mensajes_Lista_Vista extends JFrame {
                     Mensaje selectedMensaje = mensajesList.getSelectedValue();
                     if (selectedMensaje != null) {
                         Mensajes_Vista detalleVista = new Mensajes_Vista(selectedMensaje);
+                        selectedMensaje.setLeido(true);
+                        ControladorDatos.marcarComoLeido(selectedMensaje, conn);
                         detalleVista.setVisible(true);
                     }
                 }
@@ -98,6 +102,8 @@ public class Mensajes_Lista_Vista extends JFrame {
     }
 
     private JList<Mensaje> getMensajesJList() {
+        setBackground(new Color(211, 205, 192));
+
         JList<Mensaje> mensajesList = new JList<>(listModel);
         mensajesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mensajesList.setCellRenderer((list, mensaje, index, isSelected, cellHasFocus) -> {
@@ -115,6 +121,8 @@ public class Mensajes_Lista_Vista extends JFrame {
     }
 
     protected void cargarMensajes() {
+        setBackground(new Color(211, 205, 192));
+
         LOGGER.log(Level.INFO, "Cargando mensajes");
         listModel.clear(); // Limpiar la lista antes de recargar
 

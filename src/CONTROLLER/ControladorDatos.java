@@ -367,4 +367,20 @@ public class ControladorDatos {
 
         return mensajes;
     }
+    public static void marcarComoLeido(Mensaje mensaje, Connection conn) {
+        String sql = "UPDATE MENSAJES SET leido = ? WHERE id_mensajes = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBoolean(1, true); // Marcar como leído
+            ps.setInt(2, mensaje.getId_mensaje()); // ID del mensaje
+
+            int filasActualizadas = ps.executeUpdate();
+            if (filasActualizadas > 0) {
+                System.out.println("El mensaje ha sido marcado como leído correctamente.");
+            } else {
+                System.out.println("No se encontró el mensaje para marcar como leído.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al marcar el mensaje como leído: " + e.getMessage());
+        }
+    }
 }

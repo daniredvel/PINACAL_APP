@@ -7,6 +7,15 @@ public class Mensaje {
     private String contenido;
     private Usuario de_usuario;
     private Usuario para_usuario;
+
+    public int getId_mensaje() {
+        return id_mensaje;
+    }
+
+    public void setId_mensaje(int id_mensaje) {
+        this.id_mensaje = id_mensaje;
+    }
+
     private int id_mensaje;
     private boolean leido;
     private Timestamp fecha_envio;

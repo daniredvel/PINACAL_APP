@@ -58,6 +58,7 @@ public class Mensajes_Vista extends JPanel{
 
         textViewContenido.setForeground(leido ? Color.GRAY : Color.BLACK);
         textViewAsunto.setForeground(leido ? Color.GRAY : Color.BLACK);
+        textViewUsuario.setForeground(leido ? Color.GRAY : Color.BLACK);
 
         leftPanel.add(textViewAsunto);
         leftPanel.add(textViewUsuario);
