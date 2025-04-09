@@ -1,4 +1,4 @@
-package VIEW;
+package VIEW.MENSAJES;
 
 import CONTROLLER.ControladorDatos;
 import MODEL.Mensaje;

@@ -1,8 +1,6 @@
-package VIEW;
+package VIEW.MENSAJES;
 
 import MODEL.Mensaje;
-import MODEL.Publicacion;
-import MODEL.Usuario;
 
 import javax.swing.*;
 import java.awt.*;

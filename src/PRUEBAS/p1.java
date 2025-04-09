@@ -3,7 +3,7 @@ package PRUEBAS;
 
 import MODEL.Mensaje;
 import MODEL.Usuario;
-import VIEW.Mensajes_Vista;
+import VIEW.MENSAJES.Mensajes_Vista;
 
 import javax.swing.*;
 

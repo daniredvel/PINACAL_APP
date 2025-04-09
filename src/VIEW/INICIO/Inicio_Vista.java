@@ -6,7 +6,7 @@ import MODEL.Usuario;
 import VIEW.ADD.Add_Empresa;
 import VIEW.ADMINISTRAR.Administar_Vista;
 import VIEW.ERROR.Error_INICIAR_BD;
-import VIEW.Mensajes_Lista_Vista;
+import VIEW.MENSAJES.Mensajes_Lista_Vista;
 import VIEW.PERSONAL.Personal_Empresa;
 import VIEW.PERSONAL.Personal_Usuario;
 import VIEW.PUBLICACIONES.Publicacion_Vista;
