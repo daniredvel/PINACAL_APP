@@ -98,9 +98,8 @@ public class Mensajes_Lista_Vista extends JFrame {
             }
         });
 
-        JScrollPane scrollPane = new JScrollPane(mensajesList);
-        scrollPane.getViewport().setBackground(new Color(211, 205, 192)); // Fondo del JScrollPane
-        return scrollPane;    }
+        return new JScrollPane(mensajesList);
+    }
 
     private JList<Mensaje> getMensajesJList() {
         setBackground(new Color(211, 205, 192));
